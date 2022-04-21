@@ -1,11 +1,16 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import {createRouter, createWebHistory, RouteRecordRaw} from "vue-router";
+import DefaultLayout from "@/components/layouts/DefaultLayout.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
         path: "/",
-        name: "home",
-        component: HomeView
+        name: "",
+        component: DefaultLayout,
+        children: [{
+            name: "HomeView",
+            path: "",
+            component: () => import(/* webpackChunkName: "home-view" */ "../views/HomeView.vue")
+        }]
     },
     {
         path: "/about",

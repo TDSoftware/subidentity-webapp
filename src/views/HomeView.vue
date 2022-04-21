@@ -1,20 +1,20 @@
 <template>
-    <div class="home">
-        <img alt="Vue logo" src="../assets/logo.png"/>
-        <div>
-            <AmazingButton @click="onAmazingButtonClick">
-                Toggle Text
-            </AmazingButton>
-            <p v-if="clicked">
-                Yes that is so beautiful!
-            </p>
-        </div>
-        <p>
-            <AmazingButton @click="toggleAuthenticated" class="login-button">
-                {{ $store.state.isAuthenticated ? "Logout" : "Login" }}
-            </AmazingButton>
-        </p>
-    </div>
+  <div class="home">
+    <!--    <img alt="Vue logo" src="../assets/logo.png"/>-->
+    <!--    <div>-->
+    <!--      <AmazingButton @click="onAmazingButtonClick">-->
+    <!--        Toggle Text-->
+    <!--      </AmazingButton>-->
+    <!--      <p v-if="clicked">-->
+    <!--        Yes that is so beautiful!-->
+    <!--      </p>-->
+    <!--    </div>-->
+    <!--    <p>-->
+    <!--      <AmazingButton class="login-button" @click="toggleAuthenticated">-->
+    <!--        {{ $store.state.isAuthenticated ? "Logout" : "Login" }}-->
+    <!--      </AmazingButton>-->
+    <!--    </p>-->
+  </div>
 </template>
 
 <script lang="ts">
@@ -28,19 +28,19 @@ import AmazingButton from "@/components/AmazingButton.vue"; // @ is an alias to 
 })
 export default class HomeView extends Vue {
 
-    private clicked = false;
+  private clicked = false;
 
-    onAmazingButtonClick() {
-        console.log("Yeah");
-        this.clicked = !this.clicked;
-    }
+  onAmazingButtonClick() {
+      console.log("Yeah");
+      this.clicked = !this.clicked;
+  }
 
-    toggleAuthenticated() {
-        if(this.$store.state.isAuthenticated) {
-            this.$store.commit("logout");
-        } else {
-            this.$store.commit("login");
-        }
-    }
+    // toggleAuthenticated() {
+    //     if(this.$store.state.isAuthenticated) {
+    //         this.$store.commit("logout");
+    //     } else {
+    //         this.$store.commit("login");
+    //     }
+    // }
 }
 </script>
