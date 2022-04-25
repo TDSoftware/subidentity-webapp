@@ -7,9 +7,9 @@ const routes: Array<RouteRecordRaw> = [
         name: "",
         component: DefaultLayout,
         children: [{
-            name: "HomeView",
+            name: "SearchView.vue",
             path: "",
-            component: () => import(/* webpackChunkName: "home-view" */ "../views/HomeView.vue")
+            component: () => import(/* webpackChunkName: "home-view" */ "../views/SearchView.vue")
         }]
     },
     {
