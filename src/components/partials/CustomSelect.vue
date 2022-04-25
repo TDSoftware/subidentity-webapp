@@ -49,11 +49,8 @@ export default class CustomSelect extends Vue {
     private open = false;
 
     created() {
-        console.log(this.options.length);
         this.selected = this.defaultValue ? this.defaultValue : this.options.length > 0 ? this.options[0] : null;
         this.$emit("change", this.selected);
-
-
     }
 
 
