@@ -26,7 +26,12 @@ $body-color: #111;
 
 .container-medium {
   @include make-container();
-  width: 50%;
+  width: 60%;
+}
+
+.logo {
+  @include make-row();
+  margin-right: 0;
 }
 
 
