@@ -39,14 +39,14 @@ import CustomSelect from "@/components/partials/CustomSelect.vue";
 })
 export default class IdentitySearch extends Vue {
 
-    searchTerm = "";
-    selectedChain = "";
+    private searchTerm = "";
+    private selectedChain = "";
 
-    onSelectedChange(selected: string) {
+    private onSelectedChange(selected: string) {
         this.selectedChain = selected;
     }
 
-    onSubmitSearchIdentity() {
+    private onSubmitSearchIdentity() {
         //search identity logic goes here
     }
 
