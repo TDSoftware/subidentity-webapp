@@ -1,7 +1,7 @@
 <template>
     <div :tabindex="tabindex" class="custom-select" @blur="open = false">
         <span class="icon fw-light text-muted">$</span>
-        <div :class="{ open: open }" class="selected fw-light text-muted" @click="open = !open">
+        <div :class="{ open: open }" class="selected fw-light text-muted" @click="onSelectClick">
             {{ selected }}
         </div>
         <div :class="{ selectHide: !open }" class="items">
@@ -9,11 +9,7 @@
                 v-for="(option, i) of options"
                 :key="i"
                 class="fw-light text-muted"
-                @click="
-          selected = option;
-          open = false;
-          $emit('change', option);
-        ">
+                @click="setOption(option)">
                 {{ option }}
             </div>
         </div>
@@ -51,6 +47,16 @@ export default class CustomSelect extends Vue {
     created() {
         this.selected = this.defaultValue ? this.defaultValue : this.options.length > 0 ? this.options[0] : null;
         this.$emit("change", this.selected);
+    }
+
+    private onSelectClick() {
+        this.open = !this.open;
+    }
+
+    private setOption(option: string) {
+        this.selected = option;
+        this.open = false;
+        this.$emit("change", option);
     }
 
 
