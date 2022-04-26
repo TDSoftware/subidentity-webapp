@@ -2,14 +2,14 @@
     <div :tabindex="tabindex" class="custom-select" @blur="open = false">
         <span class="icon fw-light text-muted">$</span>
         <div :class="{ open: open }" class="selected fw-light text-muted" @click="onSelectClick">
-            {{ selected }}
+            {{ selected.displayValue }}
         </div>
         <div :class="{ selectHide: !open }" class="items">
             <div
                 v-for="(option, i) of options"
                 :key="i"
                 class="fw-light text-muted"
-                @click="setOption(option.displayValue)">
+                @click="setOption(option)">
                 {{ option.displayValue }}
             </div>
         </div>
@@ -18,6 +18,7 @@
 
 <script lang="ts">
 import {Options, Vue} from "vue-class-component";
+import {ChainOption} from "@/interfaces/ChainOptions";
 
 @Options({
     name: "CustomSelect",
@@ -25,11 +26,6 @@ import {Options, Vue} from "vue-class-component";
         options: {
             type: Array,
             required: true
-        },
-        defaultValue: {
-            type: String,
-            required: false,
-            default: null
         },
         tabindex: {
             type: Number,
@@ -39,24 +35,26 @@ import {Options, Vue} from "vue-class-component";
     }
 })
 export default class CustomSelect extends Vue {
-    private defaultValue!: string;
-    private options!: Array<string>;
-    private selected: string | null = "";
+    private options!: Array<ChainOption>;
+    private selected: ChainOption | null = {
+        key: "",
+        displayValue: ""
+    };
     private open = false;
 
     created() {
-        this.selected = this.defaultValue ? this.defaultValue : this.options.length > 0 ? this.options[0] : null;
-        this.$emit("change", this.selected);
+        this.selected = this.options.length > 0 ? this.options[0] : null;
+        this.$emit("change", this.selected?.key);
     }
 
     private onSelectClick() {
         this.open = !this.open;
     }
 
-    private setOption(option: string) {
+    private setOption(option: ChainOption) {
         this.selected = option;
         this.open = false;
-        this.$emit("change", option);
+        this.$emit("change", this.selected?.key);
     }
 
 

@@ -14,7 +14,6 @@
                 </div>
                 <div class="col-md-4 border-end p-2">
                     <CustomSelect
-                        :default-value="'All Chains'"
                         :options="chainOptions"
                         class="select"
                         @change="onChainSelectChanged"
