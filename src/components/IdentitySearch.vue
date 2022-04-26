@@ -17,7 +17,7 @@
                         :default-value="'All Chains'"
                         :options="['All Chains','In Polkadot', 'Kusama']"
                         class="select"
-                        @change="onSelectedChange"
+                        @change="onChainSelectChanged"
                     />
                 </div>
                 <div class="col-md-2 d-grid mx-auto">
@@ -42,7 +42,7 @@ export default class IdentitySearch extends Vue {
     private searchTerm = "";
     private selectedChain = "";
 
-    private onSelectedChange(selected: string) {
+    private onChainSelectChanged(selected: string) {
         this.selectedChain = selected;
     }
 
