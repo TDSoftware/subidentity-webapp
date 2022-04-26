@@ -3,7 +3,7 @@
         <Logo/>
     </div>
     <div class="pt-5">
-        <SearchIdentities/>
+        <IdentitySearch/>
     </div>
 
 </template>
@@ -11,12 +11,12 @@
 <script lang="ts">
 import {Options, Vue} from "vue-class-component";
 import Logo from "@/components/partials/Logo.vue";
-import SearchIdentities from "@/components/SearchIdentities.vue";
+import IdentitySearch from "@/components/IdentitySearch.vue";
 
 @Options({
     components: {
         Logo,
-        SearchIdentities
+        IdentitySearch
     }
 })
 export default class SearchView extends Vue {

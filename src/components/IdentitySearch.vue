@@ -37,7 +37,7 @@ import CustomSelect from "@/components/partials/CustomSelect.vue";
         CustomSelect
     }
 })
-export default class SearchIdentities extends Vue {
+export default class IdentitySearch extends Vue {
 
     searchTerm = "";
     selectedChain = "";
