@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="onSubmitSearchIdentity">
+    <form @submit.prevent="onSubmitIdentitySearch">
         <div class="bg-white text-dark container-medium rounded">
             <div class="row align-items-center">
                 <div class="col-md-6 border-end p-2">
@@ -21,7 +21,7 @@
                     />
                 </div>
                 <div class="col-md-2 d-grid mx-auto">
-                    <button class="btn btn-primary fw-normal text-white " type="button">SEARCH</button>
+                    <button class="btn btn-primary fw-normal text-white " type="submit">SEARCH</button>
                 </div>
             </div>
         </div>
@@ -46,7 +46,7 @@ export default class IdentitySearch extends Vue {
         this.selectedChain = selected;
     }
 
-    private onSubmitSearchIdentity() {
+    private onSubmitIdentitySearch() {
         //search identity logic goes here
     }
 
