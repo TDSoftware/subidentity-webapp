@@ -15,7 +15,7 @@
                 <div class="col-md-4 border-end p-2">
                     <CustomSelect
                         :default-value="'All Chains'"
-                        :options="['All Chains','In Polkadot', 'Kusama']"
+                        :options="chainOptions"
                         class="select"
                         @change="onChainSelectChanged"
                     />
@@ -41,6 +41,20 @@ export default class IdentitySearch extends Vue {
 
     private searchTerm = "";
     private selectedChain = "";
+    private chainOptions = [
+        {
+            key: "all",
+            displayValue: "All Chains"
+        },
+        {
+            key: "polkadot",
+            displayValue: "In Polkadot"
+        },
+        {
+            key: "kusama",
+            displayValue: "In Kusama"
+        }
+    ]
 
     private onChainSelectChanged(selected: string) {
         this.selectedChain = selected;

@@ -9,8 +9,8 @@
                 v-for="(option, i) of options"
                 :key="i"
                 class="fw-light text-muted"
-                @click="setOption(option)">
-                {{ option }}
+                @click="setOption(option.displayValue)">
+                {{ option.displayValue }}
             </div>
         </div>
     </div>
