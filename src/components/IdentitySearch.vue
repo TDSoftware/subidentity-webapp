@@ -62,8 +62,8 @@ export default class IdentitySearch extends Vue {
     ]
 
     onSubmitIdentitySearch() {
-        console.log("im called by test");
-        this.store.dispatch("searchIdentities");
+        this.store.state.isAuthenticated = true;
+        this.store.dispatch("yeah");
     }
 
     private onChainSelectChanged(selected: string) {

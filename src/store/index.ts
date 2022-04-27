@@ -13,7 +13,7 @@ export const useStore = () => {
 
 export const store = createStore({
     state: {
-        isAuthenticated: true
+        isAuthenticated: false
     },
     getters: {},
     mutations: {
