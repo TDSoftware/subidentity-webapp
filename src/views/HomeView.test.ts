@@ -1,6 +1,6 @@
 import {mount} from "@vue/test-utils";
 import router from "@/router";
-import store from "@/store";
+import {store} from "@/store";
 import HomeView from "@/views/SearchView.vue";
 
 describe("AmazingButton.vue", () => {

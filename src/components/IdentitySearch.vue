@@ -20,7 +20,11 @@
                     />
                 </div>
                 <div class="col-md-2 d-grid mx-auto">
-                    <button class="btn btn-primary fw-normal text-white " type="submit">SEARCH</button>
+                    <button ref="searchButton"
+                            class="btn btn-primary fw-normal text-white"
+                            type="submit">
+                        SEARCH
+                    </button>
                 </div>
             </div>
         </div>
@@ -30,6 +34,8 @@
 <script lang="ts">
 import {Options, Vue} from "vue-class-component";
 import CustomSelect from "@/components/partials/CustomSelect.vue";
+import {useStore} from "../store";
+
 
 @Options({
     components: {
@@ -37,7 +43,7 @@ import CustomSelect from "@/components/partials/CustomSelect.vue";
     }
 })
 export default class IdentitySearch extends Vue {
-
+    store = useStore();
     private searchTerm = "";
     private selectedChain = "";
     private chainOptions = [
@@ -55,12 +61,13 @@ export default class IdentitySearch extends Vue {
         }
     ]
 
-    private onChainSelectChanged(selected: string) {
-        this.selectedChain = selected;
+    onSubmitIdentitySearch() {
+        console.log("im called by test");
+        this.store.dispatch("searchIdentities");
     }
 
-    private onSubmitIdentitySearch() {
-        //search identity logic goes here
+    private onChainSelectChanged(selected: string) {
+        this.selectedChain = selected;
     }
 
 }

@@ -1,12 +1,19 @@
-import { createStore } from "vuex";
+import {InjectionKey} from "vue";
+import {createStore, useStore as baseUseStore, Store} from "vuex";
 
 export interface StoreI {
     isAuthenticated: boolean;
 }
 
-export default createStore({
+export const key: InjectionKey<Store<StoreI>> = Symbol();
+
+export const useStore = () => {
+    return baseUseStore(key);
+};
+
+export const store = createStore({
     state: {
-        isAuthenticated: false
+        isAuthenticated: true
     },
     getters: {},
     mutations: {
@@ -17,6 +24,12 @@ export default createStore({
             state.isAuthenticated = false;
         }
     },
-    actions: {},
+    actions: {
+        searchIdentities() {
+            // search identities logic
+            console.error("real store called");
+        }
+    },
     modules: {}
 });
+
