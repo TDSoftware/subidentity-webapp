@@ -43,9 +43,11 @@ import {useStore} from "../store";
     }
 })
 export default class IdentitySearch extends Vue {
+
     store = useStore();
+
     private searchTerm = "";
-    private selectedChain = "";
+    private selectedChainKey = "";
     private chainOptions = [
         {
             key: "all",
@@ -61,13 +63,15 @@ export default class IdentitySearch extends Vue {
         }
     ]
 
-    onSubmitIdentitySearch() {
-        this.store.state.isAuthenticated = true;
-        this.store.dispatch("yeah");
+    private onSubmitIdentitySearch() {
+        this.store.dispatch("SEARCH_IDENDITIES", {
+            searchTerm: this.searchTerm,
+            selectedChainKey: this.selectedChainKey
+        });
     }
 
-    private onChainSelectChanged(selected: string) {
-        this.selectedChain = selected;
+    private onChainSelectChanged(selectedChainKey: string) {
+        this.selectedChainKey = selectedChainKey;
     }
 
 }

@@ -1,5 +1,5 @@
-import {InjectionKey} from "vue";
-import {createStore, useStore as baseUseStore, Store} from "vuex";
+import { InjectionKey } from "vue";
+import { createStore, useStore as baseUseStore, Store } from "vuex";
 
 export interface StoreI {
     isAuthenticated: boolean;
@@ -25,9 +25,8 @@ export const store = createStore({
         }
     },
     actions: {
-        searchIdentities() {
-            // search identities logic
-            console.error("real store called");
+        SEARCH_IDENDITIES(...args) {
+            console.warn("[store/index] TODO: Implement SEARCH_IDENDITIES", args);
         }
     },
     modules: {}
