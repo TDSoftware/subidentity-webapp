@@ -1,8 +1,8 @@
 <template>
-  <div class="subidentity-container">
-    <router-view/>
-  </div>
-  <Footer/>
+    <div class="subidentity-container has-bg-image">
+        <router-view/>
+    </div>
+    <Footer/>
 </template>
 
 <script lang="ts">
@@ -18,13 +18,13 @@ export default class DefaultLayout extends Vue {
 
 }
 </script>
-<style scoped>
-.subidentity-container {
-  background-image: url("../../assets/logo-blurr.png"), url("../../assets/mainbg.png");
-  background-position: top center;
-  background-repeat: no-repeat, no-repeat;
-  background-size: 700px, cover;
-  height: 93.6vh;
-
+<style lang="scss" scoped>
+.has-bg-image {
+    min-height: calc(100vh - 64px);
+    background-color: white;
+    background-image: url("../../assets/logo-blurr.png"), url("../../assets/mainbg.png");
+    background-position: top center;
+    background-repeat: no-repeat, no-repeat;
+    background-size: 700px, 100% auto;
 }
 </style>
