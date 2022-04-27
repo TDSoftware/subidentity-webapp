@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-md-2 d-grid mx-auto">
                     <button ref="searchButton"
-                            :disabled="!searchTerm || !selectedChain"
+                            :disabled="!searchTerm"
                             class="btn btn-primary fw-normal text-white"
                             type="submit">
                         SEARCH
@@ -37,7 +37,6 @@ import {Options, Vue} from "vue-class-component";
 import CustomSelect from "@/components/partials/CustomSelect.vue";
 import {useStore} from "../store";
 
-
 @Options({
     components: {
         CustomSelect
@@ -45,8 +44,8 @@ import {useStore} from "../store";
 })
 export default class IdentitySearch extends Vue {
     store = useStore();
-    private searchTerm = "";
-    private selectedChain = "";
+    searchTerm = "";
+    selectedChainKey = "";
     private chainOptions = [
         {
             key: "all",
@@ -62,13 +61,15 @@ export default class IdentitySearch extends Vue {
         }
     ]
 
-    onSubmitIdentitySearch() {
-        this.store.dispatch("searchIdentities");
+    private onSubmitIdentitySearch() {
+        this.store.dispatch("SEARCH_IDENDITIES", {
+            searchTerm: this.searchTerm,
+            selectedChainKey: this.selectedChainKey
+        });
     }
 
-    private onChainSelectChanged(selected: string) {
-        this.selectedChain = selected;
+    private onChainSelectChanged(selectedChainKey: string) {
+        this.selectedChainKey = selectedChainKey;
     }
-
 }
 </script>
