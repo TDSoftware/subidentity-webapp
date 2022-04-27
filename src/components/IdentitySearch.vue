@@ -21,6 +21,7 @@
                 </div>
                 <div class="col-md-2 d-grid mx-auto">
                     <button ref="searchButton"
+                            :disabled="!searchTerm || !selectedChain"
                             class="btn btn-primary fw-normal text-white"
                             type="submit">
                         SEARCH
