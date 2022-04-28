@@ -2,13 +2,14 @@
     <div :tabindex="tabindex" class="custom-select" @blur="open = false">
         <span class="icon fw-light text-muted">$</span>
         <div :class="{ open: open }" class="selected fw-light text-muted" @click="onSelectClick">
-            {{ selected.displayValue }}
+            {{ selected?.displayValue }}
         </div>
         <div :class="{ selectHide: !open }" class="items">
             <div
                 v-for="(option, i) of options"
                 :key="i"
-                class="fw-light text-muted"
+                ref="select-option"
+                class="select-option fw-light text-muted"
                 @click="setOption(option)">
                 {{ option.displayValue }}
             </div>

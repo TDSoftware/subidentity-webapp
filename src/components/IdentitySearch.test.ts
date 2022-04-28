@@ -1,4 +1,4 @@
-import {mount, VueWrapper} from "@vue/test-utils";
+import {mount} from "@vue/test-utils";
 import IdentitySearch from "@/components/IdentitySearch.vue";
 import {key, store} from "@/store";
 
