@@ -25,9 +25,8 @@ export const store = createStore({
         }
     },
     actions: {
-        searchIdentities() {
-            // search identities logic
-            console.error("real store called");
+        SEARCH_IDENDITIES() {
+            // TODO search identities store logic
         }
     },
     modules: {}

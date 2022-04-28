@@ -36,21 +36,25 @@
 import {Options, Vue} from "vue-class-component";
 import CustomSelect from "@/components/partials/CustomSelect.vue";
 import {useStore} from "../store";
+import {RecentSearchHistory} from "@/interfaces/RecentSearchHistory";
 
 @Options({
     components: {
         CustomSelect
+    },
+    prop: {
+        recentSearches: {
+            type: Array
+        }
     }
 })
 export default class IdentitySearch extends Vue {
     store = useStore();
     searchTerm = "";
     selectedChainKey = "";
+    recentSearches: Array<RecentSearchHistory> = [];
+
     private chainOptions = [
-        {
-            key: "all",
-            displayValue: "All Chains"
-        },
         {
             key: "polkadot",
             displayValue: "In Polkadot"
@@ -61,11 +65,22 @@ export default class IdentitySearch extends Vue {
         }
     ]
 
+
+    // TODO -- add change listener for an accurate search history
     private onSubmitIdentitySearch() {
         this.store.dispatch("SEARCH_IDENDITIES", {
             searchTerm: this.searchTerm,
             selectedChainKey: this.selectedChainKey
         });
+        const recentSearchHistory = {
+            id: window.crypto.getRandomValues(new Uint32Array(1))[0].toString(16),
+            chainName: this.selectedChainKey,
+            searchTerm: this.searchTerm,
+            searchResult: 23,
+            dateOfSearch: new Date().toUTCString()
+        };
+        this.recentSearches.push(recentSearchHistory);
+        window.localStorage.setItem("recentSearchHistory", JSON.stringify(this.recentSearches));
     }
 
     private onChainSelectChanged(selectedChainKey: string) {
