@@ -48,10 +48,6 @@ export default class IdentitySearch extends Vue {
     selectedChainKey = "";
     private chainOptions = [
         {
-            key: "all",
-            displayValue: "All Chains"
-        },
-        {
             key: "polkadot",
             displayValue: "In Polkadot"
         },
