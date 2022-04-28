@@ -19,8 +19,10 @@ export default class DefaultLayout extends Vue {
 }
 </script>
 <style lang="scss" scoped>
+@import "../../styles/variables.scss";
+
 .has-bg-image {
-    min-height: calc(100vh - 64px);
+    min-height: calc(100vh - $footerHeight);
     background-color: white;
     background-image: url("../../assets/logo-blurr.png"), url("../../assets/mainbg.png");
     background-position: top center;

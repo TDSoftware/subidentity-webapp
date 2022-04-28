@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="onSubmitSearchIdentity">
+    <form @submit.prevent="onSubmitIdentitySearch">
         <div class="bg-white text-dark container-medium rounded">
             <div class="row align-items-center">
                 <div class="col-md-6 border-end p-2">
@@ -14,14 +14,18 @@
                 </div>
                 <div class="col-md-4 border-end p-2">
                     <CustomSelect
-                        :default-value="'All Chains'"
-                        :options="['All Chains','In Polkadot', 'Kusama']"
+                        :options="chainOptions"
                         class="select"
-                        @change="onSelectedChange"
+                        @change="onChainSelectChanged"
                     />
                 </div>
                 <div class="col-md-2 d-grid mx-auto">
-                    <button class="btn btn-primary fw-normal text-white " type="button">SEARCH</button>
+                    <button ref="searchButton"
+                            :disabled="!searchTerm"
+                            class="btn btn-primary fw-normal text-white"
+                            type="submit">
+                        SEARCH
+                    </button>
                 </div>
             </div>
         </div>
@@ -31,24 +35,37 @@
 <script lang="ts">
 import {Options, Vue} from "vue-class-component";
 import CustomSelect from "@/components/partials/CustomSelect.vue";
+import {useStore} from "../store";
 
 @Options({
     components: {
         CustomSelect
     }
 })
-export default class SearchIdentities extends Vue {
-
+export default class IdentitySearch extends Vue {
+    store = useStore();
     searchTerm = "";
-    selectedChain = "";
+    selectedChainKey = "";
+    private chainOptions = [
+        {
+            key: "polkadot",
+            displayValue: "In Polkadot"
+        },
+        {
+            key: "kusama",
+            displayValue: "In Kusama"
+        }
+    ]
 
-    onSelectedChange(selected: string) {
-        this.selectedChain = selected;
+    private onSubmitIdentitySearch() {
+        this.store.dispatch("SEARCH_IDENDITIES", {
+            searchTerm: this.searchTerm,
+            selectedChainKey: this.selectedChainKey
+        });
     }
 
-    onSubmitSearchIdentity() {
-        //search identity logic goes here
+    private onChainSelectChanged(selectedChainKey: string) {
+        this.selectedChainKey = selectedChainKey;
     }
-
 }
 </script>
