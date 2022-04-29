@@ -3,9 +3,9 @@
         <Logo/>
     </div>
     <div class="pt-5">
-        <IdentitySearch :recentSearches="recentSearches"/>
+        <IdentitySearch/>
     </div>
-    <div v-if="recentSearches" ref="recentSearch" class="subidentity-container mt-5 pb-5 bg-white">
+    <div v-if="recentSearches.length!==0" ref="recentSearch" class="subidentity-container mt-5 pb-5 bg-white">
         <div class="container-medium pt-5 p-0">
             <p class="h4">Recent Searches</p>
         </div>
@@ -20,6 +20,7 @@ import Logo from "@/components/partials/Logo.vue";
 import IdentitySearch from "@/components/IdentitySearch.vue";
 import RecentSearch from "@/components/partials/RecentSearch.vue";
 import {RecentSearchHistory} from "@/interfaces/RecentSearchHistory";
+import {get} from "@/utill/storage";
 
 
 @Options({
@@ -34,13 +35,10 @@ export default class SearchView extends Vue {
     recentSearches: Array<RecentSearchHistory> = [];
 
     created() {
-        const recentSearchHistory = window.localStorage.getItem("recentSearchHistory");
-        if (recentSearchHistory) {
-            const recentSearch = JSON.parse(recentSearchHistory);
-            recentSearch.forEach((el: RecentSearchHistory) => {
-                this.recentSearches.push(el);
-            });
-        }
+        const recentSearchHistory: RecentSearchHistory[] | undefined = get("recentSearchHistory");
+        recentSearchHistory?.forEach((el: RecentSearchHistory) => {
+            this.recentSearches.push(el);
+        });
     }
 }
 </script>

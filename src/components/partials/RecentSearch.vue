@@ -12,6 +12,7 @@
                             <span class="badge bg-light mx-3">
                                  <span class="fw-light text-muted">$</span>
                                 {{ recentSearch.chainName }}</span>
+                            <!-- TODO calculate time  -->
                             <div class="ms-auto fw-light text-muted">12 hours ago</div>
                         </div>
                         <p class="h6">{{ recentSearch.searchTerm }}</p>
