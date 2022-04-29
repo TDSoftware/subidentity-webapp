@@ -10,4 +10,9 @@ $input-focus-border-color: #fff;
 $form-select-focus-border-color: #fff;
 $form-select-focus-box-shadow: none;
 
-$footerHeight: 64px;
+$footerHeight: 73px;
+
+// BreakPoint for indicating mobile/desktop screen
+:root {
+  --breakPoint: 920px;
+}
