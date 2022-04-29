@@ -7,12 +7,19 @@
 </template>
 
 <script lang="ts">
-    import {Component, Prop, Vue} from "vue-property-decorator";
+import {Options, Vue} from "vue-class-component";
 
-@Component
-    export default class TDSModal extends Vue {
-  @Prop({type: Boolean, required: true}) open!: boolean;
+@Options({
+    props: {
+        open: {
+            type: Boolean,
+            required: true
+        }
     }
+})
+export default class MobileMenuButton extends Vue {
+  private open!: boolean;
+}
 </script>
 
 <style lang="scss" scoped>
