@@ -1,6 +1,6 @@
 <template>
     <form @submit.prevent="onSubmitIdentitySearch">
-        <div class="bg-white text-dark container-medium rounded">
+        <div class="bg-white text-dark rounded" :class="{'container-medium': !isMobileScreen}">
             <div class="row align-items-center">
                 <div class="col-md-6 border-end p-2">
                     <div class="input-group">
@@ -46,6 +46,11 @@ export default class IdentitySearch extends Vue {
     store = useStore();
     searchTerm = "";
     selectedChainKey = "";
+
+    get isMobileScreen() {
+        return this.store.state.isMobileScreen;
+    }
+
     private chainOptions = [
         {
             key: "polkadot",
