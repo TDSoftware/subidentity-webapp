@@ -2,7 +2,7 @@
     <form @submit.prevent="onSubmitIdentitySearch">
         <div class="bg-white text-dark container-medium rounded">
             <div class="row align-items-center">
-                <div class="col-md-6 border-end p-2">
+                <div class="col-md-6 p-2">
                     <div class="input-group">
                         <span class="input-group-text fw-light text-muted">$</span>
                         <input v-model="searchTerm"
@@ -12,7 +12,7 @@
                     </div>
 
                 </div>
-                <div class="col-md-4 border-end p-2">
+                <div class="col-md-4 border-start border-end p-2">
                     <CustomSelect
                         :options="chainOptions"
                         class="select"
