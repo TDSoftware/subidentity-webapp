@@ -9,7 +9,7 @@
                     <div class="card-body">
                         <div class="d-flex mb-3">
                             <span class="fw-light text-muted">$</span>
-                            <span class="badge bg-light mx-3">
+                            <span class="badge text-capitalize bg-light mx-3">
                                  <span class="fw-light text-muted">$</span>
                                 {{ recentSearch.chainName }}</span>
                             <div class="ms-auto fw-light text-muted">{{timeAgo(recentSearch.searchDate)}}</div>
