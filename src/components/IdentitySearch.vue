@@ -37,7 +37,7 @@ import {Options, Vue} from "vue-class-component";
 import CustomSelect from "@/components/partials/CustomSelect.vue";
 import {useStore} from "../store";
 import {RecentSearchHistory} from "@/interfaces/RecentSearchHistory";
-import {set, get} from "@/utill/storage";
+import {set, get} from "@/util/storage";
 
 
 @Options({
@@ -49,6 +49,8 @@ export default class IdentitySearch extends Vue {
     store = useStore();
     searchTerm = "";
     selectedChainKey = "";
+    searchResult = 23;
+    searchDate = new Date().toUTCString()
 
     private chainOptions = [
         {
@@ -62,27 +64,30 @@ export default class IdentitySearch extends Vue {
     ]
 
 
-    private onSubmitIdentitySearch() {
-        this.store.dispatch("SEARCH_IDENDITIES", {
-            searchTerm: this.searchTerm,
-            selectedChainKey: this.selectedChainKey
-        });
+    saveRecentSearchToLocalStorage() {
         const recentSearchHistory = {
-            id: window.crypto.getRandomValues(new Uint32Array(1))[0].toString(16),
             chainName: this.selectedChainKey,
             searchTerm: this.searchTerm,
-            searchResult: 23,
-            dateOfSearch: new Date().toUTCString()
+            searchResult: this.searchResult,
+            searchDate: this.searchDate
         };
-
         const fetchedRecentSearchHistory = get<RecentSearchHistory[] | undefined>("recentSearchHistory") || [];
 
         if (fetchedRecentSearchHistory.length === 3) {
             fetchedRecentSearchHistory.shift();
         }
-
         fetchedRecentSearchHistory.push(recentSearchHistory);
         set("recentSearchHistory", fetchedRecentSearchHistory);
+    }
+
+
+    private onSubmitIdentitySearch() {
+        this.store.dispatch("SEARCH_IDENDITIES", {
+            searchTerm: this.searchTerm,
+            selectedChainKey: this.selectedChainKey
+        });
+
+        this.saveRecentSearchToLocalStorage();
     }
 
     private onChainSelectChanged(selectedChainKey: string) {

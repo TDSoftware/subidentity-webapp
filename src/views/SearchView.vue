@@ -20,7 +20,7 @@ import Logo from "@/components/partials/Logo.vue";
 import IdentitySearch from "@/components/IdentitySearch.vue";
 import RecentSearch from "@/components/partials/RecentSearch.vue";
 import {RecentSearchHistory} from "@/interfaces/RecentSearchHistory";
-import {get} from "@/utill/storage";
+import {get} from "@/util/storage";
 
 
 @Options({
@@ -34,11 +34,13 @@ export default class SearchView extends Vue {
 
     recentSearches: Array<RecentSearchHistory> = [];
 
+
+    getRecentSearchHistory() {
+        this.recentSearches = get<RecentSearchHistory[] | undefined>("recentSearchHistory") || [];
+    }
+
     created() {
-        const recentSearchHistory: RecentSearchHistory[] | undefined = get("recentSearchHistory");
-        recentSearchHistory?.forEach((el: RecentSearchHistory) => {
-            this.recentSearches.push(el);
-        });
+        this.getRecentSearchHistory();
     }
 }
 </script>
