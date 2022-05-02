@@ -12,8 +12,7 @@
                             <span class="badge bg-light mx-3">
                                  <span class="fw-light text-muted">$</span>
                                 {{ recentSearch.chainName }}</span>
-                            <!-- TODO calculate time  -->
-                            <div class="ms-auto fw-light text-muted">12 hours ago</div>
+                            <div class="ms-auto fw-light text-muted">{{timeAgo(recentSearch.searchDate)}}</div>
                         </div>
                         <p class="h6">{{ recentSearch.searchTerm }}</p>
                         <a class="text-decoration-none link-primary" href="#">{{ recentSearch.searchResult }}</a>
@@ -26,6 +25,7 @@
 
 <script lang="ts">
 import {Options, Vue} from "vue-class-component";
+import {timeBetween} from "@/util/timeAgo";
 
 @Options({
     props: {
@@ -35,6 +35,11 @@ import {Options, Vue} from "vue-class-component";
         }
     }
 })
-export default class RecentSearchHistory extends Vue {
+export default class RecentSearch extends Vue {
+
+    timeAgo(searchDate: string){
+        return timeBetween(new Date(searchDate), new Date());
+    }
+
 }
 </script>
