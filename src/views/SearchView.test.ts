@@ -1,6 +1,6 @@
 import {shallowMount} from "@vue/test-utils";
 import SearchView from "@/views/SearchView.vue";
-import {get, set} from "@/util/storage";
+import {get} from "@/util/storage";
 
 jest.mock("@/util/storage");
 import {mocked} from "jest-mock";

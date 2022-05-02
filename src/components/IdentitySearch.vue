@@ -82,7 +82,7 @@ export default class IdentitySearch extends Vue {
 
 
     private onSubmitIdentitySearch() {
-        this.store.dispatch("SEARCH_IDENDITIES", {
+        this.store.dispatch("SEARCH_IDENTITIES", {
             searchTerm: this.searchTerm,
             selectedChainKey: this.selectedChainKey
         });

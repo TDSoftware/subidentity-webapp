@@ -12,7 +12,7 @@ const mockedSet = mocked(set);
 
 describe("IdentitySearch.vue", () => {
     describe("when search button is disabled", () => {
-        it("should not dispatch SEARCH_IDENDITIES action", async () => {
+        it("should not dispatch SEARCH_IDENTITIES action", async () => {
             // mound the component and get the real store instance
             const wrapper = mount(IdentitySearch, {
                 global: {
@@ -51,7 +51,7 @@ describe("IdentitySearch.vue", () => {
         });
 
 
-        it("should dispatch SEARCH_IDENDITIES action", async () => {
+        it("should dispatch SEARCH_IDENTITIES action", async () => {
             // Overwriting a method with a dummy (here the store dispatch)
             // On one hand this allows us to check if the function gets called
             // on the other hand we avoid, that e.g. the real store action (HTTP request or so) is triggered
@@ -63,7 +63,7 @@ describe("IdentitySearch.vue", () => {
             await wrapper.vm.$nextTick();
             await searchButton.trigger("click");
 
-            // This would works always but isn't that nice.
+            // This would work always but isn't that nice.
             // We want our unit test to have an input and output: this time input is the click
             // event by the user and the output is the store method to be called.
             // await wrapper.find("form").trigger("submit");
@@ -81,7 +81,7 @@ describe("IdentitySearch.vue", () => {
             await searchButton.trigger("click");
 
             expect(wrapper.vm.store.dispatch).toBeCalledWith(
-                "SEARCH_IDENDITIES",
+                "SEARCH_IDENTITIES",
                 {
                     searchTerm: "test",
                     selectedChainKey: "polkadot"
@@ -122,7 +122,7 @@ describe("IdentitySearch.vue", () => {
                     searchResult: 23,
                     searchDate: "2022-05-01T03:54:55+0000"
                 }]);
-                
+
                 wrapper.vm.searchTerm = "search_term3";
                 wrapper.vm.selectedChainKey = "polkadot";
                 wrapper.vm.searchResult = 23;
