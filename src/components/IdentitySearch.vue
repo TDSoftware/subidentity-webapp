@@ -36,6 +36,9 @@
 import {Options, Vue} from "vue-class-component";
 import CustomSelect from "@/components/partials/CustomSelect.vue";
 import {useStore} from "../store";
+import {RecentSearchHistory} from "@/interfaces/RecentSearchHistory";
+import {set, get} from "@/util/storage";
+
 
 @Options({
     components: {
@@ -46,6 +49,9 @@ export default class IdentitySearch extends Vue {
     store = useStore();
     searchTerm = "";
     selectedChainKey = "";
+    searchResult = 23;
+    searchDate = new Date().toUTCString()
+
     private chainOptions = [
         {
             key: "polkadot",
@@ -57,11 +63,31 @@ export default class IdentitySearch extends Vue {
         }
     ]
 
+
+    saveRecentSearchToLocalStorage() {
+        const recentSearchHistory = {
+            chainName: this.selectedChainKey,
+            searchTerm: this.searchTerm,
+            searchResult: this.searchResult,
+            searchDate: this.searchDate
+        };
+        const fetchedRecentSearchHistory = get<RecentSearchHistory[] | undefined>("recentSearchHistory") || [];
+
+        if (fetchedRecentSearchHistory.length === 3) {
+            fetchedRecentSearchHistory.shift();
+        }
+        fetchedRecentSearchHistory.push(recentSearchHistory);
+        set("recentSearchHistory", fetchedRecentSearchHistory);
+    }
+
+
     private onSubmitIdentitySearch() {
-        this.store.dispatch("SEARCH_IDENDITIES", {
+        this.store.dispatch("SEARCH_IDENTITIES", {
             searchTerm: this.searchTerm,
             selectedChainKey: this.selectedChainKey
         });
+
+        this.saveRecentSearchToLocalStorage();
     }
 
     private onChainSelectChanged(selectedChainKey: string) {
