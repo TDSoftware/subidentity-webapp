@@ -25,7 +25,7 @@ export const store = createStore({
         }
     },
     actions: {
-        SEARCH_IDENDITIES() {
+        SEARCH_IDENTITIES() {
             // TODO search identities store logic
         }
     },
