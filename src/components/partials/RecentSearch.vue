@@ -8,14 +8,19 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex mb-3">
-                            <span class="fw-light text-muted">$</span>
-                            <span class="badge bg-light mx-3">
-                                 <span class="fw-light text-muted">$</span>
-                                {{ recentSearch.chainName }}</span>
+                            <span class="fw-light text-muted pt-1">
+                             <ion-icon class="fw-light text-muted" name="search-outline"></ion-icon>
+                             </span>
+                            <div class="d-flex flex-row badge text-capitalize bg-light mx-2">
+                                  <div class="fw-light text-muted">
+                                         <ion-icon size="small" class="fw-light text-muted" name="git-network-outline"></ion-icon>
+                                     </div>
+                                <div class="mx-2">{{ recentSearch.chainName }}</div>
+                                </div>
                             <div class="ms-auto fw-light text-muted">{{timeAgo(recentSearch.searchDate)}}</div>
                         </div>
                         <p class="h6">{{ recentSearch.searchTerm }}</p>
-                        <a class="text-decoration-none link-primary" href="#">{{ recentSearch.searchResult }}</a>
+                        <a class="text-decoration-none link-primary" href="#">{{ recentSearch.searchResult }} results</a>
                     </div>
                 </div>
             </div>

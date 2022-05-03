@@ -1,6 +1,8 @@
 <template>
     <div :tabindex="tabindex" class="custom-select" @blur="open = false">
-        <span class="icon fw-light text-muted">$</span>
+        <span class="icon fw-light text-muted">
+            <ion-icon class="fw-light text-muted" name="git-network-outline"></ion-icon>
+        </span>
         <div :class="{ open: open }" class="selected fw-light text-muted" @click="onSelectClick">
             {{ selected?.displayValue }}
         </div>
@@ -9,7 +11,7 @@
                 v-for="(option, i) of options"
                 :key="i"
                 ref="select-option"
-                class="select-option fw-light text-muted"
+                class="select-option fw-light text-body"
                 @click="setOption(option)">
                 {{ option.displayValue }}
             </div>
@@ -76,9 +78,10 @@ export default class CustomSelect extends Vue {
         border-radius: 6px;
         border: 1px solid #fff;
         color: #000;
-        padding-left: 3em;
+        padding-left: 3.5em;
         cursor: pointer;
         user-select: none;
+    
 
         &.open {
             border: 1px solid #fff;
@@ -89,7 +92,7 @@ export default class CustomSelect extends Vue {
             border-right: 1px solid #707070;
             position: absolute;
             content: "";
-            top: 25px;
+            top: 23px;
             right: 1em;
             width: 10px;
             height: 10px;
@@ -101,7 +104,7 @@ export default class CustomSelect extends Vue {
     .icon {
         position: absolute;
         content: "";
-        top: 2px;
+        top: 14%;
         left: 5%;
     }
 
