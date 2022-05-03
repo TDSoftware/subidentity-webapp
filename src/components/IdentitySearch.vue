@@ -2,17 +2,19 @@
     <form @submit.prevent="onSubmitIdentitySearch">
         <div class="bg-white text-dark container-medium rounded">
             <div class="row align-items-center">
-                <div class="col-md-6 border-end p-2">
+                <div class="col-md-6 p-2">
                     <div class="input-group">
-                        <span class="input-group-text fw-light text-muted">$</span>
+                        <span class="input-group-text fw-light text-muted">
+                            <ion-icon class="fw-light text-muted" name="search-outline"></ion-icon>
+                        </span>
                         <input v-model="searchTerm"
                                class="form-control fw-light text-muted"
                                placeholder="Search for a Name, E-Mail, Address"
-                               type="text">
+                               type="text"/>
                     </div>
 
                 </div>
-                <div class="col-md-4 border-end p-2">
+                <div class="col-md-4 border-start border-end p-2">
                     <CustomSelect
                         :options="chainOptions"
                         class="select"
@@ -95,3 +97,8 @@ export default class IdentitySearch extends Vue {
     }
 }
 </script>
+<style>
+ion-icon {
+  font-size: 21px;
+}
+</style>

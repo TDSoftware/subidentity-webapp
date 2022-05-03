@@ -9,7 +9,7 @@
         <div class="container-medium pt-5 p-0">
             <p class="h4">Recent Searches</p>
         </div>
-        <RecentSearch :recentSearches="recentSearches" class="mb-5 pb-1 p-0"/>
+        <RecentSearch :recentSearches="recentSearches" class="mb-5 pb-2 p-0"/>
     </div>
 
 </template>
@@ -47,6 +47,6 @@ export default class SearchView extends Vue {
 
 <style lang="scss" scoped>
 .vh-50 {
-    min-height: 44vh;
+    min-height: 43vh;
 }
 </style>
