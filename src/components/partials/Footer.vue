@@ -1,21 +1,9 @@
 <template>
-  <div class="bg-secondary text-white">
+  <div class="bg-secondary">
     <div class="container-small">
-      <div class="d-flex justify-content-evenly pt-4 text-white-50">
-        <p class="">© 2022 Web Foundation</p>
-        <span>-</span>
-        <p>Imprint</p>
-        <span>-</span>
-        <p>Disclaimer</p>
-        <span>-</span>
-        <p>Privacy</p>
-        <span>-</span>
-        <p>Cookie</p>
-        <span>-</span>
-        <p>Settings</p>
+      <div class="d-flex pt-4 text-white-50">
+        <p>This project was carried out as part of the Web3Foundations grant program.</p>
       </div>
-
-
     </div>
   </div>
 </template>
