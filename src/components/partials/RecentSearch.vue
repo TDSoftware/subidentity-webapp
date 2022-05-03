@@ -17,7 +17,9 @@
                                      </div>
                                 <div class="mx-2">{{ recentSearch.chainName }}</div>
                                 </div>
-                            <div class="ms-auto fw-light text-muted">{{timeAgo(recentSearch.searchDate)}}</div>
+                            <div class="ms-auto fw-light text-muted">
+                                <TimeAgo :date="new Date(recentSearch.searchDate)"/>
+                            </div>
                         </div>
                         <p class="h6">{{ recentSearch.searchTerm }}</p>
                         <a class="text-decoration-none link-primary" href="#">{{ recentSearch.searchResult }} results</a>
@@ -30,9 +32,13 @@
 
 <script lang="ts">
 import {Options, Vue} from "vue-class-component";
-import {timeBetween} from "@/util/timeAgo";
+import {timeBetween} from "@/util/timeBetween";
+import TimeAgo from "./TimeAgo.vue";
 
 @Options({
+    components: {
+        TimeAgo
+    },
     props: {
         recentSearches: {
             type: Array,
