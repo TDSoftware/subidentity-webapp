@@ -2,11 +2,7 @@
     <form @submit.prevent="onSubmitIdentitySearch">
         <div class="bg-white shadow text-dark p-1 rounded">
             <div class="row align-items-center">
-<<<<<<< HEAD
-                <div class="col-md-6 border-end">
-=======
-                <div class="col-md-6 p-2">
->>>>>>> main
+                <div class="col-md-6 ">
                     <div class="input-group">
                         <span class="input-group-text fw-light text-muted">
                             <ion-icon class="fw-light text-muted" name="search-outline"></ion-icon>
@@ -18,7 +14,7 @@
                     </div>
 
                 </div>
-                <div class="col-md-4 border-start border-end p-2">
+                <div class="col-md-3 border-start border-end p-2">
                     <CustomSelect
                         :options="chainOptions"
                         class="select"

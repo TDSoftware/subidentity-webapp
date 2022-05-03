@@ -12,7 +12,7 @@
   <div class="subidentity-container">
     <div class="container-medium p-0">
       <p class="h4">158 Search Results for ‘Michael Müller’ in ‘Polkadot’</p>
-        <!-- list goes here -->
+        <IdentityList/>
     </div>
   </div>
 </template>
@@ -20,10 +20,12 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import IdentitySearch from "@/components/IdentitySearch.vue";
+import IdentityList from "@/components/IdentityList.vue";
 
 @Options({
     components: {
-        IdentitySearch
+        IdentitySearch,
+        IdentityList
     }
 })
 export default class SearchView extends Vue {}
