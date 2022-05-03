@@ -2,7 +2,7 @@
     <div class="logo align-items-end vh-50">
         <Logo/>
     </div>
-    <div class="pt-5">
+    <div class="pt-5 container-medium">
         <IdentitySearch/>
     </div>
     <div v-if="recentSearches.length!==0" ref="recentSearch" class="subidentity-container mt-5 pb-5 bg-white">

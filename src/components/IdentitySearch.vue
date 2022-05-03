@@ -1,8 +1,8 @@
 <template>
     <form @submit.prevent="onSubmitIdentitySearch">
-        <div class="bg-white text-dark container-medium rounded">
+        <div class="bg-white shadow text-dark p-1 rounded">
             <div class="row align-items-center">
-                <div class="col-md-6 border-end p-2">
+                <div class="col-md-6 border-end">
                     <div class="input-group">
                         <span class="input-group-text fw-light text-muted">$</span>
                         <input v-model="searchTerm"
