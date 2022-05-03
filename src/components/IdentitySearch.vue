@@ -40,6 +40,7 @@ import CustomSelect from "@/components/partials/CustomSelect.vue";
 import {useStore} from "../store";
 import {RecentSearchHistory} from "@/interfaces/RecentSearchHistory";
 import {set, get} from "@/util/storage";
+import router from "@/router";
 
 
 @Options({
@@ -79,17 +80,22 @@ export default class IdentitySearch extends Vue {
             fetchedRecentSearchHistory.shift();
         }
         fetchedRecentSearchHistory.push(recentSearchHistory);
-        set("recentSearchHistory", fetchedRecentSearchHistory);
+        set("recentSearchHistory", fetchedRecentSearchHistory);        
     }
 
 
-    private onSubmitIdentitySearch() {
-        this.store.dispatch("SEARCH_IDENTITIES", {
+    private async onSubmitIdentitySearch() {
+
+        // TODO: add a loading state here to disable the UI while we are loading the search data
+
+        await this.store.dispatch("SEARCH_IDENTITIES", {
             searchTerm: this.searchTerm,
             selectedChainKey: this.selectedChainKey
         });
 
         this.saveRecentSearchToLocalStorage();
+
+        router.push("/search");
     }
 
     private onChainSelectChanged(selectedChainKey: string) {
