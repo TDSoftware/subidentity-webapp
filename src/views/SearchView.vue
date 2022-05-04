@@ -2,7 +2,7 @@
     <div class="logo align-items-end vh-50">
         <Logo />
     </div>
-    <div class="pt-5 container-medium">
+    <div class="pt-5 p-0 container-medium">
         <IdentitySearch @search="onSearch" />
     </div>
     <div
@@ -13,7 +13,7 @@
         <div class="container-medium pt-5 p-0">
             <p class="h4">Recent Searches</p>
         </div>
-        <RecentSearch class="mb-5 pb-2 p-0" />
+        <RecentSearch class="mb-5 pb-2 p-0" @item-clicked="recallSearch" />
     </div>
 </template>
 
@@ -41,6 +41,16 @@ export default class SearchView extends Vue {
     }
 
     onSearch(searchData: SearchData<void>) {
+        router.push({
+            path: "/search",
+            query: {
+                query: searchData.searchTerm,
+                chain: searchData.selectedChainKey
+            }
+        });
+    }
+
+    recallSearch(searchData: SearchData<void>) {
         router.push({
             path: "/search",
             query: {

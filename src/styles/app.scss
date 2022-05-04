@@ -17,12 +17,16 @@ $badge-font-weight: $font-weight-normal;
 
 .container-small {
   @include make-container();
-  width: 40%;
+  width: calc(100% - 30px);
+
+  @include media-breakpoint-up(sm) {
+    width: 40%;
+  }
 }
 
 .container-medium {
   @include make-container();
-  width: 100%;
+  width: calc(100% - 30px);
 
   @include media-breakpoint-up(sm) {
     width: 70%;
