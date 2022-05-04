@@ -3,7 +3,7 @@
         <Logo />
     </div>
     <div class="pt-5 container-medium">
-        <IdentitySearch />
+        <IdentitySearch @search="onSearch" />
     </div>
     <div
         v-if="recentSearches.length !== 0"
@@ -24,6 +24,8 @@ import IdentitySearch from "@/components/partials/IdentitySearch.vue";
 import RecentSearch from "@/components/partials/RecentSearch.vue";
 import { RecentSearchHistory } from "@/interfaces/RecentSearchHistory";
 import { get } from "@/util/storage";
+import { SearchData } from "@/interfaces/SearchData";
+import router from "@/router";
 
 @Options({
     components: {
@@ -42,6 +44,16 @@ export default class SearchView extends Vue {
 
     created() {
         this.getRecentSearchHistory();
+    }
+
+    onSearch(searchData: SearchData) {
+        router.push({
+            path: "/search",
+            query: {
+                query: searchData.searchTerm,
+                chain: searchData.selectedChainKey
+            }
+        });
     }
 }
 </script>

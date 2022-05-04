@@ -64,6 +64,7 @@ import TimeAgo from "../common/TimeAgo.vue";
     },
     props: {
         recentSearches: {
+            // TODO: get this from store instead
             type: Array,
             required: true
         }

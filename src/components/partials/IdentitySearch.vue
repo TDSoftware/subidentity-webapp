@@ -49,6 +49,7 @@ import { useStore } from "../../store";
 import { RecentSearchHistory } from "@/interfaces/RecentSearchHistory";
 import { set, get } from "@/util/storage";
 import Spinner from "../common/Spinner.vue";
+import { SearchData } from "../../interfaces/SearchData";
 
 @Options({
     components: {
@@ -76,6 +77,8 @@ export default class IdentitySearch extends Vue {
     ];
 
     saveRecentSearchToLocalStorage() {
+        // TODO: move this to the store: on search, just store the recent searches from the store action
+
         const recentSearchHistory = {
             chainName: this.selectedChainKey,
             searchTerm: this.searchTerm,
@@ -95,14 +98,18 @@ export default class IdentitySearch extends Vue {
     async onSubmitIdentitySearch() {
         this.searchInProgress = true;
 
-        await this.store.dispatch("SEARCH_IDENTITIES", {
+        const searchData: SearchData = {
             searchTerm: this.searchTerm,
             selectedChainKey: this.selectedChainKey
-        });
+        };
+
+        await this.store.dispatch("SEARCH_IDENTITIES", searchData);
 
         this.saveRecentSearchToLocalStorage();
 
         this.searchInProgress = false;
+
+        this.$emit("search", searchData);
     }
 
     onChainSelectChanged(selectedChainKey: string) {
