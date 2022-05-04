@@ -2,7 +2,7 @@
     <form @submit.prevent="onSubmitIdentitySearch">
         <div class="bg-white shadow text-dark p-1 rounded">
             <div class="row align-items-center">
-                <div class="col-md-6">
+                <div class="col-lg-6 col-12">
                     <div class="input-group">
                         <span class="input-group-text fw-light text-muted">
                             <ion-icon
@@ -19,14 +19,14 @@
                         />
                     </div>
                 </div>
-                <div class="col-md-3 border-start border-end p-2">
+                <div class="col-lg-3 col-12 border-start border-end p-2">
                     <CustomSelect
                         :options="chainOptions"
                         class="select"
                         @change="onChainSelectChanged"
                     />
                 </div>
-                <div class="col-md-2 d-grid mx-auto">
+                <div class="col-lg-2 col-12 d-grid mx-auto">
                     <button
                         ref="searchButton"
                         :disabled="!searchTerm || searchInProgress"
