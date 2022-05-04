@@ -16,7 +16,10 @@ describe("IdentitySearch.vue", () => {
             // mound the component and get the real store instance
             const wrapper = mount(IdentitySearch, {
                 global: {
-                    plugins: [[store, key]]
+                    plugins: [[store, key]],
+                    stubs: {
+                        IonIcon: true
+                    }
                 },
                 attachTo: document.body
             });
@@ -39,8 +42,12 @@ describe("IdentitySearch.vue", () => {
         // mound the component and get the real store instance
         const wrapper = mount(IdentitySearch, {
             global: {
-                plugins: [[store, key]]
+                plugins: [[store, key]],
+                stubs: {
+                    IonIcon: true
+                }
             },
+            stubs: ["ion-icon"],
             // This is necessary for testing form submits on button "click"...
             attachTo: document.body
         });
