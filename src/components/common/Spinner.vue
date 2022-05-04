@@ -6,9 +6,7 @@
 import { Options, Vue } from "vue-class-component";
 
 @Options({})
-export default class Spinner extends Vue {
-    hello = "World";
-}
+export default class Spinner extends Vue {}
 </script>
 
 <style lang="scss" scoped>

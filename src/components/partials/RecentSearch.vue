@@ -2,7 +2,7 @@
     <div class="container-medium pt-4">
         <div class="row">
             <div
-                v-for="(recentSearch, i) of recentSearches"
+                v-for="(recentSearch, i) of store.state.recentSearches"
                 :key="i"
                 class="col-sm-4"
             >
@@ -33,18 +33,18 @@
                                     ></ion-icon>
                                 </div>
                                 <div class="mx-2">
-                                    {{ recentSearch.chainName }}
+                                    {{ recentSearch.selectedChainKey }}
                                 </div>
                             </div>
                             <div class="ms-auto fw-light text-muted">
                                 <TimeAgo
-                                    :date="new Date(recentSearch.searchDate)"
+                                    :date="new Date(recentSearch.timestamp)"
                                 />
                             </div>
                         </div>
                         <p class="h6">{{ recentSearch.searchTerm }}</p>
                         <a class="text-decoration-none link-primary" href="#"
-                            >{{ recentSearch.searchResult }} results</a
+                            >{{ recentSearch.results.length }} results</a
                         >
                     </div>
                 </div>
@@ -55,24 +55,18 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { timeBetween } from "@/util/timeBetween";
 import TimeAgo from "../common/TimeAgo.vue";
+import { useStore } from "@/store";
 
 @Options({
     components: {
         TimeAgo
-    },
-    props: {
-        recentSearches: {
-            // TODO: get this from store instead
-            type: Array,
-            required: true
-        }
     }
 })
 export default class RecentSearch extends Vue {
-    timeAgo(searchDate: string) {
-        return timeBetween(new Date(searchDate), new Date());
+    store = useStore();
+    created() {
+        console.log("Recent Searches: ", this.store.state.recentSearches);
     }
 }
 </script>

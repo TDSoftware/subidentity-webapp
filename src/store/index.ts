@@ -1,8 +1,12 @@
-import {InjectionKey} from "vue";
-import {createStore, useStore as baseUseStore, Store} from "vuex";
+import { Identity } from "@/interfaces/Identity";
+import { SearchData } from "@/interfaces/SearchData";
+import { get, push, StoreKey } from "@/util/storage";
+import { InjectionKey } from "vue";
+import { createStore, useStore as baseUseStore, Store, ActionContext } from "vuex";
 
 export interface StoreI {
     isAuthenticated: boolean;
+    recentSearches: SearchData<Identity>[];
 }
 
 export const key: InjectionKey<Store<StoreI>> = Symbol();
@@ -13,15 +17,26 @@ export const useStore = () => {
 
 export const store = createStore({
     state: {
-        isAuthenticated: false
+        isAuthenticated: false,
+        recentSearches: get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? []
     },
     getters: {},
     mutations: {
+
         login(state: StoreI) {
             state.isAuthenticated = true;
         },
+
         logout(state: StoreI) {
             state.isAuthenticated = false;
+        },
+
+        storeAsRecentSearch(state: StoreI, searchData: SearchData<Identity>) {
+
+            // TODO: add some limit to the stored array...
+
+            push(StoreKey.RecentSearches, searchData);
+            state.recentSearches = get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [];
         }
     },
     actions: {
@@ -29,14 +44,33 @@ export const store = createStore({
         /**
          * @async
          */
-        SEARCH_IDENTITIES(): Promise<void> {            
+        SEARCH_IDENTITIES(context: ActionContext<StoreI, StoreI>, searchData: SearchData<Identity>): Promise<void> {
             return new Promise((resolve) => {
+                setTimeout(() => {
 
-                // TODO: call subidentity NPM packs API to search identities with search string
+                    // TODO: call subidentity NPM packs API to search identities with search string
 
-                // TODO: remove fake timeout delay
+                    // TODO: remove fake timeout delay
 
-                setTimeout(resolve, 2000);
+                    searchData.results = [
+                        {
+                            chain: searchData.selectedChainKey,
+                            basicInfo: {},
+                            judgements: ["yeah", "uuh"],
+                            balance: {}
+                        },
+                        {
+                            chain: searchData.selectedChainKey,
+                            basicInfo: {},
+                            judgements: ["yeah", "uuh"],
+                            balance: {}
+                        }
+                    ];
+
+                    context.commit("storeAsRecentSearch", searchData);
+                    resolve();
+
+                }, 2000);
             });
         }
     },

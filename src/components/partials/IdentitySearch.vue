@@ -46,8 +46,6 @@
 import { Options, Vue } from "vue-class-component";
 import CustomSelect from "@/components/common/CustomSelect.vue";
 import { useStore } from "../../store";
-import { RecentSearchHistory } from "@/interfaces/RecentSearchHistory";
-import { set, get } from "@/util/storage";
 import Spinner from "../common/Spinner.vue";
 import { SearchData } from "../../interfaces/SearchData";
 
@@ -76,40 +74,17 @@ export default class IdentitySearch extends Vue {
         }
     ];
 
-    saveRecentSearchToLocalStorage() {
-        // TODO: move this to the store: on search, just store the recent searches from the store action
-
-        const recentSearchHistory = {
-            chainName: this.selectedChainKey,
-            searchTerm: this.searchTerm,
-            searchResult: this.searchResult,
-            searchDate: this.searchDate
-        };
-        const fetchedRecentSearchHistory =
-            get<RecentSearchHistory[] | undefined>("recentSearchHistory") ?? [];
-
-        if (fetchedRecentSearchHistory.length === 3) {
-            fetchedRecentSearchHistory.shift();
-        }
-        fetchedRecentSearchHistory.push(recentSearchHistory);
-        set("recentSearchHistory", fetchedRecentSearchHistory);
-    }
-
     async onSubmitIdentitySearch() {
         this.searchInProgress = true;
-
-        const searchData: SearchData = {
+        const searchData: SearchData<void> = {
             searchTerm: this.searchTerm,
-            selectedChainKey: this.selectedChainKey
+            selectedChainKey: this.selectedChainKey,
+            results: [],
+            timestamp: Date.now()
         };
-
         await this.store.dispatch("SEARCH_IDENTITIES", searchData);
-
-        this.saveRecentSearchToLocalStorage();
-
-        this.searchInProgress = false;
-
         this.$emit("search", searchData);
+        this.searchInProgress = false;
     }
 
     onChainSelectChanged(selectedChainKey: string) {
