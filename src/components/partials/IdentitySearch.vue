@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import CustomSelect from "@/components/partials/CustomSelect.vue";
+import CustomSelect from "@/components/common/CustomSelect.vue";
 import { useStore } from "../../store";
 import { RecentSearchHistory } from "@/interfaces/RecentSearchHistory";
 import { set, get } from "@/util/storage";
@@ -64,7 +64,7 @@ export default class IdentitySearch extends Vue {
     searchDate = new Date().toUTCString();
     searchInProgress = false;
 
-    private chainOptions = [
+    chainOptions = [
         {
             key: "polkadot",
             displayValue: "In Polkadot"
@@ -83,7 +83,7 @@ export default class IdentitySearch extends Vue {
             searchDate: this.searchDate
         };
         const fetchedRecentSearchHistory =
-            get<RecentSearchHistory[] | undefined>("recentSearchHistory") || [];
+            get<RecentSearchHistory[] | undefined>("recentSearchHistory") ?? [];
 
         if (fetchedRecentSearchHistory.length === 3) {
             fetchedRecentSearchHistory.shift();
@@ -92,7 +92,7 @@ export default class IdentitySearch extends Vue {
         set("recentSearchHistory", fetchedRecentSearchHistory);
     }
 
-    private async onSubmitIdentitySearch() {
+    async onSubmitIdentitySearch() {
         this.searchInProgress = true;
 
         await this.store.dispatch("SEARCH_IDENTITIES", {
@@ -105,7 +105,7 @@ export default class IdentitySearch extends Vue {
         this.searchInProgress = false;
     }
 
-    private onChainSelectChanged(selectedChainKey: string) {
+    onChainSelectChanged(selectedChainKey: string) {
         this.selectedChainKey = selectedChainKey;
     }
 }
