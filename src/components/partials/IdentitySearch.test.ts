@@ -1,17 +1,18 @@
-import {mount} from "@vue/test-utils";
-import IdentitySearch from "@/components/IdentitySearch.vue";
-import {key, store} from "@/store";
-import {set, get} from "@/util/storage";
+import { mount } from "@vue/test-utils";
+import IdentitySearch from "@/components/partials/IdentitySearch.vue";
+import { key, store } from "@/store";
+import { set, get } from "@/util/storage";
 
 jest.mock("@/util/storage");
 
-import {mocked} from "jest-mock";
+import { mocked } from "jest-mock";
 
 const mockedGet = mocked(get);
 const mockedSet = mocked(set);
 
 describe("IdentitySearch.vue", () => {
     describe("when search button is disabled", () => {
+
         it("should not dispatch SEARCH_IDENTITIES action", async () => {
             // mound the component and get the real store instance
             const wrapper = mount(IdentitySearch, {

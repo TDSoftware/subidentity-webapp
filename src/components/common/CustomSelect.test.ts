@@ -1,12 +1,12 @@
-import {shallowMount} from "@vue/test-utils";
-import CustomSelect from "@/components/partials/CustomSelect.vue";
+import { shallowMount } from "@vue/test-utils";
+import CustomSelect from "@/components/common/CustomSelect.vue";
 
 describe("CustomSelect.vue", () => {
 
     describe("When options is given", () => {
         const wrapper = shallowMount(CustomSelect, {
             props: {
-                options: [{key: "key", displayValue: "display"}]
+                options: [{ key: "key", displayValue: "display" }]
             }
         });
         it("should emit the correct event and value on selecting an option", async function () {

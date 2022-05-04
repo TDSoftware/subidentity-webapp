@@ -1,7 +1,18 @@
 import {createRouter, createWebHistory, RouteRecordRaw} from "vue-router";
 import DefaultLayout from "@/components/layouts/DefaultLayout.vue";
+import SecondaryLayout from "@/components/layouts/SecondaryLayout.vue";
 
 const routes: Array<RouteRecordRaw> = [
+    {
+        path: "/search",
+        name: "",
+        component: SecondaryLayout,
+        children: [{
+            name: "ListView.vue",
+            path: "",
+            component: () => import(/* webpackChunkName: "level-creator-page" */ "../views/ListView.vue")
+        }]
+    },
     {
         path: "/",
         name: "",

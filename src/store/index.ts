@@ -25,8 +25,19 @@ export const store = createStore({
         }
     },
     actions: {
-        SEARCH_IDENTITIES() {
-            // TODO search identities store logic
+
+        /**
+         * @async
+         */
+        SEARCH_IDENTITIES(): Promise<void> {            
+            return new Promise((resolve) => {
+
+                // TODO: call subidentity NPM packs API to search identities with search string
+
+                // TODO: remove fake timeout delay
+
+                setTimeout(resolve, 2000);
+            });
         }
     },
     modules: {}
