@@ -1,4 +1,4 @@
-export interface ChainOption {
+export interface UISelectOption {
     key: string;
     displayValue: string;
 }

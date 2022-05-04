@@ -1,9 +1,16 @@
 <template>
     <div :tabindex="tabindex" class="custom-select" @blur="open = false">
         <span class="icon fw-light text-muted">
-            <ion-icon class="fw-light text-muted" name="git-network-outline"></ion-icon>
+            <ion-icon
+                class="fw-light text-muted"
+                name="git-network-outline"
+            ></ion-icon>
         </span>
-        <div :class="{ open: open }" class="selected fw-light text-muted" @click="onSelectClick">
+        <div
+            :class="{ open: open }"
+            class="selected fw-light text-muted"
+            @click="onSelectClick"
+        >
             {{ selected?.displayValue }}
         </div>
         <div :class="{ selectHide: !open }" class="items">
@@ -12,7 +19,8 @@
                 :key="i"
                 ref="select-option"
                 class="select-option fw-light text-body"
-                @click="setOption(option)">
+                @click="setOption(option)"
+            >
                 {{ option.displayValue }}
             </div>
         </div>
@@ -20,8 +28,8 @@
 </template>
 
 <script lang="ts">
-import {Options, Vue} from "vue-class-component";
-import {ChainOption} from "@/interfaces/ChainOptions";
+import { Options, Vue } from "vue-class-component";
+import { UISelectOption } from "@/interfaces/UISelectOption";
 
 @Options({
     name: "CustomSelect",
@@ -34,37 +42,44 @@ import {ChainOption} from "@/interfaces/ChainOptions";
             type: Number,
             required: false,
             default: 0
+        },
+        selectedKey: {
+            type: String,
+            required: true
         }
     }
 })
 export default class CustomSelect extends Vue {
-    private options!: Array<ChainOption>;
-    private selected: ChainOption | null = {
+    options!: Array<UISelectOption>;
+    selectedKey!: string;
+    selected?: UISelectOption = {
         key: "",
         displayValue: ""
     };
-    private open = false;
+    open = false;
 
     created() {
-        this.selected = this.options.length > 0 ? this.options[0] : null;
-        this.$emit("change", this.selected?.key);
+        this.selected =
+            this.options.find(({ key }) => key === this.selectedKey) ??
+            this.options[0];
+        this.$emit("update:selectedKey", this.selected?.key);
     }
 
-    private onSelectClick() {
+    onSelectClick() {
         this.open = !this.open;
     }
 
-    private setOption(option: ChainOption) {
+    setOption(option: UISelectOption) {
         this.selected = option;
         this.open = false;
-        this.$emit("change", this.selected?.key);
+        this.$emit("update:selectedKey", this.selected?.key);
     }
-
-
 }
 </script>
 
 <style lang="scss" scoped>
+@import "../../styles/variables.scss";
+
 .custom-select {
     position: relative;
     width: 100%;
@@ -78,10 +93,20 @@ export default class CustomSelect extends Vue {
         border-radius: 6px;
         border: 1px solid #fff;
         color: #000;
-        padding-left: 3.5em;
-        cursor: pointer;
+        padding-left: 4rem;
+        padding-right: 2rem;
         user-select: none;
-    
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow-x: hidden;
+
+        @include media-breakpoint-up(lg) {
+            padding-left: 3rem;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
 
         &.open {
             border: 1px solid #fff;
@@ -111,9 +136,9 @@ export default class CustomSelect extends Vue {
     .items {
         color: #000;
         overflow: hidden;
-        border-right: 1px solid #EEEEEE;
-        border-left: 1px solid #EEEEEE;
-        border-bottom: 1px solid #EEEEEE;
+        border-right: 1px solid #eeeeee;
+        border-left: 1px solid #eeeeee;
+        border-bottom: 1px solid #eeeeee;
         position: absolute;
         background-color: #fff;
         left: 0;
@@ -128,7 +153,7 @@ export default class CustomSelect extends Vue {
             user-select: none;
 
             &:hover {
-                background-color: #EEEEEE;
+                background-color: #eeeeee;
             }
         }
     }

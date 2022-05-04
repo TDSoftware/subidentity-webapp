@@ -18,8 +18,8 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import IdentitySearch from "@/components/IdentitySearch.vue";
-import IdentityList from "@/components/IdentityList.vue";
+import IdentitySearch from "@/components/partials/IdentitySearch.vue";
+import IdentityList from "@/components/partials/IdentityList.vue";
 
 @Options({
     components: {
