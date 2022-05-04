@@ -11,7 +11,6 @@
   </div>
   <div class="subidentity-container">
     <div class="container-medium p-0">
-      <p class="h4">158 Search Results for ‘Michael Müller’ in ‘Polkadot’</p>
         <IdentityList/>
     </div>
   </div>
@@ -28,7 +27,7 @@ import IdentityList from "@/components/IdentityList.vue";
         IdentityList
     }
 })
-export default class SearchView extends Vue {}
+export default class ListView extends Vue {}
 </script>
 <style scoped>
 .logo{
