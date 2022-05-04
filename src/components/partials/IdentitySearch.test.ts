@@ -1,5 +1,5 @@
 import { mount } from "@vue/test-utils";
-import IdentitySearch from "@/components/IdentitySearch.vue";
+import IdentitySearch from "@/components/partials/IdentitySearch.vue";
 import { key, store } from "@/store";
 import { set, get } from "@/util/storage";
 

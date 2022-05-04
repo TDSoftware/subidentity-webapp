@@ -11,6 +11,7 @@
                             ></ion-icon>
                         </span>
                         <input
+                            autofocus
                             v-model="searchTerm"
                             class="form-control fw-light text-muted"
                             placeholder="Search for a Name, E-Mail, Address"
@@ -44,10 +45,10 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import CustomSelect from "@/components/partials/CustomSelect.vue";
-import { useStore } from "../store";
+import { useStore } from "../../store";
 import { RecentSearchHistory } from "@/interfaces/RecentSearchHistory";
 import { set, get } from "@/util/storage";
-import Spinner from "./common/Spinner.vue";
+import Spinner from "../common/Spinner.vue";
 
 @Options({
     components: {
