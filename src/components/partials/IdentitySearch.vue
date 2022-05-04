@@ -69,6 +69,8 @@ export default class IdentitySearch extends Vue {
         this.selectedChainKey = searchParams.get("chain") ?? "";
     }
 
+    // TODO: Move to config file
+
     chainOptions = [
         {
             key: "polkadot",

@@ -1,8 +1,11 @@
-import { Identity } from "@/interfaces/Identity";
 import { SearchData } from "@/interfaces/SearchData";
 import { get, push, StoreKey } from "@/util/storage";
 import { InjectionKey } from "vue";
 import { createStore, useStore as baseUseStore, Store, ActionContext } from "vuex";
+import { searchIdentities } from "../../node_modules/subidentity-package/lib";
+import { Page } from "../../node_modules/subidentity-package/src/types/Page";
+import { Identity } from "../../node_modules/subidentity-package/src/types/Identity";
+
 
 export interface StoreI {
     isAuthenticated: boolean;
@@ -45,34 +48,18 @@ export const store = createStore({
         /**
          * @async
          */
-        SEARCH_IDENTITIES(context: ActionContext<StoreI, StoreI>, searchData: SearchData<Identity>): Promise<void> {
-            return new Promise((resolve) => {
-                setTimeout(() => {
+        async SEARCH_IDENTITIES(context: ActionContext<StoreI, StoreI>, searchData: SearchData<Identity>): Promise<void> {
 
-                    // TODO: call subidentity NPM packs API to search identities with search string
+            // TODO: select WS based on selected chain...            
 
-                    // TODO: remove fake timeout delay
+            const wsProvider = "wss://rpc.polkadot.io";
+            const pageNumber = 1;
+            const limit = 100;
+            const page: Page<Identity> = await searchIdentities(wsProvider, searchData.searchTerm, pageNumber, limit);
+            console.log("[store] Got identities based on search: ", page);
 
-                    searchData.results = [
-                        {
-                            chain: searchData.selectedChainKey,
-                            basicInfo: {},
-                            judgements: ["yeah", "uuh"],
-                            balance: {}
-                        },
-                        {
-                            chain: searchData.selectedChainKey,
-                            basicInfo: {},
-                            judgements: ["yeah", "uuh"],
-                            balance: {}
-                        }
-                    ];
-
-                    context.commit("storeAsRecentSearch", searchData);
-                    resolve();
-
-                }, 2000);
-            });
+            searchData.results = page.items;
+            context.commit("storeAsRecentSearch", searchData);
         }
     },
     modules: {}
