@@ -2,7 +2,7 @@
     <form @submit.prevent="onSubmitIdentitySearch">
         <div class="bg-white shadow text-dark p-1 rounded">
             <div class="row align-items-center">
-                <div class="col-md-6">
+                <div class="col-lg-6 col-12">
                     <div class="input-group">
                         <span class="input-group-text fw-light text-muted">
                             <ion-icon
@@ -19,14 +19,14 @@
                         />
                     </div>
                 </div>
-                <div class="col-md-3 border-start border-end p-2">
+                <div class="col-lg-3 col-12 border-start border-end p-2">
                     <CustomSelect
                         :options="chainOptions"
                         class="select"
-                        @change="onChainSelectChanged"
+                        v-model:selected-key="selectedChainKey"
                     />
                 </div>
-                <div class="col-md-2 d-grid mx-auto">
+                <div class="col-lg-2 col-12 d-grid mx-auto">
                     <button
                         ref="searchButton"
                         :disabled="!searchTerm || searchInProgress"
@@ -46,8 +46,6 @@
 import { Options, Vue } from "vue-class-component";
 import CustomSelect from "@/components/common/CustomSelect.vue";
 import { useStore } from "../../store";
-import { RecentSearchHistory } from "@/interfaces/RecentSearchHistory";
-import { set, get } from "@/util/storage";
 import Spinner from "../common/Spinner.vue";
 import { SearchData } from "../../interfaces/SearchData";
 
@@ -65,6 +63,12 @@ export default class IdentitySearch extends Vue {
     searchDate = new Date().toUTCString();
     searchInProgress = false;
 
+    created() {
+        const searchParams = new URLSearchParams(window.location.search);
+        this.searchTerm = searchParams.get("query") ?? "";
+        this.selectedChainKey = searchParams.get("chain") ?? "";
+    }
+
     chainOptions = [
         {
             key: "polkadot",
@@ -76,45 +80,22 @@ export default class IdentitySearch extends Vue {
         }
     ];
 
-    saveRecentSearchToLocalStorage() {
-        // TODO: move this to the store: on search, just store the recent searches from the store action
-
-        const recentSearchHistory = {
-            chainName: this.selectedChainKey,
-            searchTerm: this.searchTerm,
-            searchResult: this.searchResult,
-            searchDate: this.searchDate
-        };
-        const fetchedRecentSearchHistory =
-            get<RecentSearchHistory[] | undefined>("recentSearchHistory") ?? [];
-
-        if (fetchedRecentSearchHistory.length === 3) {
-            fetchedRecentSearchHistory.shift();
-        }
-        fetchedRecentSearchHistory.push(recentSearchHistory);
-        set("recentSearchHistory", fetchedRecentSearchHistory);
-    }
-
     async onSubmitIdentitySearch() {
         this.searchInProgress = true;
-
-        const searchData: SearchData = {
+        const searchData: SearchData<void> = {
             searchTerm: this.searchTerm,
-            selectedChainKey: this.selectedChainKey
+            selectedChainKey: this.selectedChainKey,
+            results: [],
+            timestamp: Date.now()
         };
-
         await this.store.dispatch("SEARCH_IDENTITIES", searchData);
-
-        this.saveRecentSearchToLocalStorage();
-
-        this.searchInProgress = false;
-
         this.$emit("search", searchData);
+        this.searchInProgress = false;
     }
 
-    onChainSelectChanged(selectedChainKey: string) {
-        this.selectedChainKey = selectedChainKey;
-    }
+    // onChainSelectChanged(selectedChainKey: string) {
+    //     this.selectedChainKey = selectedChainKey;
+    // }
 }
 </script>
 <style>

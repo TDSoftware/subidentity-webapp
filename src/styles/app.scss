@@ -1,8 +1,4 @@
-@import "node_modules/bootstrap/scss/functions";
 @import "./variables.scss";
-// 3. Include remainder of required Bootstrap stylesheets
-@import "node_modules/bootstrap/scss/variables";
-@import "node_modules/bootstrap/scss/mixins";
 @import "node_modules/bootstrap/scss/root";
 
 $badge-font-size: 1em;
@@ -26,7 +22,11 @@ $badge-font-weight: $font-weight-normal;
 
 .container-medium {
   @include make-container();
-  width: 70%;
+  width: 100%;
+
+  @include media-breakpoint-up(sm) {
+    width: 70%;
+  }
 }
 
 .logo {
