@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { ChainOption } from "@/interfaces/ChainOptions";
+import { UISelectOption } from "@/interfaces/UISelectOption";
 
 @Options({
     name: "CustomSelect",
@@ -42,30 +42,37 @@ import { ChainOption } from "@/interfaces/ChainOptions";
             type: Number,
             required: false,
             default: 0
+        },
+        selectedKey: {
+            type: String,
+            required: true
         }
     }
 })
 export default class CustomSelect extends Vue {
-    private options!: Array<ChainOption>;
-    private selected: ChainOption | null = {
+    options!: Array<UISelectOption>;
+    selectedKey!: string;
+    selected?: UISelectOption = {
         key: "",
         displayValue: ""
     };
-    private open = false;
+    open = false;
 
     created() {
-        this.selected = this.options.length > 0 ? this.options[0] : null;
-        this.$emit("change", this.selected?.key);
+        this.selected =
+            this.options.find(({ key }) => key === this.selectedKey) ??
+            this.options[0];
+        this.$emit("update:selectedKey", this.selected?.key);
     }
 
-    private onSelectClick() {
+    onSelectClick() {
         this.open = !this.open;
     }
 
-    private setOption(option: ChainOption) {
+    setOption(option: UISelectOption) {
         this.selected = option;
         this.open = false;
-        this.$emit("change", this.selected?.key);
+        this.$emit("update:selectedKey", this.selected?.key);
     }
 }
 </script>

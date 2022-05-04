@@ -37,7 +37,6 @@ export default class SearchView extends Vue {
     store = useStore();
 
     get showRecentSearch(): boolean {
-        console.log("Store: ", this.store.state);
         return this.store.state.recentSearches.length > 0;
     }
 

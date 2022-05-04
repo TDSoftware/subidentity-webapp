@@ -73,9 +73,6 @@ import { useStore } from "@/store";
 })
 export default class RecentSearch extends Vue {
     store = useStore();
-    created() {
-        console.log("Recent Searches: ", this.store.state.recentSearches);
-    }
 }
 </script>
 

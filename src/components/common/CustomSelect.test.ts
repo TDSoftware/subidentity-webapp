@@ -7,7 +7,8 @@ describe("CustomSelect.vue", () => {
         const wrapper = shallowMount(CustomSelect, {
             props: {
                 options: [{ key: "key", displayValue: "display" }]
-            }
+            },
+            stubs: ["ion-icon"]
         });
         it("should emit the correct event and value on selecting an option", async function () {
             const selectOption = wrapper.find(".select-option");
@@ -15,13 +16,13 @@ describe("CustomSelect.vue", () => {
             // await wrapper.vm.$nextTick();
             await selectOption.trigger("click");
 
-            expect(wrapper.emitted().change).toBeTruthy();
-            const eventArgs = (wrapper.emitted().change[0] as string[]);
+            expect(wrapper.emitted()["update:selectedKey"]).toBeTruthy();
+            const eventArgs = (wrapper.emitted()["update:selectedKey"][0] as string[]);
             expect(eventArgs[0]).toBe("key");
         });
 
         it("should emit the correct default value when custom select is created", async function () {
-            const eventArgs = (wrapper.emitted().change[0] as string[]);
+            const eventArgs = (wrapper.emitted()["update:selectedKey"][0] as string[]);
             expect(eventArgs[0]).toBe("key");
         });
     });
@@ -32,7 +33,8 @@ describe("CustomSelect.vue", () => {
             const wrapper = shallowMount(CustomSelect, {
                 props: {
                     options: []
-                }
+                },
+                stubs: ["ion-icon"]
             });
             expect(wrapper.html()).toBeTruthy();
         });

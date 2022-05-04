@@ -7,6 +7,7 @@ import { createStore, useStore as baseUseStore, Store, ActionContext } from "vue
 export interface StoreI {
     isAuthenticated: boolean;
     recentSearches: SearchData<Identity>[];
+    currentSearch?: SearchData<Identity>;
 }
 
 export const key: InjectionKey<Store<StoreI>> = Symbol();

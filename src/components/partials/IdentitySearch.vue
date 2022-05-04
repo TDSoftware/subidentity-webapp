@@ -23,7 +23,7 @@
                     <CustomSelect
                         :options="chainOptions"
                         class="select"
-                        @change="onChainSelectChanged"
+                        v-model:selected-key="selectedChainKey"
                     />
                 </div>
                 <div class="col-lg-2 col-12 d-grid mx-auto">
@@ -63,6 +63,12 @@ export default class IdentitySearch extends Vue {
     searchDate = new Date().toUTCString();
     searchInProgress = false;
 
+    created() {
+        const searchParams = new URLSearchParams(window.location.search);
+        this.searchTerm = searchParams.get("query") ?? "";
+        this.selectedChainKey = searchParams.get("chain") ?? "";
+    }
+
     chainOptions = [
         {
             key: "polkadot",
@@ -87,9 +93,9 @@ export default class IdentitySearch extends Vue {
         this.searchInProgress = false;
     }
 
-    onChainSelectChanged(selectedChainKey: string) {
-        this.selectedChainKey = selectedChainKey;
-    }
+    // onChainSelectChanged(selectedChainKey: string) {
+    //     this.selectedChainKey = selectedChainKey;
+    // }
 }
 </script>
 <style>
