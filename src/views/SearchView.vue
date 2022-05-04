@@ -47,6 +47,6 @@ export default class SearchView extends Vue {
 
 <style lang="scss" scoped>
 .vh-50 {
-    min-height: 42vh;
+    min-height: 43vh;
 }
 </style>

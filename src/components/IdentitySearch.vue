@@ -1,6 +1,6 @@
 <template>
     <form @submit.prevent="onSubmitIdentitySearch">
-        <div class="bg-white shadow text-dark p-1 rounded">
+        <div class="bg-white shadow text-dark p-0 rounded">
             <div class="row align-items-center">
                 <div class="col-md-6 ">
                     <div class="input-group">

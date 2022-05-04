@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex flex-row">
-    <div class="d-flex flex-row w-auto p-3 pt-4">
+    <div class="d-flex flex-row w-auto p-4 pt-4 logo" @click="$router.push('/')">
       <img width="40" height="40" class="" src="../assets/logo.png" />
       <p class="h4 mx-2 pt-1">SubIdentity</p>
     </div>
@@ -30,3 +30,8 @@ import IdentityList from "@/components/IdentityList.vue";
 })
 export default class SearchView extends Vue {}
 </script>
+<style scoped>
+.logo{
+    cursor: pointer;
+}
+</style>
