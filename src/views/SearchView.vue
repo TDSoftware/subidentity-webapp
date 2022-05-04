@@ -1,8 +1,8 @@
 <template>
-    <div class="logo align-items-end vh-50">
+    <div class="logo-container align-items-end pt-5">
         <Logo />
     </div>
-    <div class="pt-5 p-0 container-medium">
+    <div class="pt-5 p-0 container-medium fade-in">
         <IdentitySearch @search="onSearch" />
     </div>
     <div
@@ -13,7 +13,10 @@
         <div class="container-medium pt-5 p-0">
             <p class="h4">Recent Searches</p>
         </div>
-        <RecentSearch class="mb-5 pb-2 p-0" @item-clicked="recallSearch" />
+        <RecentSearch
+            class="mb-5 pb-2 p-0 fade-in"
+            @item-clicked="recallSearch"
+        />
     </div>
 </template>
 
@@ -63,7 +66,7 @@ export default class SearchView extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.vh-50 {
+.logo-container {
     min-height: 40.5vh;
 }
 </style>

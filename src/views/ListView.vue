@@ -1,19 +1,16 @@
 <template>
-  <div class="d-flex flex-row">
-    <div class="d-flex flex-row w-auto p-4 pt-4 logo" @click="$router.push('/')">
-      <img width="40" height="40" class="" src="../assets/logo.png" />
-      <p class="h4 mx-2 pt-1">SubIdentity</p>
+    <div class="sid-wrapper">
+        <div class="search-container">
+            <div class="search container-medium p-0 fade-in">
+                <IdentitySearch />
+            </div>
+        </div>
+        <div class="subidentity-container pb-5">
+            <div class="container-medium p-0">
+                <IdentityList />
+            </div>
+        </div>
     </div>
-
-    <div class="pt-5 w-75 p-5">
-      <IdentitySearch />
-    </div>
-  </div>
-  <div class="subidentity-container">
-    <div class="container-medium p-0">
-        <IdentityList/>
-    </div>
-  </div>
 </template>
 
 <script lang="ts">
@@ -29,8 +26,32 @@ import IdentityList from "@/components/partials/IdentityList.vue";
 })
 export default class ListView extends Vue {}
 </script>
-<style scoped>
-.logo{
-    cursor: pointer;
+
+<style lang="scss" scoped>
+@import "../styles/variables";
+.sid-wrapper {
+    padding-top: 230px;
+
+    @include media-breakpoint-up(lg) {
+        padding-top: 94px;
+    }
+}
+
+.search-container {
+    position: absolute;
+    z-index: 2;
+    top: 75px;
+    width: 100vw;
+    @include media-breakpoint-up(lg) {
+        top: 60px;
+    }
+}
+
+.subidentity-container {
+    padding-top: 30px;
+
+    @include media-breakpoint-up(lg) {
+        padding-top: 94px;
+    }
 }
 </style>

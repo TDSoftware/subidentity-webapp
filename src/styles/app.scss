@@ -6,6 +6,21 @@ $badge-color: $gray-600;
 $badge-font-weight: $font-weight-normal;
 
 
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
 .subidentity-container {
   @include make-container();
   width: 100%;
@@ -13,6 +28,7 @@ $badge-font-weight: $font-weight-normal;
   padding-left: 0;
   margin-right: 0;
   margin-left: 0;
+  background-color: white;
 }
 
 .container-small {
@@ -31,11 +47,6 @@ $badge-font-weight: $font-weight-normal;
   @include media-breakpoint-up(sm) {
     width: 70%;
   }
-}
-
-.logo {
-  @include make-row();
-  margin-right: 0;
 }
 
 
