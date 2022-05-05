@@ -4,7 +4,7 @@ import SecondaryLayout from "@/components/layouts/SecondaryLayout.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
-        path: "/identity/:address",
+        path: "/chain/:chain/identity/:address",
         name: "",
         component: SecondaryLayout,
         children: [{

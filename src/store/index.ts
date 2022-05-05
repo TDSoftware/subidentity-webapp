@@ -4,6 +4,7 @@ import { InjectionKey } from "vue";
 import { createStore, useStore as baseUseStore, Store, ActionContext } from "vuex";
 import { Identity, Page, searchIdentities } from "@npmjs_tdsoftware/subidentity";
 import { getChainAddress } from "@/util/chains";
+import { LoadIdentityRequest } from "@/interfaces/LoadIdentityRequest";
 
 
 export interface StoreI {
@@ -80,6 +81,23 @@ export const store = createStore({
 
             searchData.results = page.items;
             context.commit("storeAsRecentSearch", searchData);
+        },
+
+        async LOAD_IDENTITY(context: ActionContext<StoreI, StoreI>, request: LoadIdentityRequest): Promise<Identity | undefined> {
+            const wsProvider = getChainAddress(request.chain);
+            if (!wsProvider) {
+                console.error("[store/index] No address given for chain: ", request.chain);
+                return;
+            }
+            const pageNumber = 1;
+            const limit = 1;
+
+            // TODO: Replace for getIdentity
+
+            const page: Page<Identity> = await searchIdentities(wsProvider, request.address, pageNumber, limit);
+            console.log("[store/index] Got identity by address: ", page.items[0]);
+
+            return page.items[0];
         }
     },
     modules: {}

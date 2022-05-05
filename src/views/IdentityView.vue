@@ -2,17 +2,17 @@
     <div class="sid-wrapper">
         <div class="subidentity-container pb-5">
             <div class="container-medium">
-                <router-link class="text-decoration-none" to="-1"
-                    ><div class="d-flex flex-row pt-4" @click="$router.go(-1)">
+                <router-link class="text-decoration-none" to="-1">
+                    <div class="d-flex flex-row pt-4" @click="$router.go(-1)">
                         <ion-icon
-                            class="icon"
+                            class="icon back-arrow"
                             name="arrow-back-outline"
-                        ></ion-icon>
+                        />
                         <p class="mx-2">Back to results</p>
-                    </div></router-link
-                >
+                    </div>
+                </router-link>
                 <Profile />
-                <Plugins />
+                <!-- <Plugins /> -->
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import Profile from "@/components/partials/Profile.vue";
+import Profile from "@/components/partials/IdentityProfile.vue";
 import Plugins from "@/components/partials/Plugins.vue";
 
 @Options({
@@ -37,8 +37,9 @@ export default class IdentityView extends Vue {}
 .logo {
     cursor: pointer;
 }
-.icon {
-    padding-top: 2px;
+.back-arrow {
+    padding-top: 5px;
+    padding-right: 4px;
 }
 .sid-wrapper {
     padding-top: 230px;
