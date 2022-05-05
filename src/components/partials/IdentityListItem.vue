@@ -6,20 +6,30 @@
                     src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"
                     height="50"
                     width="50"
-                    class="rounded-circle p-0 mx-0"
+                    class="rounded-circle p-0"
                     alt="Cinque Terre"
                 />
                 <h6 class="pt-3 mx-auto">{{ identity.basicInfo.display }}</h6>
             </div>
         </div>
-        <div class="col-3 m-0 pt-3 fw-light text-muted">
-            {{ identity.basicInfo.email }}
+        <div class="col-3 m-0 pt-3 fw-light text-muted text-truncate">
+            {{ identity.basicInfo.email || "-" }}
         </div>
-        <div class="col-4 m-0 pt-3 fw-light text-muted">
+        <div class="col-4 m-0 pt-3 fw-light text-muted text-truncate">
             {{ identity.basicInfo.address }}
         </div>
         <div class="col-2 m-0 pt-3">
-            <div class="d-flex flex-row badge w-75 text-capitalize bg-light">
+            <div
+                class="
+                    d-flex
+                    flex-row
+                    badge
+                    w-75
+                    text-capitalize
+                    bg-light
+                    text-truncate
+                "
+            >
                 <div class="fw-light text-muted">
                     <ion-icon
                         size="small"
@@ -132,6 +142,11 @@ export default class IdentityListItem extends Vue {
 }
 .avatar {
     padding-top: 2px;
+    img {
+        object-fit: cover;
+        margin-right: 15px;
+        display: inline-block;
+    }
 }
 .identity-list {
     cursor: pointer;

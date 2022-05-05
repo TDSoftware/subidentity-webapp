@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="onSubmitIdentitySearch">
+    <form @submit.prevent="submitIdentitySearch">
         <div class="bg-white shadow text-dark p-0 rounded">
             <div class="row align-items-center">
                 <div class="col-lg-6 col-12">
@@ -69,9 +69,17 @@ export default class IdentitySearch extends Vue {
         const searchParams = new URLSearchParams(window.location.search);
         this.searchTerm = searchParams.get("query") ?? "";
         this.selectedChainKey = searchParams.get("chain") ?? "";
-    }
 
-    // TODO: Move to config file
+        //  On page load/reload submit the search if a searchTerm is
+        //  given in the URL params
+        const shouldSubmitSearch =
+            this.searchTerm &&
+            this.selectedChainKey &&
+            this.store.getters.lastSearchTerm !== this.searchTerm;
+        if (shouldSubmitSearch) {
+            this.submitIdentitySearch();
+        }
+    }
 
     get chainOptions(): UISelectOption[] {
         return chains.map((chainInfo: ChainInfo) => {
@@ -82,7 +90,7 @@ export default class IdentitySearch extends Vue {
         });
     }
 
-    async onSubmitIdentitySearch() {
+    async submitIdentitySearch() {
         this.searchInProgress = true;
         const searchData: SearchData<void> = {
             searchTerm: this.searchTerm,
@@ -94,10 +102,6 @@ export default class IdentitySearch extends Vue {
         this.$emit("search", searchData);
         this.searchInProgress = false;
     }
-
-    // onChainSelectChanged(selectedChainKey: string) {
-    //     this.selectedChainKey = selectedChainKey;
-    // }
 }
 </script>
 <style>
