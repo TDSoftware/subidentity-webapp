@@ -48,6 +48,8 @@ import CustomSelect from "@/components/common/CustomSelect.vue";
 import { useStore } from "../../store";
 import Spinner from "../common/Spinner.vue";
 import { SearchData } from "../../interfaces/SearchData";
+import { ChainInfo, chains } from "../../util/chains";
+import { UISelectOption } from "@/interfaces/UISelectOption";
 
 @Options({
     components: {
@@ -71,16 +73,14 @@ export default class IdentitySearch extends Vue {
 
     // TODO: Move to config file
 
-    chainOptions = [
-        {
-            key: "polkadot",
-            displayValue: "In Polkadot"
-        },
-        {
-            key: "kusama",
-            displayValue: "In Kusama"
-        }
-    ];
+    get chainOptions(): UISelectOption[] {
+        return chains.map((chainInfo: ChainInfo) => {
+            return {
+                key: chainInfo.key,
+                displayValue: "In " + chainInfo.name
+            };
+        });
+    }
 
     async onSubmitIdentitySearch() {
         this.searchInProgress = true;

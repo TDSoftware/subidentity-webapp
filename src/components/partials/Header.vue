@@ -21,8 +21,8 @@ export default class Header extends Vue {}
 @import "../../styles/variables";
 header {
     background-color: $secondary;
-    height: 58px;
-    width: 100vw;
+    height: $headerHeightMobile;
+    width: 100%;
     color: white;
     display: flex;
     flex-direction: row;
@@ -51,17 +51,24 @@ header {
     @include media-breakpoint-up(lg) {
         color: $secondary;
         background-color: transparent;
-        height: 82px;
+        height: $headerHeight;
 
         img {
             height: 38px;
-            margin: 22px 22px 22px 30px;
+            margin: 22px 15px 22px 22px;
         }
 
         h1 {
+            display: none;
+        }
+    }
+
+    @media screen and (min-width: 1350px) {
+        h1 {
+            display: inline-block;
             font-style: normal;
             font-weight: 700;
-            font-size: 24px;
+            font-size: 22px;
             line-height: 38px;
             margin: 22px 0;
         }

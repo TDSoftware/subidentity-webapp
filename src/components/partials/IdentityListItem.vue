@@ -105,7 +105,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import { Identity } from "../../../node_modules/subidentity-package/src/types/Identity";
+import { Identity } from "@npmjs_tdsoftware/subidentity";
 
 @Options({
     components: {},

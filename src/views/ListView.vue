@@ -33,7 +33,7 @@ export default class ListView extends Vue {}
     padding-top: 230px;
 
     @include media-breakpoint-up(lg) {
-        padding-top: 94px;
+        padding-top: $headerHeight;
     }
 }
 
@@ -41,7 +41,7 @@ export default class ListView extends Vue {}
     position: absolute;
     z-index: 2;
     top: 75px;
-    width: 100vw;
+    width: 100%;
     @include media-breakpoint-up(lg) {
         top: 60px;
     }
@@ -51,7 +51,7 @@ export default class ListView extends Vue {}
     padding-top: 30px;
 
     @include media-breakpoint-up(lg) {
-        padding-top: 94px;
+        padding-top: $headerHeight;
     }
 }
 </style>

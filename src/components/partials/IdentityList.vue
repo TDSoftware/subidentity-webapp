@@ -35,28 +35,15 @@ export default class IdentityList extends Vue {
     store = useStore();
 
     get searchResults() {
-        return this.store.state.recentSearches[
-            this.store.state.recentSearches.length - 1
-        ].results;
+        return this.store.getters.lastSearchResults;
     }
 
     get searchTerm() {
-        return this.store.state.recentSearches[
-            this.store.state.recentSearches.length - 1
-        ].searchTerm;
+        return this.store.getters.lastSearchTerm;
     }
 
     isMobile = false;
-    private identities = [
-        {
-            id: 1
-        },
-        {
-            id: 2
-        },
-        {
-            id: 3
-        }
-    ];
+
+    // TODO: add logic for isMobile
 }
 </script>

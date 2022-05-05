@@ -45,7 +45,8 @@ $badge-font-weight: $font-weight-normal;
   width: calc(100% - 30px);
 
   @include media-breakpoint-up(sm) {
-    width: 70%;
+    width: 100%;
+    max-width: 920px;
   }
 }
 
