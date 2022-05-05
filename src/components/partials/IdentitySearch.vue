@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="onSubmitIdentitySearch">
+    <form @submit.prevent="submitIdentitySearch">
         <div class="bg-white shadow text-dark p-0 rounded">
             <div class="row align-items-center">
                 <div class="col-lg-6 col-12">
@@ -48,6 +48,8 @@ import CustomSelect from "@/components/common/CustomSelect.vue";
 import { useStore } from "../../store";
 import Spinner from "../common/Spinner.vue";
 import { SearchData } from "../../interfaces/SearchData";
+import { ChainInfo, chains } from "../../util/chains";
+import { UISelectOption } from "@/interfaces/UISelectOption";
 
 @Options({
     components: {
@@ -67,20 +69,28 @@ export default class IdentitySearch extends Vue {
         const searchParams = new URLSearchParams(window.location.search);
         this.searchTerm = searchParams.get("query") ?? "";
         this.selectedChainKey = searchParams.get("chain") ?? "";
+
+        //  On page load/reload submit the search if a searchTerm is
+        //  given in the URL params
+        const shouldSubmitSearch =
+            this.searchTerm &&
+            this.selectedChainKey &&
+            this.store.getters.lastSearchTerm !== this.searchTerm;
+        if (shouldSubmitSearch) {
+            this.submitIdentitySearch();
+        }
     }
 
-    chainOptions = [
-        {
-            key: "polkadot",
-            displayValue: "In Polkadot"
-        },
-        {
-            key: "kusama",
-            displayValue: "In Kusama"
-        }
-    ];
+    get chainOptions(): UISelectOption[] {
+        return chains.map((chainInfo: ChainInfo) => {
+            return {
+                key: chainInfo.key,
+                displayValue: "In " + chainInfo.name
+            };
+        });
+    }
 
-    async onSubmitIdentitySearch() {
+    async submitIdentitySearch() {
         this.searchInProgress = true;
         const searchData: SearchData<void> = {
             searchTerm: this.searchTerm,
@@ -92,10 +102,6 @@ export default class IdentitySearch extends Vue {
         this.$emit("search", searchData);
         this.searchInProgress = false;
     }
-
-    // onChainSelectChanged(selectedChainKey: string) {
-    //     this.selectedChainKey = selectedChainKey;
-    // }
 }
 </script>
 <style>

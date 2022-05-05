@@ -6,9 +6,14 @@ describe("CustomSelect.vue", () => {
     describe("When options is given", () => {
         const wrapper = shallowMount(CustomSelect, {
             props: {
-                options: [{ key: "key", displayValue: "display" }]
+                options: [{ key: "key", displayValue: "display" }],
+                selectedKey: "key"
             },
-            stubs: ["ion-icon"]
+            global: {
+                stubs: {
+                    IonIcon: true
+                }
+            }
         });
         it("should emit the correct event and value on selecting an option", async function () {
             const selectOption = wrapper.find(".select-option");
@@ -32,9 +37,14 @@ describe("CustomSelect.vue", () => {
         it("should pass empty array as props ", async function () {
             const wrapper = shallowMount(CustomSelect, {
                 props: {
-                    options: []
+                    options: [],
+                    selectedKey: ""
                 },
-                stubs: ["ion-icon"]
+                global: {
+                    stubs: {
+                        IonIcon: true
+                    }
+                }
             });
             expect(wrapper.html()).toBeTruthy();
         });

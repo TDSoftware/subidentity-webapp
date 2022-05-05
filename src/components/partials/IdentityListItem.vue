@@ -10,20 +10,30 @@
                     src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"
                     height="50"
                     width="50"
-                    class="rounded-circle p-0 mx-0"
+                    class="rounded-circle p-0"
                     alt="Cinque Terre"
                 />
-                <h6 class="pt-3 mx-auto">Micheal Muller</h6>
+                <h6 class="pt-3 mx-auto">{{ identity.basicInfo.display }}</h6>
             </div>
         </div>
-        <div class="col-3 m-0 pt-3 fw-light text-muted">
-            michael.mueller@example.de
+        <div class="col-3 m-0 pt-3 fw-light text-muted text-truncate">
+            {{ identity.basicInfo.email || "-" }}
         </div>
-        <div class="col-4 m-0 pt-3 fw-light text-muted">
-            5FEJV93P94SerQhOq4Be9AAR2hZtC...
+        <div class="col-4 m-0 pt-3 fw-light text-muted text-truncate">
+            {{ identity.basicInfo.address }}
         </div>
         <div class="col-2 m-0 pt-3">
-            <div class="d-flex flex-row badge w-75 text-capitalize bg-light">
+            <div
+                class="
+                    d-flex
+                    flex-row
+                    badge
+                    w-75
+                    text-capitalize
+                    bg-light
+                    text-truncate
+                "
+            >
                 <div class="fw-light text-muted">
                     <ion-icon
                         size="small"
@@ -31,7 +41,7 @@
                         name="git-network-outline"
                     ></ion-icon>
                 </div>
-                <div class="mx-2">Polkadot</div>
+                <div class="mx-2">{{ identity.chain }}</div>
             </div>
         </div>
         <div class="col-1 m-0 pt-3">
@@ -58,7 +68,7 @@
                         class="rounded-circle p-0 mx-0"
                         alt="Cinque Terre"
                     />
-                    <h6 class="pt-3 mx-3">Micheal Muller</h6>
+                    <h6 class="pt-3 mx-3">{{ identity.basicInfo.display }}</h6>
                 </div>
                 <div class="ms-auto fw-light text-muted">
                     <a class="text-decoration-none link-primary" href="#">
@@ -79,7 +89,7 @@
                         name="git-network-outline"
                     ></ion-icon>
                 </div>
-                <div class="mx-2">Polkadot</div>
+                <div class="mx-2">{{ identity.chain }}</div>
             </div>
             <div class="d-flex flex-row w-50 text-capitalize mb-2">
                 <div class="fw-light text-muted">
@@ -89,7 +99,7 @@
                     ></ion-icon>
                 </div>
                 <div class="mx-2 fw-light text-muted">
-                    5FEJV93P94SerQhOq4Be9AAR2hZtC...
+                    {{ identity.basicInfo.address }}
                 </div>
             </div>
             <div class="d-flex flex-row w-50 text-capitalize mb-2">
@@ -100,7 +110,7 @@
                     ></ion-icon>
                 </div>
                 <div class="mx-2 fw-light text-muted">
-                    michael.mueller@example.de
+                    {{ identity.basicInfo.email }}
                 </div>
             </div>
         </div>
@@ -109,12 +119,24 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import { Identity } from "@npmjs_tdsoftware/subidentity";
 
 @Options({
-    components: {}
+    components: {},
+    props: {
+        identity: {
+            type: Object,
+            required: true
+        }
+    }
 })
 export default class IdentityListItem extends Vue {
     isMobile = false;
+    identity!: Identity;
+
+    mounted() {
+        console.log("Identity: ", this.identity);
+    }
 }
 </script>
 
@@ -124,6 +146,11 @@ export default class IdentityListItem extends Vue {
 }
 .avatar {
     padding-top: 2px;
+    img {
+        object-fit: cover;
+        margin-right: 15px;
+        display: inline-block;
+    }
 }
 .identity-list {
     cursor: pointer;

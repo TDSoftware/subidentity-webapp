@@ -93,7 +93,7 @@ export default class CustomSelect extends Vue {
         border-radius: 6px;
         border: 1px solid #fff;
         color: #000;
-        padding-left: 4rem;
+        padding-left: 3.85rem;
         padding-right: 2rem;
         user-select: none;
         white-space: nowrap;

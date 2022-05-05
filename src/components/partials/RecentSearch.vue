@@ -6,7 +6,10 @@
                 :key="i"
                 class="col-xl-4 col-md-6 col-12"
             >
-                <div class="card mb-4">
+                <div
+                    class="card mb-4 recent-search-item"
+                    @click="$emit('itemClicked', recentSearch)"
+                >
                     <div class="card-body">
                         <div class="d-flex mb-3">
                             <span class="fw-light text-muted pt-1">
@@ -82,5 +85,15 @@ export default class RecentSearch extends Vue {
 }
 .time-badge {
     line-height: 32px;
+}
+.recent-search-item {
+    transition: transform 0.3s ease-out;
+    &:hover {
+        cursor: pointer;
+        transform: scale(1.05);
+    }
+    &:active {
+        transform: scale(1);
+    }
 }
 </style>

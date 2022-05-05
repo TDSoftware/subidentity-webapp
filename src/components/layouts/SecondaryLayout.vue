@@ -1,4 +1,5 @@
 <template>
+    <Header />
     <div class="subidentity-container has-bg-image">
         <router-view />
     </div>
@@ -8,10 +9,12 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import Footer from "@/components/partials/Footer.vue";
+import Header from "../partials/Header.vue";
 
 @Options({
     components: {
-        Footer
+        Footer,
+        Header
     }
 })
 export default class SecondaryLayout extends Vue {}
@@ -25,6 +28,6 @@ export default class SecondaryLayout extends Vue {}
         url("../../assets/headerbg.png");
     background-position: top center;
     background-repeat: no-repeat, no-repeat;
-    background-size: 700px, 100% 10%;
+    background-size: 700px, cover;
 }
 </style>

@@ -6,6 +6,21 @@ $badge-color: $gray-600;
 $badge-font-weight: $font-weight-normal;
 
 
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
 .subidentity-container {
   @include make-container();
   width: 100%;
@@ -13,25 +28,26 @@ $badge-font-weight: $font-weight-normal;
   padding-left: 0;
   margin-right: 0;
   margin-left: 0;
+  background-color: white;
 }
 
 .container-small {
   @include make-container();
-  width: 40%;
+  width: calc(100% - 30px);
+
+  @include media-breakpoint-up(sm) {
+    width: 40%;
+  }
 }
 
 .container-medium {
   @include make-container();
-  width: 100%;
+  width: calc(100% - 30px);
 
   @include media-breakpoint-up(sm) {
-    width: 70%;
+    width: 100%;
+    max-width: 920px;
   }
-}
-
-.logo {
-  @include make-row();
-  margin-right: 0;
 }
 
 
