@@ -1,9 +1,9 @@
 <template>
     <div
-        class="row mx-0 py-3 px-2 rounded border identity-list-item"
+        class="row mx-0 py-3 px-2 identity-list-item"
         @click="$router.push('/identity/' + identity.basicInfo.address)"
     >
-        <div class="col-12 col-md-2">
+        <div class="col">
             <div class="d-flex flex-row avatar">
                 <div class="img-wrapper">
                     <img
@@ -15,13 +15,16 @@
                 <h6>{{ identity.basicInfo.display }}</h6>
             </div>
         </div>
-        <div class="col-12 col-md-3 text-muted vertical-centered-column">
+        <div class="col text-muted vertical-centered-column">
             {{ identity.basicInfo.email || "-" }}
         </div>
-        <div class="col text-muted vertical-centered-column">
+        <div
+            class="col text-muted vertical-centered-column font-monospace"
+            style="flex: 0 0 455px"
+        >
             {{ identity.basicInfo.address }}
         </div>
-        <div class="col-12 col-md-2 vertical-centered-column">
+        <div class="col vertical-centered-column" style="flex: 0 0 150px">
             <div
                 class="
                     d-flex
@@ -83,7 +86,10 @@ export default class IdentityListItem extends Vue {
     padding-top: 0.3rem;
 }
 .icon {
-    padding-top: 3px;
+    padding-top: 4px;
+}
+.font-monospace {
+    font-size: 0.9rem;
 }
 .avatar {
     height: 100%;
@@ -109,6 +115,13 @@ export default class IdentityListItem extends Vue {
 .identity-list-item {
     cursor: pointer;
     margin-bottom: 18px;
+    border: 1px solid #d8d8d8;
+    border-radius: 5px;
+    border-bottom: none;
+
+    &:last-child {
+        border-bottom: 1px solid #d8d8d8;
+    }
 
     &:hover {
         background-color: #f7f7f7;
