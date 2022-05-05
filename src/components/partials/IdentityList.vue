@@ -7,7 +7,7 @@
         <p class="h4">{{ searchResults.length }} Search Results</p>
         <p class="fw-light text-muted">for ‘{{ searchTerm }}’ in ‘Polkadot’</p>
     </span>
-    <div class="bg-white p-0 fade-in">
+    <div class="bg-white p-0 fade-in" v-if="searchResults.length > 0">
         <div v-if="!isMobile" class="row mx-0 p-2 pt-5 text-muted fw-bold">
             <h6 class="col-2">Name</h6>
             <h6 class="col-3">E-MAIL</h6>
