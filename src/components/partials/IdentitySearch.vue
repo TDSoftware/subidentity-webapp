@@ -33,8 +33,8 @@
                         class="btn btn-primary fw-normal text-white"
                         type="submit"
                     >
-                        SEARCH
                         <Spinner v-if="searchInProgress" />
+                        SEARCH
                     </button>
                 </div>
             </div>
