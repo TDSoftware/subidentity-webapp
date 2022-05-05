@@ -1,5 +1,5 @@
 import { SearchData } from "@/interfaces/SearchData";
-import { get, push, StoreKey } from "@/util/storage";
+import { get, push, set, StoreKey } from "@/util/storage";
 import { InjectionKey } from "vue";
 import { createStore, useStore as baseUseStore, Store, ActionContext } from "vuex";
 import { Identity, Page, searchIdentities } from "@npmjs_tdsoftware/subidentity";
@@ -51,6 +51,11 @@ export const store = createStore({
             const maxItemsInStorage = 12;
             push(StoreKey.RecentSearches, searchData, maxItemsInStorage);
             state.recentSearches = get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [];
+        },
+
+        clearRecentSearches(state: StoreI) {
+            set<SearchData<Identity>[]>(StoreKey.RecentSearches, []);
+            state.recentSearches = [];
         }
     },
     actions: {

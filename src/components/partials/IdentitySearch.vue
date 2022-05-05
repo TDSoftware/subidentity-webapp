@@ -19,7 +19,7 @@
                         />
                     </div>
                 </div>
-                <div class="col-lg-3 col-12 border-start border-end p-2">
+                <div class="col-lg-3 col-12 custom-select-container">
                     <CustomSelect
                         :options="chainOptions"
                         class="select"
@@ -104,8 +104,20 @@ export default class IdentitySearch extends Vue {
     }
 }
 </script>
-<style>
+
+<style lang="scss" scoped>
+@import "../../styles/variables";
+
 ion-icon {
-    font-size: 21px;
+    font-size: 20px;
+}
+
+.custom-select-container {
+    @include media-breakpoint-up(lg) {
+        border-left: 1px solid #dee2e6;
+        border-right: 1px solid #dee2e6;
+        padding: 0;
+        margin: 0;
+    }
 }
 </style>

@@ -82,7 +82,7 @@
             <div
                 class="d-flex flex-row badge w-50 text-capitalize bg-light mb-2"
             >
-                <div class="fw-light text-muted">
+                <div class="text-muted">
                     <ion-icon
                         size="small"
                         class="fw-light text-muted"
@@ -98,7 +98,7 @@
                         name="folder-outline"
                     ></ion-icon>
                 </div>
-                <div class="mx-2 fw-light text-muted">
+                <div class="mx-2 text-muted">
                     {{ identity.basicInfo.address }}
                 </div>
             </div>

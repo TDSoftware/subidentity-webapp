@@ -45,8 +45,18 @@ $badge-font-weight: $font-weight-normal;
   width: calc(100% - 30px);
 
   @include media-breakpoint-up(sm) {
-    width: 100%;
     max-width: 920px;
+  }
+
+  @media screen and (min-width: 1600px) {
+    max-width: 1200px;
+  }
+}
+
+.btn {
+  ion-icon {
+    font-size: 18px;
+    margin-bottom: -2px
   }
 }
 

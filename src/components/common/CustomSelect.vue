@@ -91,9 +91,10 @@ export default class CustomSelect extends Vue {
     .selected {
         background-color: #fff;
         border-radius: 6px;
-        border: 1px solid #fff;
+        // border: 1px solid #fff;
+        border: none;
         color: #000;
-        padding-left: 3.85rem;
+        padding-left: 3.7rem;
         padding-right: 2rem;
         user-select: none;
         white-space: nowrap;
@@ -129,8 +130,8 @@ export default class CustomSelect extends Vue {
     .icon {
         position: absolute;
         content: "";
-        top: 14%;
-        left: 5%;
+        top: 5%;
+        left: 15px;
     }
 
     .items {
@@ -143,7 +144,7 @@ export default class CustomSelect extends Vue {
         background-color: #fff;
         left: 0;
         right: 0;
-        top: 56px;
+        top: 48px;
         z-index: 1;
 
         div {

@@ -49,6 +49,7 @@ export default class ListView extends Vue {}
 
 .subidentity-container {
     padding-top: 30px;
+    min-height: calc(100vh - $footerHeight - 94px);
 
     @include media-breakpoint-up(lg) {
         padding-top: $headerHeight;
