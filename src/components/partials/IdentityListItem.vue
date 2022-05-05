@@ -1,5 +1,9 @@
 <template>
-    <div v-if="!isMobile" class="row mx-0 p-1 rounded border identity-list">
+    <div
+        v-if="!isMobile"
+        class="row mx-0 p-1 rounded border identity-list"
+        @click="$router.push('/identity')"
+    >
         <div class="col-2">
             <div class="d-flex flex-row avatar">
                 <img
