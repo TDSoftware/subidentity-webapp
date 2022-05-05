@@ -47,6 +47,10 @@ $badge-font-weight: $font-weight-normal;
   @include media-breakpoint-up(sm) {
     max-width: 920px;
   }
+
+  @media screen and (min-width: 1600px) {
+    max-width: 1200px;
+  }
 }
 
 .btn {

@@ -3,12 +3,10 @@
 </template>
 
 <script lang="ts">
-import {Options, Vue} from "vue-class-component";
+import { Options, Vue } from "vue-class-component";
 import "./styles/app.scss";
 
 @Options({})
-export default class App extends Vue {
-
-}
+export default class App extends Vue {}
 </script>
 
