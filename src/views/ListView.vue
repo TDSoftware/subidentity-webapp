@@ -2,7 +2,7 @@
     <div class="sid-wrapper">
         <div class="search-container">
             <div class="search container-medium p-0 fade-in">
-                <IdentitySearch />
+                <IdentitySearch @search="onSearch" />
             </div>
         </div>
         <div class="subidentity-container pb-5">
@@ -17,6 +17,8 @@
 import { Options, Vue } from "vue-class-component";
 import IdentitySearch from "@/components/partials/IdentitySearch.vue";
 import IdentityList from "@/components/partials/IdentityList.vue";
+import { SearchData } from "@/interfaces/SearchData";
+import router from "@/router";
 
 @Options({
     components: {
@@ -24,7 +26,17 @@ import IdentityList from "@/components/partials/IdentityList.vue";
         IdentityList
     }
 })
-export default class ListView extends Vue {}
+export default class ListView extends Vue {
+    onSearch(searchData: SearchData<void>) {
+        router.push({
+            path: "/search",
+            query: {
+                query: searchData.searchTerm,
+                chain: searchData.selectedChainKey
+            }
+        });
+    }
+}
 </script>
 
 <style lang="scss" scoped>
