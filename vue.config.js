@@ -2,6 +2,7 @@ const { defineConfig } = require("@vue/cli-service");
 module.exports = defineConfig({
     transpileDependencies: true,
     chainWebpack: config => {
+        config.plugins.delete("named-chunks");
         config.module
             .rule("vue")
             .use("vue-loader")
@@ -9,7 +10,7 @@ module.exports = defineConfig({
             .tap(options => {
                 options.compilerOptions = {
                     ...(options.compilerOptions || {}),
-                    isCustomElement: tag => /^ion-/.test(tag)
+                    isCustomElement: tag => /^ion-/.test(tag) || tag === "polkadot-web-identicon"
                 };
                 return options;
             });

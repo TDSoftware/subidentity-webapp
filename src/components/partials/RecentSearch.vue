@@ -111,7 +111,7 @@ export default class RecentSearch extends Vue {
 
 <style lang="scss" scoped>
 .chain-name-badge {
-    line-height: 20px;
+    line-height: 19px;
     padding-bottom: 0;
     padding-top: 0.4rem;
 }

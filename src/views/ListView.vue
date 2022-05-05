@@ -55,7 +55,7 @@ export default class ListView extends Vue {
     top: 75px;
     width: 100%;
     @include media-breakpoint-up(lg) {
-        top: 60px;
+        top: 68px;
     }
 }
 

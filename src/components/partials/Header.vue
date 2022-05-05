@@ -55,7 +55,7 @@ header {
 
         img {
             height: 38px;
-            margin: 22px 15px 22px 22px;
+            margin: 28px 15px 28px 22px;
         }
 
         h1 {
@@ -70,7 +70,7 @@ header {
             font-weight: 700;
             font-size: 22px;
             line-height: 38px;
-            margin: 22px 0;
+            margin: 28px 0;
         }
     }
 }
