@@ -11,7 +11,7 @@
         <div class="row mx-0 p-2 text-muted fw-bold labels">
             <h6 class="col">Name</h6>
             <h6 class="col">E-MAIL</h6>
-            <h6 class="col" style="flex: 0 0 455px">ADDRESS</h6>
+            <h6 class="col address-col">ADDRESS</h6>
             <h6 class="col" style="flex: 0 0 150px">CHAIN</h6>
             <h6 class="col" style="flex: 0 0 100px">PROFILE</h6>
         </div>
@@ -57,6 +57,11 @@ h6 {
     display: none;
     @include media-breakpoint-up(md) {
         display: flex;
+    }
+}
+.address-col {
+    @media screen and (min-width: 1600px) {
+        flex: 0 0 455px;
     }
 }
 </style>

@@ -9,7 +9,7 @@ module.exports = defineConfig({
             .tap(options => {
                 options.compilerOptions = {
                     ...(options.compilerOptions || {}),
-                    isCustomElement: tag => /^ion-/.test(tag)
+                    isCustomElement: tag => /^ion-/.test(tag) || tag === "polkadot-web-identicon"
                 };
                 return options;
             });

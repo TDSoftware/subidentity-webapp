@@ -3,28 +3,33 @@
         class="row mx-0 py-3 px-2 identity-list-item"
         @click="$router.push('/identity/' + identity.basicInfo.address)"
     >
-        <div class="col">
+        <div class="col-md col-sm-12">
             <div class="d-flex flex-row avatar">
                 <div class="img-wrapper">
-                    <img
-                        src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80"
-                        class="rounded-circle"
-                        alt="Cinque Terre"
+                    <polkadot-web-identicon
+                        size="50"
+                        :address="identity.basicInfo.address"
+                        theme="polkadot"
                     />
                 </div>
                 <h6>{{ identity.basicInfo.display }}</h6>
             </div>
         </div>
-        <div class="col text-muted vertical-centered-column">
+        <div class="col-md col-sm-12 text-muted vertical-centered-column">
             {{ identity.basicInfo.email || "-" }}
         </div>
         <div
-            class="col text-muted vertical-centered-column font-monospace"
-            style="flex: 0 0 455px"
+            class="
+                col
+                text-muted
+                vertical-centered-column
+                font-monospace
+                address-col
+            "
         >
             {{ identity.basicInfo.address }}
         </div>
-        <div class="col vertical-centered-column" style="flex: 0 0 150px">
+        <div class="col-md col-sm-12 vertical-centered-column chain-col">
             <div
                 class="
                     d-flex
@@ -46,7 +51,10 @@
                 <div class="mx-2">{{ identity.chain }}</div>
             </div>
         </div>
-        <div class="col vertical-centered-column" style="flex: 0 0 100px">
+        <div
+            class="col-md col-sm-12 vertical-centered-column"
+            style="flex: 0 0 100px"
+        >
             <span class="text-decoration-none link-primary">
                 <div class="d-flex flex-row">
                     <span>Details</span>
@@ -65,7 +73,6 @@ import { Options, Vue } from "vue-class-component";
 import { Identity } from "@npmjs_tdsoftware/subidentity";
 
 @Options({
-    components: {},
     props: {
         identity: {
             type: Object,
@@ -87,9 +94,6 @@ export default class IdentityListItem extends Vue {
 }
 .icon {
     padding-top: 4px;
-}
-.font-monospace {
-    font-size: 0.9rem;
 }
 .avatar {
     height: 100%;
@@ -117,7 +121,6 @@ export default class IdentityListItem extends Vue {
     margin-bottom: 18px;
     border: 1px solid #d8d8d8;
     border-radius: 5px;
-    border-bottom: none;
 
     &:last-child {
         border-bottom: 1px solid #d8d8d8;
@@ -138,6 +141,7 @@ export default class IdentityListItem extends Vue {
 
     @include media-breakpoint-up(md) {
         margin-bottom: 0;
+        border-bottom: none;
 
         & > * {
             margin-bottom: 0;
@@ -154,5 +158,22 @@ export default class IdentityListItem extends Vue {
     flex-direction: column;
     justify-content: center;
     overflow-wrap: anywhere;
+}
+
+.address-col {
+    font-size: 0.9rem;
+    @media screen and (min-width: 1600px) {
+        flex: 0 0 455px;
+    }
+}
+
+.chain-col {
+    @include media-breakpoint-up(md) {
+        flex: 0 0 150px;
+    }
+}
+
+polkadot-web-identicon {
+    transform: translateY(9px);
 }
 </style>
