@@ -14,7 +14,7 @@
                         <div class="d-flex mb-3">
                             <span class="fw-light text-muted pt-1">
                                 <ion-icon
-                                    class="fw-light text-muted"
+                                    class="text-muted"
                                     name="search-outline"
                                 ></ion-icon>
                             </span>

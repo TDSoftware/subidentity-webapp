@@ -72,7 +72,7 @@ export const store = createStore({
                 return console.error("[store/index] No address given for chain: ", searchData.selectedChainKey);
             }
             const pageNumber = 1;
-            const limit = 100;
+            const limit = 9999;
             const page: Page<Identity> = await searchIdentities(wsProvider, searchData.searchTerm, pageNumber, limit);
             console.log("[store/index] Got identities: ", page);
 
