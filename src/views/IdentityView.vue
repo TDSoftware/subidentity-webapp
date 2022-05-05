@@ -9,13 +9,14 @@
 
     <div class="subidentity-container">
         <div class="container-medium">
-            <a class="text-decoration-none link-primary" href="#">
-                <div class="d-flex flex-row pt-4">
+            <router-link class="text-decoration-none" to="-1"
+                ><div class="d-flex flex-row pt-4" @click="$router.go(-1)">
                     <ion-icon class="icon" name="arrow-back-outline"></ion-icon>
                     <p class="mx-2">Back to results</p>
-                </div>
-            </a>
-            <profile />
+                </div></router-link
+            >
+            <Profile />
+            <Plugins />
         </div>
     </div>
 </template>
@@ -23,10 +24,12 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import Profile from "@/components/partials/Profile.vue";
+import Plugins from "@/components/partials/Plugins.vue";
 
 @Options({
     components: {
-        Profile
+        Profile,
+        Plugins
     }
 })
 export default class IdentityView extends Vue {}
@@ -36,6 +39,6 @@ export default class IdentityView extends Vue {}
     cursor: pointer;
 }
 .icon {
-    padding-top: 5px;
+    padding-top: 2px;
 }
 </style>
