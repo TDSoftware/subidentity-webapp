@@ -1,10 +1,10 @@
-import {createRouter, createWebHistory, RouteRecordRaw} from "vue-router";
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import DefaultLayout from "@/components/layouts/DefaultLayout.vue";
 import SecondaryLayout from "@/components/layouts/SecondaryLayout.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
-        path: "/identity",
+        path: "/identity/:address",
         name: "",
         component: SecondaryLayout,
         children: [{
