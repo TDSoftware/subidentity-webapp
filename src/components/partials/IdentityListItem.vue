@@ -128,6 +128,10 @@ export default class IdentityListItem extends Vue {
 
         & > * {
             margin-bottom: 0;
+
+            &:last-child {
+                margin-top: 0;
+            }
         }
     }
 }
