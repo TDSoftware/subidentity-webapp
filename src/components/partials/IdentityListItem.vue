@@ -1,7 +1,7 @@
 <template>
     <div
         class="row mx-0 py-3 px-2 identity-list-item"
-        @click="$router.push('/identity/' + identity.basicInfo.address)"
+        @click="$router.push(profileAddress)"
     >
         <div class="col-md col-sm-12">
             <div class="d-flex flex-row avatar">
@@ -82,6 +82,15 @@ import { Identity } from "@npmjs_tdsoftware/subidentity";
 })
 export default class IdentityListItem extends Vue {
     identity!: Identity;
+
+    get profileAddress() {
+        return (
+            "/chain/" +
+            this.identity.chain.toLowerCase() +
+            "/identity/" +
+            this.identity.basicInfo.address
+        );
+    }
 }
 </script>
 
