@@ -4,6 +4,16 @@ import SecondaryLayout from "@/components/layouts/SecondaryLayout.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
+        path: "/identity",
+        name: "",
+        component: SecondaryLayout,
+        children: [{
+            name: "Identity.vue",
+            path: "",
+            component: () => import(/* webpackChunkName: "level-creator-page" */ "../views/IdentityView.vue")
+        }]
+    },
+    {
         path: "/search",
         name: "",
         component: SecondaryLayout,
