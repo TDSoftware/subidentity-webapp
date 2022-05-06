@@ -11,15 +11,19 @@
                             ></ion-icon>
                         </span>
                         <input
+                            :disabled="busy"
                             autofocus
                             v-model="searchTerm"
-                            class="form-control fw-light text-muted"
+                            class="form-control text-muted search-input"
                             placeholder="Search for a Name, E-Mail, Address"
                             type="text"
                         />
                     </div>
                 </div>
-                <div class="col-lg-3 col-12 custom-select-container">
+                <div
+                    class="col-lg-3 col-12 custom-select-container"
+                    :class="{ disabled: busy }"
+                >
                     <CustomSelect
                         :options="chainOptions"
                         class="select"
@@ -29,11 +33,11 @@
                 <div class="col-lg-2 col-12 d-grid mx-auto">
                     <button
                         ref="searchButton"
-                        :disabled="!searchTerm || searchInProgress"
+                        :disabled="!searchTerm || busy"
                         class="btn btn-primary fw-normal text-white"
                         type="submit"
                     >
-                        <Spinner v-if="searchInProgress" />
+                        <Spinner v-if="busy" />
                         SEARCH
                     </button>
                 </div>
@@ -55,6 +59,11 @@ import { UISelectOption } from "@/interfaces/UISelectOption";
     components: {
         CustomSelect,
         Spinner
+    },
+    watch: {
+        selectedChainKey() {
+            this.checkIdentityPalletExists();
+        }
     }
 })
 export default class IdentitySearch extends Vue {
@@ -63,7 +72,7 @@ export default class IdentitySearch extends Vue {
     selectedChainKey = "";
     searchResult = 23;
     searchDate = new Date().toUTCString();
-    searchInProgress = false;
+    busy = false;
 
     created() {
         const searchParams = new URLSearchParams(window.location.search);
@@ -90,8 +99,26 @@ export default class IdentitySearch extends Vue {
         });
     }
 
+    /**
+     *  If the selected blockchain does not implement the identity pallet,
+     *  we cannot search for identities...
+     */
+    async checkIdentityPalletExists() {
+        this.busy = true;
+        const implementsPallet: boolean = await this.store.dispatch(
+            "IDENTITY_PALLET_EXISTS",
+            this.selectedChainKey
+        );
+        if (!implementsPallet) {
+            alert(
+                "Sorry, the selected node is not available or does not implement the identity pallet"
+            );
+        }
+        this.busy = false;
+    }
+
     async submitIdentitySearch() {
-        this.searchInProgress = true;
+        this.busy = true;
         const searchData: SearchData<void> = {
             searchTerm: this.searchTerm,
             selectedChainKey: this.selectedChainKey,
@@ -100,7 +127,7 @@ export default class IdentitySearch extends Vue {
         };
         await this.store.dispatch("SEARCH_IDENTITIES", searchData);
         this.$emit("search", searchData);
-        this.searchInProgress = false;
+        this.busy = false;
     }
 }
 </script>
@@ -112,12 +139,28 @@ ion-icon {
     font-size: 20px;
 }
 
+input {
+    transition: opacity 0.3s ease-out;
+}
+
+input:disabled.search-input.form-control {
+    opacity: 0.5;
+    background: white !important;
+}
+
 .custom-select-container {
+    transition: opacity 0.3s ease-out;
     @include media-breakpoint-up(lg) {
         border-left: 1px solid #dee2e6;
         border-right: 1px solid #dee2e6;
         padding: 0;
         margin: 0;
+    }
+
+    &.disabled {
+        cursor: default;
+        pointer-events: none;
+        opacity: 0.5;
     }
 }
 </style>
