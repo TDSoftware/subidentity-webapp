@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import Logo from "@/components/partials/Logo.vue";
+import Logo from "@/components/partials/general/Logo.vue";
 import IdentitySearch from "@/components/partials/IdentitySearch.vue";
 import RecentSearch from "@/components/partials/RecentSearch.vue";
 import { SearchData } from "@/interfaces/SearchData";

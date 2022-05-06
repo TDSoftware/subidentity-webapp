@@ -8,8 +8,8 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import Footer from "@/components/partials/Footer.vue";
-import Header from "../partials/Header.vue";
+import Footer from "@/components/partials/general/Footer.vue";
+import Header from "../partials/general/Header.vue";
 
 @Options({
     components: {
