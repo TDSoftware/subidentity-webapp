@@ -18,6 +18,6 @@ If you click on a table row, you will be redirected to the users [Identity View]
 
 ## <a id="identityView"></a> View Identity
 
-In the Identity View the available details of a user are displayed. The identicon displays an address as a unique icon and could therefore be used to recognize an identity. Information is displayed in separate plugins. Basic Information can be found in the Plugin with title "Basic Info".  You can copy the accounts address by clicking on the copy icon next to it.
+In the Identity View the available details of a user are displayed. The identicon displays an address as a unique icon and could therefore be used to recognize an identity. Information is displayed in separate plugins. Basic Information can be found in the Plugin with title "Basic Info".
 
-ℹ️ If an information in the selected identity is missing, the field for this information will not be shown.
+ℹ️ If an information of the selected identity is missing, the field for this information will not be shown.

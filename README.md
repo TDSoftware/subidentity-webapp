@@ -71,6 +71,7 @@ Plugins like seen in following picture are used to display information.
 ![Plugin](./docs/assets/basicPlugin.png)
 
 The identity view can easily be extended with custom plugins to display various information as explained below. You can refer to `./src/components/partials/profile/plugins/BasicInfoPlugin.vue` as an example.
+
 To add your own plugin create a vue file with a significant name in `./src/components/partials/profile/plugins/`. Use the Accordion component to place your content inside in order to add a plugin matching the Basic Plugin Design.
 Import it into your plugin from `./src/components/common/Accordion.vue` and use it like:
 
@@ -82,7 +83,21 @@ Import it into your plugin from `./src/components/common/Accordion.vue` and use 
     </Accordion>
 </template>    
 ```
-Then import the plugin into the `IdentityView.vue`, add it to the list of components and use it like the basic info plugin as follows:
+Then import the plugin into the `IdentityView.vue` and add it to the list of components as follows:
+```
+import BasicInfoPlugin from "@/components/partials/profile/plugins/BasicInfoPlugin.vue";
+import YourPluginName from "@/components/partials/profile/plugins/YourPluginName.vue";
+
+@Options({
+    components: {
+        //... all the components used in Identity View
+        BasicInfoPlugin,
+        YourPluginName
+    }
+})
+```
+
+Now you can use it like the basic info plugin in your identity view:
 ```
     <div v-if="loaded" class="plugins fade-in">
         <BasicInfoPlugin :identity="identity" />
