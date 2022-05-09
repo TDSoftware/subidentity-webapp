@@ -64,7 +64,7 @@
                     </p>
                     <a
                         class="text-decoration-none link-primary mx-2"
-                        href="identity.basicInfo.web"
+                        :href="identity.basicInfo.web"
                         target="_blank"
                     >
                         <ion-icon
