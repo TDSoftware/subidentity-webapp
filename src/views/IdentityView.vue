@@ -103,6 +103,7 @@ export default class IdentityView extends Vue {
     flex-direction: row;
     & > * {
         margin-right: 2rem;
+        min-width: 33%;
 
         &:last-child {
             margin-right: 0;
