@@ -2,7 +2,7 @@ import { SearchData } from "@/interfaces/SearchData";
 import { get, push, set, StoreKey } from "@/util/storage";
 import { InjectionKey } from "vue";
 import { createStore, useStore as baseUseStore, Store, ActionContext } from "vuex";
-import { Identity, implementsIdentityPallet, Page, searchIdentities } from "@npmjs_tdsoftware/subidentity";
+import { getIdentity, Identity, implementsIdentityPallet, Page, searchIdentities } from "@npmjs_tdsoftware/subidentity";
 import { getChainAddress } from "@/util/chains";
 import { LoadIdentityRequest } from "@/interfaces/LoadIdentityRequest";
 
@@ -83,21 +83,14 @@ export const store = createStore({
             context.commit("storeAsRecentSearch", searchData);
         },
 
-        async LOAD_IDENTITY(context: ActionContext<StoreI, StoreI>, request: LoadIdentityRequest): Promise<Identity | undefined> {
+        async LOAD_IDENTITY(context: ActionContext<StoreI, StoreI>, request: LoadIdentityRequest): Promise<Identity> {
             const wsAddress = getChainAddress(request.chain);
             if (!wsAddress) {
-                console.error("[store/index] No address given for chain: ", request.chain);
-                return;
+                throw new Error("[store/index] No address given for chain: " + request.chain);
             }
-            const pageNumber = 1;
-            const limit = 1;
-
-            // TODO: Replace for getIdentity
-
-            const page: Page<Identity> = await searchIdentities(wsAddress, request.address, pageNumber, limit);
-            console.log("[store/index] Got identity by address: ", page.items[0]);
-
-            return page.items[0];
+            const identity: Identity = await getIdentity(wsAddress, request.address);
+            console.log("[store/index] Got identity by address: ", identity);
+            return identity;
         },
 
         async IDENTITY_PALLET_EXISTS(context: ActionContext<StoreI, StoreI>, chainKey: string): Promise<boolean> {

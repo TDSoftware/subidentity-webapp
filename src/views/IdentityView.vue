@@ -84,10 +84,18 @@ export default class IdentityView extends Vue {
     padding-right: 4px;
 }
 .sid-wrapper {
-    padding-top: 230px;
+    padding-top: $headerHeightMobile;
+
+    & > * {
+        min-height: calc(100vh - $footerHeight - $headerHeightMobile);
+    }
 
     @include media-breakpoint-up(lg) {
         padding-top: $headerHeight;
+
+        & > * {
+            min-height: calc(100vh - $footerHeight - $headerHeight);
+        }
     }
 }
 .plugins {
