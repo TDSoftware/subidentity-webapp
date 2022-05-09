@@ -36,6 +36,12 @@ export const store = createStore({
             return state.recentSearches[
                 state.recentSearches.length - 1
             ]?.searchTerm;
+        },
+
+        lastSearchChainKey(state: StoreI) {
+            return state.recentSearches[
+                state.recentSearches.length - 1
+            ]?.selectedChainKey;
         }
     },
     mutations: {

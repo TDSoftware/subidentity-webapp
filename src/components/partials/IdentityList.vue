@@ -5,7 +5,7 @@
     </p> -->
     <div class="mb-4 pb-1">
         <p class="h4 mb-2">{{ searchResults.length }} Search Results</p>
-        <p class="text-muted">for "{{ searchTerm }}"" in "Polkadot"</p>
+        <p class="text-muted">for "{{ searchTerm }}" in "{{ chainName }}"</p>
     </div>
     <div class="bg-white p-0 fade-in" v-if="searchResults.length > 0">
         <div class="row mx-0 p-2 text-muted fw-bold labels">
@@ -25,6 +25,7 @@
 import { Options, Vue } from "vue-class-component";
 import IdentityListItem from "@/components/partials/IdentityListItem.vue";
 import { useStore } from "@/store";
+import { getChainName } from "@/util/chains";
 
 @Options({
     components: {
@@ -40,6 +41,10 @@ export default class IdentityList extends Vue {
 
     get searchTerm() {
         return this.store.getters.lastSearchTerm;
+    }
+
+    get chainName() {
+        return getChainName(this.store.getters.lastSearchChainKey);
     }
 
     isMobile = false;
