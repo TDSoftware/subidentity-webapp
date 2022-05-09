@@ -1,8 +1,8 @@
 <template>
     <div class="d-flex pt-4 fade-in row">
-        <div class="col-sm-1 col-xs-12 icon-wrapper">
+        <div class="col-sm-1 col-xs-12 icon-wrapper mb-4">
             <polkadot-web-identicon
-                size="100"
+                size="64"
                 :address="identity.basicInfo.address"
                 theme="polkadot"
             />
@@ -29,7 +29,6 @@
                         rounded
                         p-1
                         tag
-                        fw-light
                         text-muted
                     "
                 >
@@ -86,7 +85,7 @@ export default class ProfileHeader extends Vue {
 }
 
 .tag {
-    line-height: 30px;
+    line-height: 25px;
 }
 .icon-wrapper {
     justify-content: center;

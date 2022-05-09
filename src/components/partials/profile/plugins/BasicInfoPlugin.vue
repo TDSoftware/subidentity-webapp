@@ -21,11 +21,11 @@
                 <p class="mb-0 fw-bold">Balance</p>
                 <p class="fw-light text-muted">{{ balance }}</p>
             </div>
-            <div v-if="identity.basicInfo.display">
+            <div v-if="identity.basicInfo.legal">
                 <p class="mb-0 fw-bold">Full name</p>
                 <div class="d-flex flex-row">
                     <p class="fw-light text-muted">
-                        {{ identity.basicInfo.display }}
+                        {{ identity.basicInfo.legal }}
                     </p>
                 </div>
             </div>
