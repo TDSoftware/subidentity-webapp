@@ -1,21 +1,22 @@
 <template>
-    <div class="d-flex pt-4 fade-in">
-        <polkadot-web-identicon
-            size="100"
-            :address="identity.basicInfo.address"
-            theme="polkadot"
-        />
-        <div class="mx-4">
+    <div class="d-flex pt-4 fade-in row">
+        <div class="col-sm-1 col-xs-12 icon-wrapper">
+            <polkadot-web-identicon
+                size="100"
+                :address="identity.basicInfo.address"
+                theme="polkadot"
+            />
+        </div>
+        <div class="mx-4 col">
             <h4>{{ identity.basicInfo.display }}</h4>
             <div class="d-flex flex-row">
                 <p class="fw-light text-muted" style="overflow-wrap: anywhere">
                     Address: {{ identity.basicInfo.address }}
                 </p>
-                <span class="text-decoration-none link-primary mx-2">
-                    <!-- TODO: add copy to clip board feature -->
-
+                <!-- TODO: add copy to clip board feature -->
+                <!-- <span class="text-decoration-none link-primary mx-2">                    
                     <ion-icon size="small" name="copy-outline"></ion-icon>
-                </span>
+                </span> -->
             </div>
             <div class="d-flex flex-row">
                 <div
@@ -45,7 +46,7 @@
                 <!-- TODO: add this info from getIdentity -->
             </div>
         </div>
-        <div class="ms-auto">
+        <!-- <div class="ms-auto">
             <button
                 class="btn btn-primary fw-bold w-100 text-white"
                 type="submit"
@@ -53,7 +54,7 @@
             >
                 SEND Token
             </button>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -79,11 +80,19 @@ export default class ProfileHeader extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import "../../../styles/variables";
 .text-success {
     line-height: 40px;
 }
 
 .tag {
     line-height: 30px;
+}
+.icon-wrapper {
+    justify-content: center;
+    display: flex;
+    @include media-breakpoint-up(sm) {
+        display: block;
+    }
 }
 </style>

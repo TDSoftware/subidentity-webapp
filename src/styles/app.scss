@@ -60,6 +60,12 @@ $badge-font-weight: $font-weight-normal;
   }
 }
 
+.link-primary {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 
 // 4. Include any optional Bootstrap CSS as needed
 @import "node_modules/bootstrap/scss/bootstrap-utilities";

@@ -34,3 +34,11 @@ export const chains: ChainInfo[] = [
 export function getChainAddress(chainKey: string): string | undefined {
     return chains.find(({ key }) => chainKey === key)?.address;
 }
+
+/**
+ * @param chainKey - example: "polkadot" 
+ */
+export function getChainName(chainKey: string): string | undefined {
+    return chains.find(({ key }) => chainKey === key)?.name;
+}
+

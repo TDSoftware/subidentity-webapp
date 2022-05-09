@@ -12,16 +12,15 @@
                         {{ identity.basicInfo.address }}
                     </p>
                     <!-- TODO: add copy to clip board feature -->
-                    <span class="text-decoration-none link-primary mx-2">
+                    <!-- <span class="text-decoration-none link-primary mx-2">
                         <ion-icon size="small" name="copy-outline"></ion-icon>
-                    </span>
+                    </span> -->
                 </div>
             </div>
-            <!-- TODO: add this -->
-            <!-- <div>
+            <div v-if="balance">
                 <p class="mb-0 fw-bold">Balance</p>
-                <p class="fw-light text-muted">-</p>                
-            </div> -->
+                <p class="fw-light text-muted">{{ balance }}</p>
+            </div>
             <div v-if="identity.basicInfo.display">
                 <p class="mb-0 fw-bold">Full name</p>
                 <div class="d-flex flex-row">
@@ -65,7 +64,7 @@
                     </p>
                     <a
                         class="text-decoration-none link-primary mx-2"
-                        href="identity.basicInfo.web"
+                        :href="identity.basicInfo.web"
                         target="_blank"
                     >
                         <ion-icon
@@ -76,14 +75,15 @@
                     </a>
                 </div>
             </div>
-            <!-- TODO: add this -->
-            <!-- <div>
+            <div v-if="judgements">
                 <p class="mb-0 fw-bold">Judgements</p>
                 <p class="fw-light text-muted">
                     Registrar determined this identity as
-                    <span class="text-success">good</span>
+                    <span class="text-success">
+                        {{ judgements }}
+                    </span>
                 </p>
-            </div> -->
+            </div>
         </template>
     </Accordion>
 </template>
@@ -106,5 +106,21 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class BasicInfoPlugin extends Vue {
     identity!: Identity;
+
+    get judgements() {
+        return this.identity.judgements
+            ?.map((judgement: string) => judgement.toLowerCase())
+            .join(", ");
+    }
+
+    get balance() {
+        const { total, symbol } = this.identity.balance ?? {};
+        if (!total || !symbol) return "";
+        return `${this.getNumberFormatter(symbol).format(Number(total))}`;
+    }
+
+    getNumberFormatter(currency: string) {
+        return new Intl.NumberFormat("en-US", { style: "currency", currency });
+    }
 }
 </script>
