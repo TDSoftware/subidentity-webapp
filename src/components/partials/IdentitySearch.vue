@@ -33,7 +33,7 @@
                 <div class="col-lg-2 col-12 d-grid mx-auto">
                     <button
                         ref="searchButton"
-                        :disabled="!searchTerm || busy"
+                        :disabled="submitButtonDisabled"
                         class="btn btn-primary fw-normal text-white"
                         type="submit"
                     >
@@ -73,6 +73,7 @@ export default class IdentitySearch extends Vue {
     searchResult = 23;
     searchDate = new Date().toUTCString();
     busy = false;
+    implementsPallet = false;
 
     created() {
         const searchParams = new URLSearchParams(window.location.search);
@@ -90,6 +91,10 @@ export default class IdentitySearch extends Vue {
         }
     }
 
+    get submitButtonDisabled() {
+        return !this.searchTerm || this.busy || !this.implementsPallet;
+    }
+
     get chainOptions(): UISelectOption[] {
         return chains.map((chainInfo: ChainInfo) => {
             return {
@@ -105,11 +110,11 @@ export default class IdentitySearch extends Vue {
      */
     async checkIdentityPalletExists() {
         this.busy = true;
-        const implementsPallet: boolean = await this.store.dispatch(
+        this.implementsPallet = await this.store.dispatch(
             "IDENTITY_PALLET_EXISTS",
             this.selectedChainKey
         );
-        if (!implementsPallet) {
+        if (!this.implementsPallet) {
             alert(
                 "Sorry, the selected node is not available or does not implement the identity pallet"
             );
