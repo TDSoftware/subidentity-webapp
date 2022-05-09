@@ -2,7 +2,7 @@ import { SearchData } from "@/interfaces/SearchData";
 import { get, push, set, StoreKey } from "@/util/storage";
 import { InjectionKey } from "vue";
 import { createStore, useStore as baseUseStore, Store, ActionContext } from "vuex";
-import { Identity, Page, searchIdentities } from "@npmjs_tdsoftware/subidentity";
+import { Identity, implementsIdentityPallet, Page, searchIdentities } from "@npmjs_tdsoftware/subidentity";
 import { getChainAddress } from "@/util/chains";
 import { LoadIdentityRequest } from "@/interfaces/LoadIdentityRequest";
 
@@ -68,13 +68,13 @@ export const store = createStore({
          *  --> all recentSearches are store in localStorage and allow client side caching.
          */
         async SEARCH_IDENTITIES(context: ActionContext<StoreI, StoreI>, searchData: SearchData<Identity>): Promise<void> {
-            const wsProvider = getChainAddress(searchData.selectedChainKey);
-            if (!wsProvider) {
+            const wsAddress = getChainAddress(searchData.selectedChainKey);
+            if (!wsAddress) {
                 return console.error("[store/index] No address given for chain: ", searchData.selectedChainKey);
             }
             const pageNumber = 1;
             const limit = 9999;
-            const page: Page<Identity> = await searchIdentities(wsProvider, searchData.searchTerm, pageNumber, limit);
+            const page: Page<Identity> = await searchIdentities(wsAddress, searchData.searchTerm, pageNumber, limit);
             console.log("[store/index] Got identities: ", page);
 
             // // TODO: implement pagination
@@ -84,8 +84,8 @@ export const store = createStore({
         },
 
         async LOAD_IDENTITY(context: ActionContext<StoreI, StoreI>, request: LoadIdentityRequest): Promise<Identity | undefined> {
-            const wsProvider = getChainAddress(request.chain);
-            if (!wsProvider) {
+            const wsAddress = getChainAddress(request.chain);
+            if (!wsAddress) {
                 console.error("[store/index] No address given for chain: ", request.chain);
                 return;
             }
@@ -94,10 +94,19 @@ export const store = createStore({
 
             // TODO: Replace for getIdentity
 
-            const page: Page<Identity> = await searchIdentities(wsProvider, request.address, pageNumber, limit);
+            const page: Page<Identity> = await searchIdentities(wsAddress, request.address, pageNumber, limit);
             console.log("[store/index] Got identity by address: ", page.items[0]);
 
             return page.items[0];
+        },
+
+        async IDENTITY_PALLET_EXISTS(context: ActionContext<StoreI, StoreI>, chainKey: string): Promise<boolean> {
+            const wsAddress = getChainAddress(chainKey);
+            if (!wsAddress) {
+                console.error("[store/index] No address given for chain: ", chainKey);
+                return false;
+            }
+            return await implementsIdentityPallet(wsAddress);
         }
     },
     modules: {}
