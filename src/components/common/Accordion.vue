@@ -41,7 +41,15 @@ export default class Accordion extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import "../../styles/variables.scss";
 .icon {
     font-size: 26px;
+}
+.accordion-button:not(.collapsed) {
+    color: #212529;
+    background-color: #eeeeee;
+    &::after {
+        background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23212529%27%3e%3cpath fill-rule=%27evenodd%27 d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3e%3c/svg%3e");
+    }
 }
 </style>

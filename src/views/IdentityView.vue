@@ -102,8 +102,17 @@ export default class IdentityView extends Vue {
     display: flex;
     flex-direction: row;
     & > * {
-        margin-right: 2rem;
-        min-width: 33%;
+        width: 100%;
+
+        @include media-breakpoint-up(sm) {
+            width: 50%;
+            margin-right: 2rem;
+        }
+
+        @include media-breakpoint-up(md) {
+            width: 33%;
+            margin-right: 2rem;
+        }
 
         &:last-child {
             margin-right: 0;
@@ -114,5 +123,11 @@ export default class IdentityView extends Vue {
     width: 100%;
     text-align: center;
     padding: 2rem 0;
+}
+
+.container-medium {
+    @media screen and (max-width: 575px) {
+        padding: 0;
+    }
 }
 </style>
