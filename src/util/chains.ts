@@ -19,11 +19,6 @@ export const chains: ChainInfo[] = [
         key: "westend",
         name: "Westend",
         address: "wss://westend-rpc.polkadot.io"
-    },
-    {
-        key: "rococo",
-        name: "Rococo",
-        address: "wss://rococo-rpc.polkadot.io"
     }
 ];
 
