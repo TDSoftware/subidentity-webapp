@@ -9,6 +9,19 @@
             <div class="container-medium p-0">
                 <IdentityList />
             </div>
+            <div class="container-medium pt-5 p-0">
+                <div
+                    class="
+                        d-flex
+                        justify-content-center
+                        pt-3
+                        pb-2
+                        text-white-50
+                    "
+                >
+                    <Pagination />
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -19,11 +32,13 @@ import IdentitySearch from "@/components/partials/IdentitySearch.vue";
 import IdentityList from "@/components/partials/IdentityList.vue";
 import { SearchData } from "@/interfaces/SearchData";
 import router from "@/router";
+import Pagination from "@/components/common/Pagination.vue";
 
 @Options({
     components: {
         IdentitySearch,
-        IdentityList
+        IdentityList,
+        Pagination
     }
 })
 export default class ListView extends Vue {
