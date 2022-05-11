@@ -7,6 +7,10 @@
         <p class="h4 mb-2">{{ searchResults.length }} Search Results</p>
         <p class="text-muted">for "{{ searchTerm }}" in "{{ chainName }}"</p>
     </div>
+    <Alert
+        v-if="searchResults.length === 0"
+        message="Sorry, there are no results for your search term - Please try again"
+    />
     <div class="bg-white p-0 fade-in" v-if="searchResults.length > 0">
         <div class="row mx-0 p-2 text-muted fw-bold labels">
             <h6 class="col">Name</h6>
@@ -26,10 +30,12 @@ import { Options, Vue } from "vue-class-component";
 import IdentityListItem from "@/components/partials/IdentityListItem.vue";
 import { useStore } from "@/store";
 import { getChainName } from "@/util/chains";
+import Alert from "@/components/common/Alert.vue";
 
 @Options({
     components: {
-        IdentityListItem
+        IdentityListItem,
+        Alert
     }
 })
 export default class IdentityList extends Vue {
