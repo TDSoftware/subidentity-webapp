@@ -5,7 +5,9 @@
     </p> -->
     <div class="mb-4 pb-1">
         <p class="h4 mb-2">{{ searchResults.length }} Search Results</p>
-        <p class="text-muted">for "{{ searchTerm }}" in "{{ chainName }}"</p>
+        <p class="text-muted">
+            for "{{ lastSearchTerm }}" in "{{ chainName }}"
+        </p>
     </div>
     <div class="bg-white p-0 fade-in" v-if="searchResults.length > 0">
         <div class="row mx-0 p-2 text-muted fw-bold labels">
@@ -19,6 +21,17 @@
             <IdentityListItem :identity="identity" />
         </template>
     </div>
+    <div v-if="searchResults.length !== 0" class="container-medium pt-5">
+        <div class="d-flex justify-content-center pt-3 pb-2 text-white-50">
+            <Pagination
+                :totalPages="pagination.totalPageCount"
+                :currentPage="pagination.currentPage"
+                :previous="pagination.previous"
+                :next="pagination.next"
+                @onPagechange="onPageChange"
+            />
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -26,25 +39,51 @@ import { Options, Vue } from "vue-class-component";
 import IdentityListItem from "@/components/partials/IdentityListItem.vue";
 import { useStore } from "@/store";
 import { getChainName } from "@/util/chains";
+import Pagination from "@/components/common/Pagination.vue";
+import { SearchData } from "@/interfaces/SearchData";
 
 @Options({
     components: {
-        IdentityListItem
+        IdentityListItem,
+        Pagination
     }
 })
 export default class IdentityList extends Vue {
+    searchTerm = "";
+    selectedChainKey = "";
     store = useStore();
 
     get searchResults() {
         return this.store.getters.lastSearchResults;
     }
 
-    get searchTerm() {
+    get lastSearchTerm() {
         return this.store.getters.lastSearchTerm;
     }
 
     get chainName() {
         return getChainName(this.store.getters.lastSearchChainKey);
+    }
+
+    get pagination() {
+        return this.store.state.pagination;
+    }
+
+    async onPageChange(page: number) {
+        const searchParams = new URLSearchParams(window.location.search);
+        this.searchTerm = searchParams.get("query") ?? "";
+        this.selectedChainKey = searchParams.get("chain") ?? "";
+
+        const searchData: SearchData<void> = {
+            searchTerm: this.searchTerm,
+            selectedChainKey: this.selectedChainKey,
+            results: [],
+            timestamp: Date.now()
+        };
+        await this.store.dispatch("SEARCH_IDENTITIES", {
+            searchData,
+            currentPage: page
+        });
     }
 
     isMobile = false;

@@ -9,28 +9,6 @@
             <div class="container-medium p-0">
                 <IdentityList />
             </div>
-            <div
-                v-if="searchResults.length !== 0"
-                class="container-medium pt-5 p-0"
-            >
-                <div
-                    class="
-                        d-flex
-                        justify-content-center
-                        pt-3
-                        pb-2
-                        text-white-50
-                    "
-                >
-                    <Pagination
-                        :totalPages="pagination.totalPageCount"
-                        :currentPage="pagination.currentPage"
-                        :previous="pagination.previous"
-                        :next="pagination.next"
-                        @onPagechange="onPageChange"
-                    />
-                </div>
-            </div>
         </div>
     </div>
 </template>
@@ -39,29 +17,16 @@
 import { Options, Vue } from "vue-class-component";
 import IdentitySearch from "@/components/partials/IdentitySearch.vue";
 import IdentityList from "@/components/partials/IdentityList.vue";
-import { SearchData } from "@/interfaces/SearchData";
 import router from "@/router";
-import Pagination from "@/components/common/Pagination.vue";
-import { useStore } from "@/store";
+import { SearchData } from "@/interfaces/SearchData";
 
 @Options({
     components: {
         IdentitySearch,
-        IdentityList,
-        Pagination
+        IdentityList
     }
 })
 export default class ListView extends Vue {
-    store = useStore();
-    searchTerm = "";
-    selectedChainKey = "";
-
-    created() {
-        const searchParams = new URLSearchParams(window.location.search);
-        this.searchTerm = searchParams.get("query") ?? "";
-        this.selectedChainKey = searchParams.get("chain") ?? "";
-    }
-
     onSearch(searchData: SearchData<void>) {
         router.push({
             path: "/search",
@@ -69,27 +34,6 @@ export default class ListView extends Vue {
                 query: searchData.searchTerm,
                 chain: searchData.selectedChainKey
             }
-        });
-    }
-
-    get searchResults() {
-        return this.store.getters.lastSearchResults;
-    }
-
-    get pagination() {
-        return this.store.state.pagination;
-    }
-
-    async onPageChange(page: number) {
-        const searchData: SearchData<void> = {
-            searchTerm: this.searchTerm,
-            selectedChainKey: this.selectedChainKey,
-            results: [],
-            timestamp: Date.now()
-        };
-        await this.store.dispatch("SEARCH_IDENTITIES", {
-            searchData,
-            currentPage: page
         });
     }
 }
