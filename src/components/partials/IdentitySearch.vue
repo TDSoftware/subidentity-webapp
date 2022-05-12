@@ -70,8 +70,6 @@ export default class IdentitySearch extends Vue {
     store = useStore();
     searchTerm = "";
     selectedChainKey = "";
-    searchResult = 23;
-    searchDate = new Date().toUTCString();
     busy = false;
     implementsPallet = false;
 
@@ -130,7 +128,10 @@ export default class IdentitySearch extends Vue {
             results: [],
             timestamp: Date.now()
         };
-        await this.store.dispatch("SEARCH_IDENTITIES", searchData);
+        await this.store.dispatch("SEARCH_IDENTITIES", {
+            searchData,
+            currentPage: 1
+        });
         this.$emit("search", searchData);
         this.busy = false;
     }

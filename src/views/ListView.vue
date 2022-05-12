@@ -19,7 +19,13 @@
                         text-white-50
                     "
                 >
-                    <Pagination />
+                    <Pagination
+                        :totalPages="pagination.totalPageCount"
+                        :currentPage="pagination.currentPage"
+                        :previous="pagination.previous"
+                        :next="pagination.next"
+                        @onPagechange="onPageChange"
+                    />
                 </div>
             </div>
         </div>
@@ -33,6 +39,7 @@ import IdentityList from "@/components/partials/IdentityList.vue";
 import { SearchData } from "@/interfaces/SearchData";
 import router from "@/router";
 import Pagination from "@/components/common/Pagination.vue";
+import { useStore } from "@/store";
 
 @Options({
     components: {
@@ -42,6 +49,16 @@ import Pagination from "@/components/common/Pagination.vue";
     }
 })
 export default class ListView extends Vue {
+    store = useStore();
+    searchTerm = "";
+    selectedChainKey = "";
+
+    created() {
+        const searchParams = new URLSearchParams(window.location.search);
+        this.searchTerm = searchParams.get("query") ?? "";
+        this.selectedChainKey = searchParams.get("chain") ?? "";
+    }
+
     onSearch(searchData: SearchData<void>) {
         router.push({
             path: "/search",
@@ -49,6 +66,23 @@ export default class ListView extends Vue {
                 query: searchData.searchTerm,
                 chain: searchData.selectedChainKey
             }
+        });
+    }
+
+    get pagination() {
+        return this.store.state.pagination;
+    }
+
+    async onPageChange(page: number) {
+        const searchData: SearchData<void> = {
+            searchTerm: this.searchTerm,
+            selectedChainKey: this.selectedChainKey,
+            results: [],
+            timestamp: Date.now()
+        };
+        await this.store.dispatch("SEARCH_IDENTITIES", {
+            searchData,
+            currentPage: page
         });
     }
 }
