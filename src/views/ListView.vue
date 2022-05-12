@@ -9,7 +9,10 @@
             <div class="container-medium p-0">
                 <IdentityList />
             </div>
-            <div class="container-medium pt-5 p-0">
+            <div
+                v-if="searchResults.length !== 0"
+                class="container-medium pt-5 p-0"
+            >
                 <div
                     class="
                         d-flex
@@ -67,6 +70,10 @@ export default class ListView extends Vue {
                 chain: searchData.selectedChainKey
             }
         });
+    }
+
+    get searchResults() {
+        return this.store.getters.lastSearchResults;
     }
 
     get pagination() {
