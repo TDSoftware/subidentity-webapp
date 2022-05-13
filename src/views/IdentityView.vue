@@ -12,6 +12,9 @@
                     />
                     <p class="mx-2">Back to results</p>
                 </div>
+                <span v-if="loaded && error">
+                    <Alert :message="error" />
+                </span>
                 <div v-if="!loaded" class="spinner-wrapper">
                     <Spinner color="#D0D0D0" :size="40" :width="3" />
                 </div>
@@ -41,12 +44,14 @@ import { useRoute } from "vue-router";
 import { useStore } from "@/store";
 import { Identity } from "@npmjs_tdsoftware/subidentity";
 import Spinner from "@/components/common/Spinner.vue";
+import Alert from "@/components/common/Alert.vue";
 
 @Options({
     components: {
         Spinner,
         ProfileHeader,
-        BasicInfoPlugin
+        BasicInfoPlugin,
+        Alert
     }
 })
 export default class IdentityView extends Vue {
@@ -57,19 +62,24 @@ export default class IdentityView extends Vue {
     chain = (this.route.params.chain as string).toLowerCase();
     loaded = false;
     identity?: Identity;
+    error = "";
 
     created() {
         this.loadIdentity();
     }
 
     async loadIdentity() {
-        // TODO: Error handling for identity not found or no network etc.
-
-        this.identity = await this.store.dispatch("LOAD_IDENTITY", {
-            chain: this.chain,
-            address: this.address
-        });
-        this.loaded = true;
+        try {
+            this.identity = await this.store.dispatch("LOAD_IDENTITY", {
+                chain: this.chain,
+                address: this.address
+            });
+            this.loaded = true;
+        } catch (error) {
+            this.loaded = true;
+            this.error =
+                "Sorry, could not find identity with the given address";
+        }
     }
 }
 </script>
