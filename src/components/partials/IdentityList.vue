@@ -9,7 +9,11 @@
             for "{{ lastSearchTerm }}" in "{{ chainName }}"
         </p>
     </div>
-    <div class="bg-white p-0 fade-in" v-if="searchResults.length > 0">
+
+    <div
+        class="bg-white p-0 fade-in"
+        v-if="searchResults.length > 0 && pagination.totalPageCount !== 0"
+    >
         <div class="row mx-0 p-2 text-muted fw-bold labels">
             <h6 class="col">Name</h6>
             <h6 class="col">E-MAIL</h6>
@@ -21,9 +25,23 @@
             <IdentityListItem :identity="identity" />
         </template>
     </div>
-    <div v-if="searchResults.length !== 0" class="container-medium pt-5">
+
+    <div class="container-medium pt-5">
         <div class="d-flex justify-content-center pt-3 pb-2 text-white-50">
+            <div
+                v-if="
+                    pagination.totalPageCount === 0 &&
+                    searchResults.length !== 0
+                "
+                class="spinner-wrapper"
+            >
+                <Spinner color="#D0D0D0" :size="40" :width="3" />
+            </div>
             <Pagination
+                v-if="
+                    searchResults.length !== 0 &&
+                    pagination.totalPageCount !== 0
+                "
                 :totalPages="pagination.totalPageCount"
                 :currentPage="pagination.currentPage"
                 :previous="pagination.previous"
@@ -41,11 +59,13 @@ import { useStore } from "@/store";
 import { getChainName } from "@/util/chains";
 import Pagination from "@/components/common/Pagination.vue";
 import { SearchData } from "@/interfaces/SearchData";
+import Spinner from "@/components/common/Spinner.vue";
 
 @Options({
     components: {
         IdentityListItem,
-        Pagination
+        Pagination,
+        Spinner
     }
 })
 export default class IdentityList extends Vue {

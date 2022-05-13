@@ -12,6 +12,9 @@
                     Previous
                 </button>
             </li>
+            <li v-if="startPage > 1" class="page-item disabled">
+                <span class="page-link">...</span>
+            </li>
             <li
                 v-for="page in pages"
                 :class="{ active: currentPage === page.name }"
@@ -26,6 +29,12 @@
                 >
                     {{ page.name }}
                 </button>
+            </li>
+            <li
+                v-if="totalPages > 3 && startPage < totalPages - 2"
+                class="page-item disabled"
+            >
+                <span class="page-link">...</span>
             </li>
             <li class="page-item" :class="{ disabled: next === undefined }">
                 <button
