@@ -12,7 +12,11 @@
                     Previous
                 </button>
             </li>
-            <li v-if="startPage > 1" class="page-item disabled">
+            <li
+                v-if="startPage > 1"
+                class="page-item disabled"
+                ref="first-page-dots"
+            >
                 <span class="page-link">...</span>
             </li>
             <li
@@ -33,6 +37,7 @@
             <li
                 v-if="totalPages > 3 && startPage < totalPages - 2"
                 class="page-item disabled"
+                ref="last-page-dots"
             >
                 <span class="page-link">...</span>
             </li>
