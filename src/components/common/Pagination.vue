@@ -1,5 +1,5 @@
 <template>
-    <nav aria-label="...">
+    <nav>
         <ul class="pagination">
             <li class="page-item" :class="{ disabled: previous === undefined }">
                 <button
@@ -7,6 +7,7 @@
                     :disabled="previous === undefined"
                     class="page-link"
                     @click="onClickPreviousPage"
+                    ref="previous-button"
                 >
                     Previous
                 </button>
@@ -32,6 +33,7 @@
                     type="button"
                     :disabled="next === undefined"
                     class="btn page-link"
+                    ref="next-button"
                 >
                     Next
                 </button>
