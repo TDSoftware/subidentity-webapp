@@ -86,7 +86,7 @@ export default class IdentityList extends Vue {
     }
 
     get pagination() {
-        return this.store.state.pagination;
+        return this.store.state.identitySearchPagination;
     }
 
     async onPageChange(page: number) {

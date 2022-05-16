@@ -1,7 +1,7 @@
 import { shallowMount } from "@vue/test-utils";
 import Pagination from "@/components/common/Pagination.vue";
 
-describe("CustomSelect.vue", () => {
+describe("Pagination.vue", () => {
     describe("When next and previous buttons are not disabled", () => {
         it("should emit change event and return correct page number ", async function () {
             const wrapper = shallowMount(Pagination, {
@@ -56,29 +56,5 @@ describe("CustomSelect.vue", () => {
             expect((nextButton.element as HTMLInputElement).disabled).toBe(true);
             expect(wrapper.emitted()["onPagechange"]).toBeFalsy();
         });
-    });
-
-
-    describe("When page number is above three", () => {
-        it("should replace the page numbers with dots ", async function () {
-            const wrapper = shallowMount(Pagination, {
-                props: {
-                    totalPages: 12,
-                    currentPage: 2,
-                    previous: 1,
-                    next: 3,
-                    maxVisibleButtons: 3
-                }
-            });
-
-            // TODO: fix this test case.
-            wrapper.vm.startPage = 2;
-
-            // const firstPageDots = wrapper.find({
-            //     ref: "first-page-dots"
-            // });
-            //expect(firstPageDots.exists()).toBeTruthy();
-        });
-
     });
 });

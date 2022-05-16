@@ -80,8 +80,10 @@ export default class IdentitySearch extends Vue {
 
         //  On page load/reload submit the search if a searchTerm is
         //  given in the URL params
-        const shouldSubmitSearch = this.searchTerm && this.selectedChainKey;
-        this.store.getters.lastSearchTerm !== this.searchTerm;
+        const shouldSubmitSearch =
+            this.searchTerm &&
+            this.selectedChainKey &&
+            this.store.getters.lastSearchTerm !== this.searchTerm;
         if (shouldSubmitSearch) {
             this.submitIdentitySearch();
         }

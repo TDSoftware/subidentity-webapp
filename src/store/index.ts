@@ -6,14 +6,13 @@ import { getIdentity, Identity, implementsIdentityPallet, Page, searchIdentities
 import { getChainAddress } from "@/util/chains";
 import { LoadIdentityRequest } from "@/interfaces/LoadIdentityRequest";
 import { Pagination } from "@/interfaces/Pagination";
-import { resourceLimits } from "worker_threads";
 
 
 export interface StoreI {
     isAuthenticated: boolean;
     recentSearches: SearchData<Identity>[];
     currentSearch?: SearchData<Identity>;
-    pagination: Pagination
+    identitySearchPagination: Pagination
 
 }
 
@@ -27,26 +26,20 @@ export const store = createStore({
     state: {
         isAuthenticated: false,
         recentSearches: get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [],
-        pagination: {
-
-            // TODO: add "limit", items per page here
-
+        identitySearchPagination: {
             totalPageCount: 0,
             previous: 0,
             next: 0,
-            currentPage: 1
+            currentPage: 1,
+            limit: 5
         }
 
     },
     getters: {
 
         lastSearchResults(state: StoreI) {
-
-            // TODO: with state.pagination, filter the sate.recentSearches.results array
-            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
-
-            const startIndex = (state.pagination.currentPage - 1) * state.pagination.limit;
-            const endIndex = state.pagination.currentPage * state.pagination.limit;
+            const startIndex = (state.identitySearchPagination.currentPage - 1) * state.identitySearchPagination.limit;
+            const endIndex = state.identitySearchPagination.currentPage * state.identitySearchPagination.limit;
 
             return (state.recentSearches[
                 state.recentSearches.length - 1
@@ -98,7 +91,7 @@ export const store = createStore({
         },
 
         paginateSearchResult(state: StoreI, page) {
-            state.pagination = { totalPageCount: page.totalPageCount, previous: page.previous, next: page.next, currentPage: page.next - 1 || page.previous + 1 || 1 };
+            state.identitySearchPagination = { totalPageCount: page.totalPageCount, previous: page.previous, next: page.next, currentPage: page.next - 1 || page.previous + 1 || 1, limit: 5 };
         }
 
     },
@@ -115,8 +108,8 @@ export const store = createStore({
             if (!wsAddress) {
                 return console.error("[store/index] No address given for chain: ", searchData.selectedChainKey);
             }
-            const limit = 5;
-            const page: Page<Identity> = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, limit);
+
+            const page: Page<Identity> = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
             console.log("[store/index] Got identities: ", page);
 
 
