@@ -38,14 +38,10 @@
                     <ion-icon
                         class="fw-normal"
                         :name="
-                            customNodeAvailable
-                                ? 'create-outline'
-                                : 'add-circle-outline'
+                            customNode ? 'create-outline' : 'add-circle-outline'
                         "
                     />
-                    <span>
-                        {{ customNodeAvailable ? "Edit" : "" }} Custom Node
-                    </span>
+                    <span> {{ customNode ? "Edit" : "" }} Custom Node </span>
                 </div>
                 <div class="col d-grid mx-auto search-button-col">
                     <button
@@ -62,19 +58,24 @@
         </div>
     </form>
     <Modal v-model:open="editCustomNodeModalOpen">
-        <template #title>Add your custom node</template>
+        <template #title>
+            {{ customNode ? "Edit" : "Add" }} your custom node
+        </template>
         <template #body>
             <div class="mb-3">
                 <label class="form-label">Address</label>
                 <input
+                    v-model="newCustomNodeAddress"
                     type="text"
                     class="form-control"
                     placeholder="e.g.: ws://127.0.0.1:9944"
                 />
             </div>
+            <!-- TODO: show node name -->
             <div class="row">
                 <button
                     class="btn btn-primary text-white col-md col-12"
+                    :disabled="!newCustomNodeAddress"
                     @click="saveCustomNode"
                 >
                     SAVE NODE
@@ -99,6 +100,7 @@ import { SearchData } from "../../interfaces/SearchData";
 import { ChainInfo, chains } from "../../util/chains";
 import { UISelectOption } from "@/interfaces/UISelectOption";
 import Modal from "../common/Modal.vue";
+import { set, get, StoreKey } from "@/util/storage";
 
 @Options({
     components: {
@@ -107,17 +109,7 @@ import Modal from "../common/Modal.vue";
         Modal
     },
     watch: {
-        selectedChainKey(chainKey, oldChainKey) {
-            if (chainKey === "CUSTOM_NODE") {
-                this.editCustomNodeModalOpen = true;
-
-                // If CUSTOM_NODE is selected, revert the selection in the CustomSelect to a
-                // valid chain like Pokadot.
-                this.$nextTick(() => {
-                    this.selectedChainKey = oldChainKey;
-                });
-                return;
-            }
+        selectedChainKey() {
             this.checkIdentityPalletExists();
         }
     }
@@ -126,16 +118,17 @@ export default class IdentitySearch extends Vue {
     store = useStore();
     searchTerm = "";
     selectedChainKey = "";
-    searchResult = 23;
-    searchDate = new Date().toUTCString();
     busy = false;
     implementsPallet = false;
     editCustomNodeModalOpen = false;
+    newCustomNodeAddress = "";
+    customNode?: ChainInfo;
 
     created() {
         const searchParams = new URLSearchParams(window.location.search);
         this.searchTerm = searchParams.get("query") ?? "";
         this.selectedChainKey = searchParams.get("chain") ?? "";
+        this.loadCustomNodeFromStorage();
 
         //  On page load/reload submit the search if a searchTerm is
         //  given in the URL params
@@ -148,9 +141,19 @@ export default class IdentitySearch extends Vue {
         }
     }
 
-    get customNodeAvailable() {
-        // TODO: implement
-        return true;
+    // The custom node is stored in the local storage, but deleted after 24 hours
+    loadCustomNodeFromStorage() {
+        const node = get<ChainInfo>(StoreKey.CustomNode);
+        if (
+            !node ||
+            (node.modifiedAt &&
+                Date.now() - node.modifiedAt > 1000 * 60 * 60 * 24)
+        ) {
+            return console.warn(
+                "[IdentitySearch] Custom node in local storage too old or not existing."
+            );
+        }
+        this.customNode = node;
     }
 
     get submitButtonDisabled() {
@@ -158,16 +161,19 @@ export default class IdentitySearch extends Vue {
     }
 
     get chainOptions(): UISelectOption[] {
-        return chains
-            .map((chainInfo: ChainInfo) => {
-                return {
-                    key: chainInfo.key,
-                    displayValue: "In " + chainInfo.name
-                };
-            })
-            .concat([{ key: "CUSTOM_NODE", displayValue: "Add Custom Node" }]);
-
-        // TODO: add more props for displaying select options with different design
+        const chainOptions = chains.map((chainInfo: ChainInfo) => {
+            return {
+                key: chainInfo.key,
+                displayValue: "In " + chainInfo.name
+            };
+        });
+        if (this.customNode) {
+            chainOptions.push({
+                key: this.customNode.key,
+                displayValue: this.customNode.name
+            });
+        }
+        return chainOptions;
     }
 
     /**
@@ -181,6 +187,7 @@ export default class IdentitySearch extends Vue {
             this.selectedChainKey
         );
         if (!this.implementsPallet) {
+            // TODO: show nice error partial component instead of standard alert
             alert(
                 "Sorry, the selected node is not available or does not implement the identity pallet"
             );
@@ -206,9 +213,14 @@ export default class IdentitySearch extends Vue {
     }
 
     saveCustomNode() {
-        console.log("Save custom node...");
-
-        // TODO: add logic here...
+        this.customNode = {
+            key: "customNode",
+            name: "Retrieve that...",
+            address: this.newCustomNodeAddress,
+            modifiedAt: Date.now()
+        };
+        set<ChainInfo>(StoreKey.CustomNode, this.customNode);
+        this.editCustomNodeModalOpen = false;
     }
 }
 </script>

@@ -2,6 +2,7 @@ export interface ChainInfo {
     key: string;
     name: string;
     address: string;
+    modifiedAt?: number;
 }
 
 export const chains: ChainInfo[] = [
