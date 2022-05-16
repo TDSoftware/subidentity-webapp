@@ -6,6 +6,7 @@ import { getIdentity, Identity, implementsIdentityPallet, Page, searchIdentities
 import { getChainAddress } from "@/util/chains";
 import { LoadIdentityRequest } from "@/interfaces/LoadIdentityRequest";
 import { Pagination } from "@/interfaces/Pagination";
+import { resourceLimits } from "worker_threads";
 
 
 export interface StoreI {
@@ -27,6 +28,9 @@ export const store = createStore({
         isAuthenticated: false,
         recentSearches: get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [],
         pagination: {
+
+            // TODO: add "limit", items per page here
+
             totalPageCount: 0,
             previous: 0,
             next: 0,
@@ -37,9 +41,16 @@ export const store = createStore({
     getters: {
 
         lastSearchResults(state: StoreI) {
-            return state.recentSearches[
+
+            // TODO: with state.pagination, filter the sate.recentSearches.results array
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice
+
+            const startIndex = (state.pagination.currentPage - 1) * state.pagination.limit;
+            const endIndex = state.pagination.currentPage * state.pagination.limit;
+
+            return (state.recentSearches[
                 state.recentSearches.length - 1
-            ]?.results ?? [];
+            ]?.results ?? []).slice(startIndex, endIndex);
         },
 
         lastSearchTerm(state: StoreI) {
@@ -67,6 +78,17 @@ export const store = createStore({
         storeAsRecentSearch(state: StoreI, searchData: SearchData<Identity>) {
             const maxItemsInStorage = 12;
             push(StoreKey.RecentSearches, searchData, maxItemsInStorage);
+            state.recentSearches = get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [];
+        },
+
+        appendRecentSearch(state: StoreI, searchData: SearchData<Identity>) {
+            const recentSearches = get<Array<SearchData<Identity>>>(StoreKey.RecentSearches) ?? [];
+            const lastSearch = recentSearches[recentSearches.length - 1];
+            if (!lastSearch || lastSearch.searchTerm !== searchData.searchTerm) {
+                return console.error("[store/index] Could not store paginated data for ", searchData);
+            }
+            lastSearch.results.push(...searchData.results);
+            set(StoreKey.RecentSearches, recentSearches);
             state.recentSearches = get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [];
         },
 
@@ -100,7 +122,11 @@ export const store = createStore({
 
             context.commit("paginateSearchResult", page);
             searchData.results = page.items;
-            context.commit("storeAsRecentSearch", searchData);
+            if (currentPage === 1) {
+                context.commit("storeAsRecentSearch", searchData);
+            } else {
+                context.commit("appendRecentSearch", searchData);
+            }
         },
 
         async LOAD_IDENTITY(context: ActionContext<StoreI, StoreI>, request: LoadIdentityRequest): Promise<Identity> {
