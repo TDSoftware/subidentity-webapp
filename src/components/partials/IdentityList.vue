@@ -10,10 +10,11 @@
         </p>
     </div>
 
-    <div
-        class="bg-white p-0 fade-in"
-        v-if="searchResults.length > 0 && pagination.totalPageCount !== 0"
-    >
+    <Alert
+        v-if="searchResults.length === 0"
+        message="Sorry, there are no results for your search term - Please try again"
+    />
+    <div class="bg-white p-0 fade-in" v-if="searchResults.length > 0 && pagination.totalPageCount !== 0">
         <div class="row mx-0 p-2 text-muted fw-bold labels">
             <h6 class="col">Name</h6>
             <h6 class="col">E-MAIL</h6>
@@ -59,12 +60,14 @@ import { useStore } from "@/store";
 import { getChainName } from "@/util/chains";
 import Pagination from "@/components/common/Pagination.vue";
 import Spinner from "@/components/common/Spinner.vue";
+import Alert from "@/components/common/Alert.vue";
 
 @Options({
     components: {
         IdentityListItem,
         Pagination,
-        Spinner
+        Spinner,
+        Alert
     }
 })
 export default class IdentityList extends Vue {
