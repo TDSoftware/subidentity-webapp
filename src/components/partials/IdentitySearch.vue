@@ -31,12 +31,21 @@
                     />
                 </div>
                 <div
-                    class="col-lg col-12 add-node-button-col"
-                    @click="onAddCustomNodeClick"
+                    class="col-lg col-12 edit-node-button-col"
+                    @click="onEditCustomNodeClick"
                     :class="{ disabled: busy }"
                 >
-                    <ion-icon class="fw-normal" name="add-circle-outline" />
-                    <span>Custom Node</span>
+                    <ion-icon
+                        class="fw-normal"
+                        :name="
+                            customNodeAvailable
+                                ? 'create-outline'
+                                : 'add-circle-outline'
+                        "
+                    />
+                    <span>
+                        {{ customNodeAvailable ? "Edit" : "" }} Custom Node
+                    </span>
                 </div>
                 <div class="col d-grid mx-auto search-button-col">
                     <button
@@ -52,7 +61,7 @@
             </div>
         </div>
     </form>
-    <Modal v-model:open="addCustomNodeModalOpen">
+    <Modal v-model:open="editCustomNodeModalOpen">
         <template #title>Add your custom node</template>
         <template #body>
             <div class="mb-3">
@@ -72,7 +81,7 @@
                 </button>
                 <button
                     class="offset-md-1 btn btn-dark col-md col-12"
-                    @click="addCustomNodeModalOpen = false"
+                    @click="editCustomNodeModalOpen = false"
                 >
                     CANCEL
                 </button>
@@ -98,7 +107,17 @@ import Modal from "../common/Modal.vue";
         Modal
     },
     watch: {
-        selectedChainKey() {
+        selectedChainKey(chainKey, oldChainKey) {
+            if (chainKey === "CUSTOM_NODE") {
+                this.editCustomNodeModalOpen = true;
+
+                // If CUSTOM_NODE is selected, revert the selection in the CustomSelect to a
+                // valid chain like Pokadot.
+                this.$nextTick(() => {
+                    this.selectedChainKey = oldChainKey;
+                });
+                return;
+            }
             this.checkIdentityPalletExists();
         }
     }
@@ -111,7 +130,7 @@ export default class IdentitySearch extends Vue {
     searchDate = new Date().toUTCString();
     busy = false;
     implementsPallet = false;
-    addCustomNodeModalOpen = false;
+    editCustomNodeModalOpen = false;
 
     created() {
         const searchParams = new URLSearchParams(window.location.search);
@@ -129,17 +148,26 @@ export default class IdentitySearch extends Vue {
         }
     }
 
+    get customNodeAvailable() {
+        // TODO: implement
+        return true;
+    }
+
     get submitButtonDisabled() {
         return !this.searchTerm || this.busy || !this.implementsPallet;
     }
 
     get chainOptions(): UISelectOption[] {
-        return chains.map((chainInfo: ChainInfo) => {
-            return {
-                key: chainInfo.key,
-                displayValue: "In " + chainInfo.name
-            };
-        });
+        return chains
+            .map((chainInfo: ChainInfo) => {
+                return {
+                    key: chainInfo.key,
+                    displayValue: "In " + chainInfo.name
+                };
+            })
+            .concat([{ key: "CUSTOM_NODE", displayValue: "Add Custom Node" }]);
+
+        // TODO: add more props for displaying select options with different design
     }
 
     /**
@@ -173,8 +201,8 @@ export default class IdentitySearch extends Vue {
         this.busy = false;
     }
 
-    onAddCustomNodeClick() {
-        this.addCustomNodeModalOpen = true;
+    onEditCustomNodeClick() {
+        this.editCustomNodeModalOpen = true;
     }
 
     saveCustomNode() {
@@ -232,7 +260,7 @@ input:disabled.search-input.form-control {
     }
 }
 
-.add-node-button-col {
+.edit-node-button-col {
     color: $primary;
     user-select: none;
     line-height: 47px;
@@ -253,7 +281,7 @@ input:disabled.search-input.form-control {
     }
 
     @include media-breakpoint-up(lg) {
-        flex: 0 0 170px;
+        flex: 0 0 205px;
         border-right: 1px solid #dee2e6;
         padding: 0 1.25rem;
 

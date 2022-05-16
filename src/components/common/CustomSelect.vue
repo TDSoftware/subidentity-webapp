@@ -47,6 +47,16 @@ import { UISelectOption } from "@/interfaces/UISelectOption";
             type: String,
             required: true
         }
+    },
+    watch: {
+        // If the selected key gets changed from the parent component,
+        // we listen and update the selected item internally too
+        selectedKey() {
+            this.selected =
+                this.options.find(
+                    ({ key }: UISelectOption) => key === this.selectedKey
+                ) ?? this.options[0];
+        }
     }
 })
 export default class CustomSelect extends Vue {
