@@ -52,6 +52,33 @@
             </div>
         </div>
     </form>
+    <Modal v-model:open="addCustomNodeModalOpen">
+        <template #title>Add your custom node</template>
+        <template #body>
+            <div class="mb-3">
+                <label class="form-label">Address</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    placeholder="e.g.: ws://127.0.0.1:9944"
+                />
+            </div>
+            <div class="row">
+                <button
+                    class="btn btn-primary text-white col-md col-12"
+                    @click="saveCustomNode"
+                >
+                    SAVE NODE
+                </button>
+                <button
+                    class="offset-md-1 btn btn-dark col-md col-12"
+                    @click="addCustomNodeModalOpen = false"
+                >
+                    CANCEL
+                </button>
+            </div>
+        </template>
+    </Modal>
 </template>
 
 <script lang="ts">
@@ -62,11 +89,13 @@ import Spinner from "../common/Spinner.vue";
 import { SearchData } from "../../interfaces/SearchData";
 import { ChainInfo, chains } from "../../util/chains";
 import { UISelectOption } from "@/interfaces/UISelectOption";
+import Modal from "../common/Modal.vue";
 
 @Options({
     components: {
         CustomSelect,
-        Spinner
+        Spinner,
+        Modal
     },
     watch: {
         selectedChainKey() {
@@ -82,6 +111,7 @@ export default class IdentitySearch extends Vue {
     searchDate = new Date().toUTCString();
     busy = false;
     implementsPallet = false;
+    addCustomNodeModalOpen = false;
 
     created() {
         const searchParams = new URLSearchParams(window.location.search);
@@ -144,7 +174,13 @@ export default class IdentitySearch extends Vue {
     }
 
     onAddCustomNodeClick() {
-        console.log("Add custom node...");
+        this.addCustomNodeModalOpen = true;
+    }
+
+    saveCustomNode() {
+        console.log("Save custom node...");
+
+        // TODO: add logic here...
     }
 }
 </script>
