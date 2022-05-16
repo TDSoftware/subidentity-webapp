@@ -30,6 +30,14 @@
                         v-model:selected-key="selectedChainKey"
                     />
                 </div>
+                <div
+                    class="col-lg col-12 add-node-button-col"
+                    @click="onAddCustomNodeClick"
+                    :class="{ disabled: busy }"
+                >
+                    <ion-icon class="fw-normal" name="add-circle-outline" />
+                    <span>Custom Node</span>
+                </div>
                 <div class="col d-grid mx-auto search-button-col">
                     <button
                         ref="searchButton"
@@ -134,6 +142,10 @@ export default class IdentitySearch extends Vue {
         this.$emit("search", searchData);
         this.busy = false;
     }
+
+    onAddCustomNodeClick() {
+        console.log("Add custom node...");
+    }
 }
 </script>
 
@@ -180,6 +192,37 @@ input:disabled.search-input.form-control {
 
         .btn.btn-primary {
             border-radius: 0.25rem;
+        }
+    }
+}
+
+.add-node-button-col {
+    color: $primary;
+    user-select: none;
+    line-height: 47px;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &.disabled {
+        cursor: default;
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    ion-icon {
+        margin: 0 24px 0 13px;
+        transform: translateY(4px);
+    }
+
+    @include media-breakpoint-up(lg) {
+        flex: 0 0 170px;
+        border-right: 1px solid #dee2e6;
+        padding: 0 1.25rem;
+
+        ion-icon {
+            margin: 0 8px 0 0;
         }
     }
 }
