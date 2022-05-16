@@ -2,7 +2,7 @@
     <form @submit.prevent="submitIdentitySearch">
         <div class="bg-white shadow text-dark p-0 rounded">
             <div class="row align-items-center">
-                <div class="col-lg-6 col-12">
+                <div class="col-lg col-12">
                     <div class="input-group">
                         <span class="input-group-text fw-light text-muted">
                             <ion-icon
@@ -30,7 +30,7 @@
                         v-model:selected-key="selectedChainKey"
                     />
                 </div>
-                <div class="col-lg-2 col-12 d-grid mx-auto">
+                <div class="col d-grid mx-auto search-button-col">
                     <button
                         ref="searchButton"
                         :disabled="submitButtonDisabled"
@@ -166,6 +166,21 @@ input:disabled.search-input.form-control {
         cursor: default;
         pointer-events: none;
         opacity: 0.5;
+    }
+}
+
+.search-button-col {
+    .btn.btn-primary {
+        border-radius: 0 0 0.25rem 0.25rem;
+    }
+
+    @include media-breakpoint-up(lg) {
+        flex: 0 0 150px;
+        padding: 0 18px 0 6px;
+
+        .btn.btn-primary {
+            border-radius: 0.25rem;
+        }
     }
 }
 </style>

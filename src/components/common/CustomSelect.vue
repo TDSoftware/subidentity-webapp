@@ -119,7 +119,7 @@ export default class CustomSelect extends Vue {
             position: absolute;
             content: "";
             top: 23px;
-            right: 1em;
+            right: 1.5rem;
             width: 10px;
             height: 10px;
             transform: rotate(45deg) translateY(-50%);
