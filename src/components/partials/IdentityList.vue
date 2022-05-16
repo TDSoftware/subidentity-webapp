@@ -58,7 +58,6 @@ import IdentityListItem from "@/components/partials/IdentityListItem.vue";
 import { useStore } from "@/store";
 import { getChainName } from "@/util/chains";
 import Pagination from "@/components/common/Pagination.vue";
-import { SearchData } from "@/interfaces/SearchData";
 import Spinner from "@/components/common/Spinner.vue";
 
 @Options({
@@ -90,20 +89,7 @@ export default class IdentityList extends Vue {
     }
 
     async onPageChange(page: number) {
-        const searchParams = new URLSearchParams(window.location.search);
-        this.searchTerm = searchParams.get("query") ?? "";
-        this.selectedChainKey = searchParams.get("chain") ?? "";
-
-        const searchData: SearchData<void> = {
-            searchTerm: this.searchTerm,
-            selectedChainKey: this.selectedChainKey,
-            results: [],
-            timestamp: Date.now()
-        };
-        await this.store.dispatch("SEARCH_IDENTITIES", {
-            searchData,
-            currentPage: page
-        });
+        this.$emit("onPagechange", page);
     }
 
     isMobile = false;

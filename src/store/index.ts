@@ -38,12 +38,9 @@ export const store = createStore({
     getters: {
 
         lastSearchResults(state: StoreI) {
-            const startIndex = (state.identitySearchPagination.currentPage - 1) * state.identitySearchPagination.limit;
-            const endIndex = state.identitySearchPagination.currentPage * state.identitySearchPagination.limit;
-
-            return (state.recentSearches[
+            return state.recentSearches[
                 state.recentSearches.length - 1
-            ]?.results ?? []).slice(startIndex, endIndex);
+            ]?.results ?? [];
         },
 
         lastSearchTerm(state: StoreI) {
@@ -70,19 +67,20 @@ export const store = createStore({
 
         storeAsRecentSearch(state: StoreI, searchData: SearchData<Identity>) {
             const maxItemsInStorage = 12;
-            push(StoreKey.RecentSearches, searchData, maxItemsInStorage);
-            state.recentSearches = get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [];
-        },
-
-        appendRecentSearch(state: StoreI, searchData: SearchData<Identity>) {
             const recentSearches = get<Array<SearchData<Identity>>>(StoreKey.RecentSearches) ?? [];
-            const lastSearch = recentSearches[recentSearches.length - 1];
-            if (!lastSearch || lastSearch.searchTerm !== searchData.searchTerm) {
-                return console.error("[store/index] Could not store paginated data for ", searchData);
+            const foundSeachTermIndex = recentSearches.findIndex((element) => element.searchTerm === searchData.searchTerm);
+
+            // if search term found
+            if (foundSeachTermIndex !== -1) {
+                recentSearches.splice(foundSeachTermIndex, 1);
+                recentSearches.push(searchData);
+                set(StoreKey.RecentSearches, recentSearches);
+                state.recentSearches = get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [];
+            } else {
+                push(StoreKey.RecentSearches, searchData, maxItemsInStorage);
+                state.recentSearches = get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [];
             }
-            lastSearch.results.push(...searchData.results);
-            set(StoreKey.RecentSearches, recentSearches);
-            state.recentSearches = get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [];
+
         },
 
         clearRecentSearches(state: StoreI) {
@@ -108,18 +106,11 @@ export const store = createStore({
             if (!wsAddress) {
                 return console.error("[store/index] No address given for chain: ", searchData.selectedChainKey);
             }
-
             const page: Page<Identity> = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
             console.log("[store/index] Got identities: ", page);
-
-
             context.commit("paginateSearchResult", page);
             searchData.results = page.items;
-            if (currentPage === 1) {
-                context.commit("storeAsRecentSearch", searchData);
-            } else {
-                context.commit("appendRecentSearch", searchData);
-            }
+            context.commit("storeAsRecentSearch", searchData);
         },
 
         async LOAD_IDENTITY(context: ActionContext<StoreI, StoreI>, request: LoadIdentityRequest): Promise<Identity> {

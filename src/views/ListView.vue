@@ -7,7 +7,7 @@
         </div>
         <div class="subidentity-container pb-5">
             <div class="container-medium p-0">
-                <IdentityList />
+                <IdentityList @onPagechange="onPageChange" />
             </div>
         </div>
     </div>
@@ -19,14 +19,48 @@ import IdentitySearch from "@/components/partials/IdentitySearch.vue";
 import IdentityList from "@/components/partials/IdentityList.vue";
 import router from "@/router";
 import { SearchData } from "@/interfaces/SearchData";
+import { useStore } from "../store";
 
 @Options({
     components: {
         IdentitySearch,
         IdentityList
+    },
+    watch: {
+        $route() {
+            this.dispatchSearchIdentities();
+        }
     }
 })
 export default class ListView extends Vue {
+    store = useStore();
+
+    async created() {
+        this.dispatchSearchIdentities();
+    }
+
+    async dispatchSearchIdentities(currentPage = 1) {
+        const searchParams = new URLSearchParams(window.location.search);
+        const searchTerm = searchParams.get("query") ?? "";
+        const selectedChainKey = searchParams.get("chain") ?? "";
+
+        const searchData: SearchData<void> = {
+            searchTerm,
+            selectedChainKey: selectedChainKey,
+            results: [],
+            timestamp: Date.now()
+        };
+
+        await this.store.dispatch("SEARCH_IDENTITIES", {
+            searchData,
+            currentPage
+        });
+    }
+
+    async onPageChange(page: number) {
+        await this.dispatchSearchIdentities(page);
+    }
+
     onSearch(searchData: SearchData<void>) {
         router.push({
             path: "/search",
