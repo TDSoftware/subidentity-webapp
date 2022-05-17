@@ -83,7 +83,9 @@ import Spinner from "@/components/common/Spinner.vue";
         customNode: {
             type: Object,
             required: true
-        },
+        }
+    },
+    watch: {
         newCustomNodeAddress() {
             this.error = "";
         }
