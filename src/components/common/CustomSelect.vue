@@ -47,6 +47,16 @@ import { UISelectOption } from "@/interfaces/UISelectOption";
             type: String,
             required: true
         }
+    },
+    watch: {
+        // If the selected key gets changed from the parent component,
+        // we listen and update the selected item internally too
+        selectedKey() {
+            this.selected =
+                this.options.find(
+                    ({ key }: UISelectOption) => key === this.selectedKey
+                ) ?? this.options[0];
+        }
     }
 })
 export default class CustomSelect extends Vue {
@@ -119,7 +129,7 @@ export default class CustomSelect extends Vue {
             position: absolute;
             content: "";
             top: 23px;
-            right: 1em;
+            right: 1.5rem;
             width: 10px;
             height: 10px;
             transform: rotate(45deg) translateY(-50%);

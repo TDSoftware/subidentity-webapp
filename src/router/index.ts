@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, NavigationHookAfter, RouteLocationNormalized, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory, RouteLocationNormalized, RouteRecordRaw } from "vue-router";
 import DefaultLayout from "@/components/layouts/DefaultLayout.vue";
 import SecondaryLayout from "@/components/layouts/SecondaryLayout.vue";
 import { getScrollPosition } from "@/util/scroll";

@@ -5,9 +5,16 @@
     </p> -->
     <div class="mb-4 pb-1">
         <p class="h4 mb-2">{{ searchResults.length }} Search Results</p>
-        <p class="text-muted">for "{{ searchTerm }}" in "{{ chainName }}"</p>
+        <p class="text-muted">
+            for "{{ lastSearchTerm }}" in "{{ chainName }}"
+        </p>
     </div>
-    <div class="bg-white p-0 fade-in" v-if="searchResults.length > 0">
+
+    <Alert
+        v-if="searchResults.length === 0"
+        message="Sorry, there are no results for your search term - Please try again"
+    />
+    <div class="bg-white p-0 fade-in" v-if="searchResults.length > 0 && pagination.totalPageCount !== 0">
         <div class="row mx-0 p-2 text-muted fw-bold labels">
             <h6 class="col">Name</h6>
             <h6 class="col">E-MAIL</h6>
@@ -19,6 +26,31 @@
             <IdentityListItem :identity="identity" />
         </template>
     </div>
+
+    <div class="container-medium pt-5">
+        <div class="d-flex justify-content-center pt-3 pb-2 text-white-50">
+            <div
+                v-if="
+                    pagination.totalPageCount === 0 &&
+                    searchResults.length !== 0
+                "
+                class="spinner-wrapper"
+            >
+                <Spinner color="#D0D0D0" :size="40" :width="3" />
+            </div>
+            <Pagination
+                v-if="
+                    searchResults.length !== 0 &&
+                    pagination.totalPageCount !== 0
+                "
+                :totalPages="pagination.totalPageCount"
+                :currentPage="pagination.currentPage"
+                :previous="pagination.previous"
+                :next="pagination.next"
+                @onPagechange="onPageChange"
+            />
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -26,25 +58,41 @@ import { Options, Vue } from "vue-class-component";
 import IdentityListItem from "@/components/partials/IdentityListItem.vue";
 import { useStore } from "@/store";
 import { getChainName } from "@/util/chains";
+import Pagination from "@/components/common/Pagination.vue";
+import Spinner from "@/components/common/Spinner.vue";
+import Alert from "@/components/common/Alert.vue";
 
 @Options({
     components: {
-        IdentityListItem
+        IdentityListItem,
+        Pagination,
+        Spinner,
+        Alert
     }
 })
 export default class IdentityList extends Vue {
+    searchTerm = "";
+    selectedChainKey = "";
     store = useStore();
 
     get searchResults() {
         return this.store.getters.lastSearchResults;
     }
 
-    get searchTerm() {
+    get lastSearchTerm() {
         return this.store.getters.lastSearchTerm;
     }
 
     get chainName() {
         return getChainName(this.store.getters.lastSearchChainKey);
+    }
+
+    get pagination() {
+        return this.store.state.identitySearchPagination;
+    }
+
+    async onPageChange(page: number) {
+        this.$emit("onPagechange", page);
     }
 
     isMobile = false;

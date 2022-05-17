@@ -5,12 +5,15 @@ import { createStore, useStore as baseUseStore, Store, ActionContext } from "vue
 import { getIdentity, Identity, implementsIdentityPallet, Page, searchIdentities } from "@npmjs_tdsoftware/subidentity";
 import { getChainAddress } from "@/util/chains";
 import { LoadIdentityRequest } from "@/interfaces/LoadIdentityRequest";
+import { Pagination } from "@/interfaces/Pagination";
 
 
 export interface StoreI {
     isAuthenticated: boolean;
     recentSearches: SearchData<Identity>[];
     currentSearch?: SearchData<Identity>;
+    identitySearchPagination: Pagination
+
 }
 
 export const key: InjectionKey<Store<StoreI>> = Symbol();
@@ -22,7 +25,15 @@ export const useStore = () => {
 export const store = createStore({
     state: {
         isAuthenticated: false,
-        recentSearches: get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? []
+        recentSearches: get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [],
+        identitySearchPagination: {
+            totalPageCount: 0,
+            previous: 0,
+            next: 0,
+            currentPage: 1,
+            limit: 5
+        }
+
     },
     getters: {
 
@@ -56,14 +67,31 @@ export const store = createStore({
 
         storeAsRecentSearch(state: StoreI, searchData: SearchData<Identity>) {
             const maxItemsInStorage = 12;
-            push(StoreKey.RecentSearches, searchData, maxItemsInStorage);
-            state.recentSearches = get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [];
+            const recentSearches = get<Array<SearchData<Identity>>>(StoreKey.RecentSearches) ?? [];
+            const foundSeachTermIndex = recentSearches.findIndex((element) => element.searchTerm === searchData.searchTerm);
+
+            // if search term found
+            if (foundSeachTermIndex !== -1) {
+                recentSearches.splice(foundSeachTermIndex, 1);
+                recentSearches.push(searchData);
+                set(StoreKey.RecentSearches, recentSearches);
+                state.recentSearches = get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [];
+            } else {
+                push(StoreKey.RecentSearches, searchData, maxItemsInStorage);
+                state.recentSearches = get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [];
+            }
+
         },
 
         clearRecentSearches(state: StoreI) {
             set<SearchData<Identity>[]>(StoreKey.RecentSearches, []);
             state.recentSearches = [];
+        },
+
+        paginateSearchResult(state: StoreI, page) {
+            state.identitySearchPagination = { totalPageCount: page.totalPageCount, previous: page.previous, next: page.next, currentPage: page.next - 1 || page.previous + 1 || 1, limit: 5 };
         }
+
     },
     actions: {
 
@@ -73,18 +101,14 @@ export const store = createStore({
          * 
          *  --> all recentSearches are store in localStorage and allow client side caching.
          */
-        async SEARCH_IDENTITIES(context: ActionContext<StoreI, StoreI>, searchData: SearchData<Identity>): Promise<void> {
+        async SEARCH_IDENTITIES(context: ActionContext<StoreI, StoreI>, { searchData, currentPage }): Promise<void> {
             const wsAddress = getChainAddress(searchData.selectedChainKey);
             if (!wsAddress) {
                 return console.error("[store/index] No address given for chain: ", searchData.selectedChainKey);
             }
-            const pageNumber = 1;
-            const limit = 9999;
-            const page: Page<Identity> = await searchIdentities(wsAddress, searchData.searchTerm, pageNumber, limit);
+            const page: Page<Identity> = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
             console.log("[store/index] Got identities: ", page);
-
-            // // TODO: implement pagination
-
+            context.commit("paginateSearchResult", page);
             searchData.results = page.items;
             context.commit("storeAsRecentSearch", searchData);
         },

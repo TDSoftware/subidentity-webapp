@@ -25,7 +25,7 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import Logo from "@/components/partials/general/Logo.vue";
-import IdentitySearch from "@/components/partials/IdentitySearch.vue";
+import IdentitySearch from "@/components/partials/IdentitySearch/IdentitySearch.vue";
 import RecentSearch from "@/components/partials/RecentSearch.vue";
 import { SearchData } from "@/interfaces/SearchData";
 import router from "@/router";
@@ -70,9 +70,9 @@ export default class SearchView extends Vue {
 <style lang="scss" scoped>
 @import "../styles/variables";
 .logo-container {
-    padding-top: 10vh;
+    padding-top: 8%;
 }
 .recent-search-container {
-    min-height: calc(100vh - $headerHeight - 30rem);
+    min-height: calc(100vh - $headerHeight - 29.5rem);
 }
 </style>
