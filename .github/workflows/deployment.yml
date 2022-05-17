@@ -1,0 +1,19 @@
+# This is a basic workflow that is manually triggered
+
+name: Deployment
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deployment
+      uses: satak/webrequest-action@master
+      with:
+        url: https://subidentity.tdsoftware.de/deploy
+        method: GET
