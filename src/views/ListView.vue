@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import IdentitySearch from "@/components/partials/IdentitySearch.vue";
+import IdentitySearch from "@/components/partials/IdentitySearch/IdentitySearch.vue";
 import IdentityList from "@/components/partials/IdentityList.vue";
 import router from "@/router";
 import { SearchData } from "@/interfaces/SearchData";

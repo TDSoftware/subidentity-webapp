@@ -1,5 +1,6 @@
 export enum StoreKey {
-    RecentSearches = "RecentSearches"
+    RecentSearches = "RecentSearches",
+    CustomNode = "CustomNode"
 }
 
 export function get<T>(key: string): T | undefined {
