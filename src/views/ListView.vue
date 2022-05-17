@@ -36,7 +36,6 @@ export default class ListView extends Vue {
     store = useStore();
     searchTerm = "";
     selectedChainKey = "";
-    page = 0;
 
     async created() {
         this.dispatchSearchIdentities();
@@ -46,7 +45,7 @@ export default class ListView extends Vue {
         const searchParams = new URLSearchParams(window.location.search);
         this.searchTerm = searchParams.get("query") ?? "";
         this.selectedChainKey = searchParams.get("chain") ?? "";
-        this.page = parseInt(searchParams.get("page") ?? "");
+        const page = parseInt(searchParams.get("page") ?? "");
 
         const searchData: SearchData<void> = {
             searchTerm: this.searchTerm,
@@ -57,7 +56,7 @@ export default class ListView extends Vue {
 
         await this.store.dispatch("SEARCH_IDENTITIES", {
             searchData,
-            currentPage: this.page
+            currentPage: page
         });
     }
 
