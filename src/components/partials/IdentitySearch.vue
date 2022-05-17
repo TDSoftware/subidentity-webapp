@@ -70,8 +70,6 @@ export default class IdentitySearch extends Vue {
     store = useStore();
     searchTerm = "";
     selectedChainKey = "";
-    searchResult = 23;
-    searchDate = new Date().toUTCString();
     busy = false;
     implementsPallet = false;
 
@@ -79,16 +77,6 @@ export default class IdentitySearch extends Vue {
         const searchParams = new URLSearchParams(window.location.search);
         this.searchTerm = searchParams.get("query") ?? "";
         this.selectedChainKey = searchParams.get("chain") ?? "";
-
-        //  On page load/reload submit the search if a searchTerm is
-        //  given in the URL params
-        const shouldSubmitSearch =
-            this.searchTerm &&
-            this.selectedChainKey &&
-            this.store.getters.lastSearchTerm !== this.searchTerm;
-        if (shouldSubmitSearch) {
-            this.submitIdentitySearch();
-        }
     }
 
     get submitButtonDisabled() {
@@ -122,7 +110,7 @@ export default class IdentitySearch extends Vue {
         this.busy = false;
     }
 
-    async submitIdentitySearch() {
+    submitIdentitySearch() {
         this.busy = true;
         const searchData: SearchData<void> = {
             searchTerm: this.searchTerm,
@@ -130,7 +118,7 @@ export default class IdentitySearch extends Vue {
             results: [],
             timestamp: Date.now()
         };
-        await this.store.dispatch("SEARCH_IDENTITIES", searchData);
+
         this.$emit("search", searchData);
         this.busy = false;
     }
