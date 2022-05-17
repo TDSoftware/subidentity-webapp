@@ -1,5 +1,5 @@
-# This is a basic workflow that is manually triggered
-
+# The the dist folder from the main branch 
+# on subidentity.tdsoftware.de
 name: Deployment
 
 on:
@@ -15,5 +15,5 @@ jobs:
     - name: Deployment
       uses: satak/webrequest-action@master
       with:
-        url: https://subidentity.tdsoftware.de/deploy
+        url: ${{ format('https://subidentity.tdsoftware.de/deploy?key={0}', secrets.DEPLOY_KEY }}
         method: GET
