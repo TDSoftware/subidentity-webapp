@@ -85,7 +85,8 @@ import CustomNodeModal from "./CustomNodeModal.vue";
         selectedChainKey() {
             this.checkIdentityPalletExists();
         }
-    }
+    },
+    emits: ["search"]
 })
 export default class IdentitySearch extends Vue {
     store = useStore();
