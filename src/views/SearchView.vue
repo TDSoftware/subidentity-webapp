@@ -70,9 +70,9 @@ export default class SearchView extends Vue {
 <style lang="scss" scoped>
 @import "../styles/variables";
 .logo-container {
-    padding-top: 10vh;
+    padding-top: 8%;
 }
 .recent-search-container {
-    min-height: calc(100vh - $headerHeight - 30rem);
+    min-height: calc(100vh - $headerHeight - 29.5rem);
 }
 </style>

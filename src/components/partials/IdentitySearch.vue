@@ -195,7 +195,7 @@ export default class IdentitySearch extends Vue {
         this.busy = false;
     }
 
-    async submitIdentitySearch() {
+    submitIdentitySearch() {
         this.busy = true;
         const searchData: SearchData<void> = {
             searchTerm: this.searchTerm,
@@ -203,7 +203,7 @@ export default class IdentitySearch extends Vue {
             results: [],
             timestamp: Date.now()
         };
-        await this.store.dispatch("SEARCH_IDENTITIES", searchData);
+
         this.$emit("search", searchData);
         this.busy = false;
     }
