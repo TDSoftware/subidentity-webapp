@@ -50,7 +50,8 @@ export default class SearchView extends Vue {
             path: "/search",
             query: {
                 query: searchData.searchTerm,
-                chain: searchData.selectedChainKey
+                chain: searchData.selectedChainKey,
+                page: 1
             }
         });
     }
@@ -60,7 +61,8 @@ export default class SearchView extends Vue {
             path: "/search",
             query: {
                 query: searchData.searchTerm,
-                chain: searchData.selectedChainKey
+                chain: searchData.selectedChainKey,
+                page: 1
             }
         });
     }
