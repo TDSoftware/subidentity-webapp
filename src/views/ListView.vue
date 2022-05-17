@@ -5,7 +5,7 @@
                 <IdentitySearch @search="onSearch" />
             </div>
         </div>
-        <div class="subidentity-container pb-5">
+        <div class="subidentity-container">
             <div class="container-medium p-0">
                 <IdentityList @onPagechange="onPageChange" />
             </div>
