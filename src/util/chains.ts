@@ -1,3 +1,5 @@
+import { get, StoreKey } from "./storage";
+
 export interface ChainInfo {
     key: string;
     name: string;
@@ -28,6 +30,14 @@ export const chains: ChainInfo[] = [
  * @returns the address to connect to via wbe3
  */
 export function getChainAddress(chainKey: string): string | undefined {
+    if (chainKey === "customNode") {
+        const customNode = get<ChainInfo>(StoreKey.CustomNode);
+        if (!customNode) {
+            console.error("[store/index] No custom node available!!!");
+            return;
+        }
+        return customNode.address;
+    }
     return chains.find(({ key }) => chainKey === key)?.address;
 }
 
@@ -35,6 +45,14 @@ export function getChainAddress(chainKey: string): string | undefined {
  * @param chainKey - example: "polkadot" 
  */
 export function getChainName(chainKey: string): string | undefined {
+    if (chainKey === "customNode") {
+        const customNode = get<ChainInfo>(StoreKey.CustomNode);
+        if (!customNode) {
+            console.error("[store/index] No custom node available!!!");
+            return;
+        }
+        return customNode.name;
+    }
     return chains.find(({ key }) => chainKey === key)?.name;
 }
 

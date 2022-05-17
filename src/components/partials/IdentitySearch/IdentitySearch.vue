@@ -57,56 +57,29 @@
             </div>
         </div>
     </form>
-    <Modal v-model:open="editCustomNodeModalOpen">
-        <template #title>
-            {{ customNode ? "Edit" : "Add" }} your custom node
-        </template>
-        <template #body>
-            <div class="mb-3">
-                <label class="form-label">Address</label>
-                <input
-                    v-model="newCustomNodeAddress"
-                    type="text"
-                    class="form-control"
-                    placeholder="e.g.: ws://127.0.0.1:9944"
-                />
-            </div>
-            <!-- TODO: show node name -->
-            <div class="row">
-                <button
-                    class="btn btn-primary text-white col-md col-12"
-                    :disabled="!newCustomNodeAddress"
-                    @click="saveCustomNode"
-                >
-                    SAVE NODE
-                </button>
-                <button
-                    class="offset-md-1 btn btn-dark col-md col-12"
-                    @click="editCustomNodeModalOpen = false"
-                >
-                    CANCEL
-                </button>
-            </div>
-        </template>
-    </Modal>
+    <CustomNodeModal
+        v-model:open="editCustomNodeModalOpen"
+        :custom-node="customNode"
+        @save="onCustomNodeSaved"
+    />
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import CustomSelect from "@/components/common/CustomSelect.vue";
-import { useStore } from "../../store";
-import Spinner from "../common/Spinner.vue";
-import { SearchData } from "../../interfaces/SearchData";
-import { ChainInfo, chains } from "../../util/chains";
+import { useStore } from "../../../store";
+import Spinner from "../../common/Spinner.vue";
+import { SearchData } from "../../../interfaces/SearchData";
+import { ChainInfo, chains } from "../../../util/chains";
 import { UISelectOption } from "@/interfaces/UISelectOption";
-import Modal from "../common/Modal.vue";
-import { set, get, StoreKey } from "@/util/storage";
+import { get, StoreKey } from "@/util/storage";
+import CustomNodeModal from "./CustomNodeModal.vue";
 
 @Options({
     components: {
         CustomSelect,
         Spinner,
-        Modal
+        CustomNodeModal
     },
     watch: {
         selectedChainKey() {
@@ -121,14 +94,15 @@ export default class IdentitySearch extends Vue {
     busy = false;
     implementsPallet = false;
     editCustomNodeModalOpen = false;
-    newCustomNodeAddress = "";
     customNode?: ChainInfo;
+    chainOptions: UISelectOption[] = [];
 
     created() {
         const searchParams = new URLSearchParams(window.location.search);
         this.searchTerm = searchParams.get("query") ?? "";
         this.selectedChainKey = searchParams.get("chain") ?? "";
         this.loadCustomNodeFromStorage();
+        this.setChainOptions();
 
         //  On page load/reload submit the search if a searchTerm is
         //  given in the URL params
@@ -141,39 +115,28 @@ export default class IdentitySearch extends Vue {
         }
     }
 
-    // The custom node is stored in the local storage, but deleted after 24 hours
     loadCustomNodeFromStorage() {
-        const node = get<ChainInfo>(StoreKey.CustomNode);
-        if (
-            !node ||
-            (node.modifiedAt &&
-                Date.now() - node.modifiedAt > 1000 * 60 * 60 * 24)
-        ) {
-            return console.warn(
-                "[IdentitySearch] Custom node in local storage too old or not existing."
-            );
-        }
-        this.customNode = node;
+        this.customNode = get<ChainInfo>(StoreKey.CustomNode);
     }
 
     get submitButtonDisabled() {
         return !this.searchTerm || this.busy || !this.implementsPallet;
     }
 
-    get chainOptions(): UISelectOption[] {
-        const chainOptions = chains.map((chainInfo: ChainInfo) => {
+    setChainOptions() {
+        const options = chains.map((chainInfo: ChainInfo) => {
             return {
                 key: chainInfo.key,
                 displayValue: "In " + chainInfo.name
             };
         });
         if (this.customNode) {
-            chainOptions.push({
+            options.push({
                 key: this.customNode.key,
                 displayValue: this.customNode.name
             });
         }
-        return chainOptions;
+        this.chainOptions = options;
     }
 
     /**
@@ -212,21 +175,16 @@ export default class IdentitySearch extends Vue {
         this.editCustomNodeModalOpen = true;
     }
 
-    saveCustomNode() {
-        this.customNode = {
-            key: "customNode",
-            name: "Retrieve that...",
-            address: this.newCustomNodeAddress,
-            modifiedAt: Date.now()
-        };
-        set<ChainInfo>(StoreKey.CustomNode, this.customNode);
+    onCustomNodeSaved() {
+        this.loadCustomNodeFromStorage();
+        this.setChainOptions();
         this.editCustomNodeModalOpen = false;
     }
 }
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/variables";
+@import "../../../styles/variables";
 
 ion-icon {
     font-size: 20px;
