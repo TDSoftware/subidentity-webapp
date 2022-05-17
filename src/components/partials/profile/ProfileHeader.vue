@@ -51,7 +51,7 @@
                 type="submit"
                 @click="sendToken"
             >
-                SEND Token
+                SEND TOKEN
             </button>
         </div> -->
     </div>
