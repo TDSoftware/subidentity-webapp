@@ -12,6 +12,7 @@ import config from "@/config";
 
 export interface StoreI {
     isAuthenticated: boolean;
+    busyCounter: 0;
     recentSearches: SearchData<Identity>[];
     currentSearch?: SearchData<Identity>;
     identitySearchPagination: Pagination
@@ -26,6 +27,7 @@ export const useStore = () => {
 
 export const store = createStore({
     state: {
+        busyCounter: 0,
         isAuthenticated: false,
         recentSearches: get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [],
         identitySearchPagination: {
@@ -38,6 +40,10 @@ export const store = createStore({
 
     },
     getters: {
+
+        isBusy(state: StoreI) {
+            return state.busyCounter > 0;
+        },
 
         lastSearchResults(state: StoreI) {
             return state.recentSearches[
@@ -58,6 +64,14 @@ export const store = createStore({
         }
     },
     mutations: {
+
+        incrementBusyCounter(state: StoreI) {
+            state.busyCounter++;
+        },
+
+        decrementBusyCounter(state: StoreI) {
+            state.busyCounter--;
+        },
 
         login(state: StoreI) {
             state.isAuthenticated = true;
@@ -108,11 +122,13 @@ export const store = createStore({
             if (!wsAddress) {
                 return console.error("[store/index] No address given for chain: ", searchData.selectedChainKey);
             }
+            context.commit("incrementBusyCounter");
             const page: Page<Identity> = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
             console.log("[store/index] Got identities: ", page);
             context.commit("paginateSearchResult", page);
             searchData.results = page.items;
             context.commit("storeAsRecentSearch", searchData);
+            context.commit("decrementBusyCounter");
         },
 
         async LOAD_IDENTITY(context: ActionContext<StoreI, StoreI>, request: LoadIdentityRequest): Promise<Identity> {
@@ -136,12 +152,14 @@ export const store = createStore({
             if (implementsPalletStoreItem && implementsPalletStoreItem.timestamp > Date.now() - config.CACHE_DURATION_IMPLEMENTS_PALLET) {
                 return implementsPalletStoreItem.implementsPallet;
             }
+            context.commit("incrementBusyCounter");
             const implementsPallet = await implementsIdentityPallet(wsAddress);
             set<ImplementsPalletStoreItem>(localStorageKey, {
                 chainAddress: wsAddress,
                 timestamp: Date.now(),
                 implementsPallet
             });
+            context.commit("decrementBusyCounter");
             return implementsPallet;
         }
     },

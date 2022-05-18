@@ -92,7 +92,6 @@ export default class IdentitySearch extends Vue {
     store = useStore();
     searchTerm = "";
     selectedChainKey = "";
-    busy = false;
     implementsPallet = false;
     editCustomNodeModalOpen = false;
     customNode?: ChainInfo;
@@ -108,6 +107,10 @@ export default class IdentitySearch extends Vue {
 
     loadCustomNodeFromStorage() {
         this.customNode = get<ChainInfo>(StoreKey.CustomNode);
+    }
+
+    get busy() {
+        return this.store.getters.isBusy;
     }
 
     get submitButtonDisabled() {
@@ -135,7 +138,6 @@ export default class IdentitySearch extends Vue {
      *  we cannot search for identities...
      */
     async checkIdentityPalletExists() {
-        this.busy = true;
         this.implementsPallet = await this.store.dispatch(
             "IDENTITY_PALLET_EXISTS",
             this.selectedChainKey
@@ -146,20 +148,16 @@ export default class IdentitySearch extends Vue {
                 "Sorry, the selected node is not available or does not implement the identity pallet"
             );
         }
-        this.busy = false;
     }
 
     submitIdentitySearch() {
-        this.busy = true;
         const searchData: SearchData<void> = {
             searchTerm: this.searchTerm,
             selectedChainKey: this.selectedChainKey,
             results: [],
             timestamp: Date.now()
         };
-
         this.$emit("search", searchData);
-        this.busy = false;
     }
 
     onEditCustomNodeClick() {
