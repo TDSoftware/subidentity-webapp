@@ -1,15 +1,15 @@
 
-# SubIdentitiy
+# SubIdentity
 ## Introduction
 SubIdentity is a web application that can be used to search for identities on all substrate chains that implement the identity pallet. This document is giving an introduction on how to use SubIdentity webapp.
 
 ## Chain Selection
-![Search Bar](./assets/searchBar.png)<a id="searchBar"></a>
+![Search Bar](./assets/searchBar.png)
 
 As seen in the picture above, by default you can choose between Polkadot, Kusama and Westend to search for identities. Select the chain you want to search identities on from the dropdown.
 
 ## <a id="searchIdentities"></a> Search Identities
-After selecting a chain to search on, identities can be searched by address or any identity field. The search term must be entered in the [search box](#searchBar) seen in the screenshot above. Click the "SEARCH" button to start your search.
+After selecting a chain to search on, identities can be searched by address or any identity field. The search term must be entered in the search box seen in the screenshot above. Click the "SEARCH" button to start your search.
 
 ## View Results
 

@@ -1,0 +1,17 @@
+# The the dist folder from the main branch 
+# on subidentity.tdsoftware.de
+name: Deployment
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deployment
+      uses: satak/webrequest-action@master
+      with:
+        url: ${{ format('https://subidentity.tdsoftware.de/deploy?key={0}', secrets.DEPLOY_KEY) }}
+        method: GET

@@ -1,4 +1,10 @@
 const { defineConfig } = require("@vue/cli-service");
+
+const execSync = require("child_process").execSync;
+
+process.env.VUE_APP_GIT_COMMIT_HASH = execSync("git rev-parse HEAD").toString().trim().substring(0, 7);
+process.env.VUE_APP_VERSION = require("./package.json").version;
+
 module.exports = defineConfig({
     transpileDependencies: true,
     chainWebpack: config => {
