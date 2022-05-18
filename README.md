@@ -36,7 +36,7 @@ npm run lint
 ```
 
 ## Data
-SubIdentity Webapp uses the [SubIdentity npm package](https://www.npmjs.com/package/@npmjs_tdsoftware/subidentity) to search for identities on a given node. The easiest way is to download that package from npm npm i `@npmjs_tdsoftware/subidentity`.
+SubIdentity Webapp uses the [SubIdentity npm package](https://www.npmjs.com/package/@npmjs_tdsoftware/subidentity) to search for identities on a given node. The easiest way is to download that package from npm `@npmjs_tdsoftware/subidentity`.
 But if you want to extend the functionality you can download [the package source code](https://github.com/TDSoftware/subidentity-package), adjust it to your needs and use it with `npm link` locally.
 
 ## Views
@@ -49,7 +49,7 @@ The application has 3 main views:
 ## Search View
 ### Chain Selection
 
-By default, you can choose between Polkadot, Kusama and Westend to search for identities. It is possible to change the list of default chains by adding/removing them from the  `chains ` list in  `./src/util/chains.ts ` before the web application is run. To do so, you need to add a chain with following properties:
+By default, you can choose between Polkadot, Kusama and Westend to search for identities. It is possible to change the list of default chains by adding/removing them from the  `chains` list in  `./src/util/chains.ts ` before the web application is run. To do so, you need to add a chain with following properties:
 
 ```
         {
@@ -59,7 +59,7 @@ By default, you can choose between Polkadot, Kusama and Westend to search for id
         }
 ```
 
-❗ You can only search identities on a substrate chain implementing the identity pallet. If you are not sure, if the node you want to use implements the identity pallet, you can use the `implementsIdentityPallet` Feature from the [npm package](https://www.npmjs.com/package/@npmjs_tdsoftware/subidentity) to check.
+❗ You can only search identities on a substrate chain implementing the identity pallet. If you are not sure, if the node you want to use implements the identity pallet, you can use the `implementsIdentityPallet` feature from the [npm package](https://www.npmjs.com/package/@npmjs_tdsoftware/subidentity) to check.
 
 ## Identity View
 The identity view is used to display detailed information of a selected identity. For more information see the [tutorial](./docs/Tutorial.md).
