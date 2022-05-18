@@ -81,8 +81,7 @@ import Spinner from "@/components/common/Spinner.vue";
             required: true
         },
         customNode: {
-            type: Object,
-            required: true
+            type: Object
         }
     },
     watch: {

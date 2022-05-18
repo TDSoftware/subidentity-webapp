@@ -80,7 +80,8 @@ import Alert from "@/components/common/Alert.vue";
         Pagination,
         Spinner,
         Alert
-    }
+    },
+    emits: ["onPagechange"]
 })
 export default class IdentityList extends Vue {
     searchTerm = "";

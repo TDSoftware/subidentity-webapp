@@ -70,12 +70,10 @@ import { Options, Vue } from "vue-class-component";
             required: true
         },
         previous: {
-            type: Number || undefined,
-            required: true
+            type: Number || undefined
         },
         next: {
-            type: Number || undefined,
-            required: true
+            type: Number || undefined
         },
         maxVisibleButtons: {
             type: Number,

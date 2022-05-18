@@ -30,7 +30,8 @@ import { useStore } from "../store";
         $route() {
             this.dispatchSearchIdentities();
         }
-    }
+    },
+    emits: ["onPagechange"]
 })
 export default class ListView extends Vue {
     store = useStore();
