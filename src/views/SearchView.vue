@@ -75,4 +75,10 @@ export default class SearchView extends Vue {
 .recent-search-container {
     min-height: calc(100vh - $headerHeight - 29.5rem);
 }
+
+.upper-part {
+    @include media-breakpoint-down(lg) {
+        margin-bottom: 100px;
+    }
+}
 </style>

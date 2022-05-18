@@ -1,6 +1,6 @@
 <template>
     <form @submit.prevent="submitIdentitySearch">
-        <div class="bg-white shadow text-dark p-0 rounded">
+        <div class="bg-white shadow text-dark p-0 rounded search-container">
             <div class="row align-items-center">
                 <div class="col-lg col-12">
                     <div class="input-group">
@@ -201,6 +201,7 @@ input:disabled.search-input.form-control {
 
 .custom-select-container {
     transition: opacity 0.3s ease-out;
+
     @include media-breakpoint-up(lg) {
         border-left: 1px solid #dee2e6;
         border-right: 1px solid #dee2e6;
@@ -215,11 +216,13 @@ input:disabled.search-input.form-control {
     }
 }
 
-.search-button-col {
-    .btn.btn-primary {
-        border-radius: 0 0 0.25rem 0.25rem;
+.input-group {
+    @include media-breakpoint-down(lg) {
+        border-bottom: 1px solid #dee2e6;
     }
+}
 
+.search-button-col {
     @include media-breakpoint-up(lg) {
         flex: 0 0 150px;
         padding: 0 18px 0 6px;
@@ -258,6 +261,12 @@ input:disabled.search-input.form-control {
         ion-icon {
             margin: 0 8px 0 0;
         }
+    }
+}
+
+.search-container {
+    @include media-breakpoint-down(lg) {
+        height: 72px;
     }
 }
 </style>
