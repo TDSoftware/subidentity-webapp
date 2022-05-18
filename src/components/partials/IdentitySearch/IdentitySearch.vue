@@ -104,16 +104,6 @@ export default class IdentitySearch extends Vue {
         this.selectedChainKey = searchParams.get("chain") ?? "";
         this.loadCustomNodeFromStorage();
         this.setChainOptions();
-
-        //  On page load/reload submit the search if a searchTerm is
-        //  given in the URL params
-        const shouldSubmitSearch =
-            this.searchTerm &&
-            this.selectedChainKey &&
-            this.store.getters.lastSearchTerm !== this.searchTerm;
-        if (shouldSubmitSearch) {
-            this.submitIdentitySearch();
-        }
     }
 
     loadCustomNodeFromStorage() {
@@ -128,7 +118,7 @@ export default class IdentitySearch extends Vue {
         const options = chains.map((chainInfo: ChainInfo) => {
             return {
                 key: chainInfo.key,
-                displayValue: "In " + chainInfo.name
+                displayValue: chainInfo.name
             };
         });
         if (this.customNode) {
