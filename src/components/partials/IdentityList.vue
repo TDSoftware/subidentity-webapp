@@ -1,6 +1,12 @@
 <template>
-    <div class="mb-4 pb-1" :class="{ 'opacity-50': busy }">
-        <p class="h4 mb-2">{{ searchResults.length }} Search Results</p>
+    <div class="pb-5 desktop-header">
+        <p class="h4">
+            {{ searchResults.length }} Search Results for "{{ lastSearchTerm }}"
+            in "{{ chainName }}"
+        </p>
+    </div>
+    <div class="pb-4 mobile-header">
+        <p class="h4 mb-2 pt-3">{{ searchResults.length }} Search Results</p>
         <p class="text-muted">
             for "{{ lastSearchTerm }}" in "{{ chainName }}"
         </p>
@@ -10,8 +16,10 @@
         v-if="!busy && searchResults.length === 0"
         message="Sorry, there are no results for your search term - Please try again"
     />
-
-    <div class="bg-white p-0 fade-in">
+    <div
+        class="bg-white p-0 fade-in"
+        v-if="searchResults.length > 0 && pagination.totalPageCount !== 0"
+    >
         <div class="row mx-0 p-2 text-muted fw-bold labels">
             <h6 class="col">Name</h6>
             <h6 class="col">E-MAIL</h6>
@@ -95,10 +103,6 @@ export default class IdentityList extends Vue {
     async onPageChange(page: number) {
         this.$emit("onPagechange", page);
     }
-
-    isMobile = false;
-
-    // TODO: add logic for isMobile
 }
 </script>
 
@@ -107,21 +111,37 @@ export default class IdentityList extends Vue {
 h6 {
     font-size: 0.85rem;
 }
+
 .labels {
     display: none;
     @include media-breakpoint-up(md) {
         display: flex;
     }
 }
+
 .address-col {
     @media screen and (min-width: 1600px) {
         flex: 0 0 455px;
     }
 }
+
 .spinner-wrapper {
     width: 100%;
     display: flex;
     padding: 6rem 0;
     justify-content: center;
+}
+
+.mobile-header {
+    display: none;
+}
+
+@include media-breakpoint-down(lg) {
+    .mobile-header {
+        display: block;
+    }
+    .desktop-header {
+        display: none;
+    }
 }
 </style>
