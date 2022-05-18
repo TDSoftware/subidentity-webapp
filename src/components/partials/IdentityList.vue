@@ -1,19 +1,12 @@
 <template>
     <div class="pb-5 desktop-header">
         <p class="h4">
-            {{ lastTotalItemCount }} Search
-            <span v-if="lastTotalItemCount > 1">Results</span>
-            <span v-if="lastTotalItemCount === 1">Result</span> for "{{
-                lastSearchTerm
-            }}" in "{{ chainName }}"
+            {{ lastTotalItemCount }} Search Results for "{{ lastSearchTerm }}"
+            in "{{ chainName }}"
         </p>
     </div>
     <div class="pb-4 mobile-header">
-        <p class="h4 mb-2 pt-3">
-            {{ lastTotalItemCount }} Search
-            <span v-if="!lastTotalItemCount === 1">Results</span>
-            <span v-if="lastTotalItemCount === 1">Result</span>
-        </p>
+        <p class="h4 mb-2 pt-3">{{ lastTotalItemCount }} Search Results</p>
         <p class="text-muted">
             for "{{ lastSearchTerm }}" in "{{ chainName }}"
         </p>
