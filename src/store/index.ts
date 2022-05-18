@@ -6,6 +6,7 @@ import { getIdentity, Identity, implementsIdentityPallet, Page, searchIdentities
 import { getChainAddress } from "@/util/chains";
 import { LoadIdentityRequest } from "@/interfaces/LoadIdentityRequest";
 import { Pagination } from "@/interfaces/Pagination";
+import { ImplementsPalletStoreItem } from "@/interfaces/ImplementsPalletStoreItem";
 
 
 export interface StoreI {
@@ -129,7 +130,18 @@ export const store = createStore({
                 console.error("[store/index] No address given for chain: ", chainKey);
                 return false;
             }
-            return await implementsIdentityPallet(wsAddress);
+            const localStorageKey = "chain-" + wsAddress + "-implements-pallet";
+            const implementsPalletStoreItem = get<ImplementsPalletStoreItem>(localStorageKey);
+            if (implementsPalletStoreItem && implementsPalletStoreItem.timestamp > Date.now() - 1000 * 60 * 60 * 24) {
+                return implementsPalletStoreItem.implementsPallet;
+            }
+            const implementsPallet = await implementsIdentityPallet(wsAddress);
+            set<ImplementsPalletStoreItem>(localStorageKey, {
+                chainAddress: wsAddress,
+                timestamp: Date.now(),
+                implementsPallet
+            });
+            return implementsPallet;
         }
     },
     modules: {}
