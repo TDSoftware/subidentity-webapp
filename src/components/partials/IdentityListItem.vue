@@ -5,7 +5,7 @@
     >
         <div class="col-md col-sm-12">
             <div class="d-flex flex-row avatar">
-                <div class="img-wrapper">
+                <div class="img-wrapper" v-if="showPolkadotIcon">
                     <polkadot-web-identicon
                         size="50"
                         :address="identity.basicInfo.address"
@@ -78,10 +78,16 @@ import { Identity } from "@npmjs_tdsoftware/subidentity";
             type: Object,
             required: true
         }
+    },
+    watch: {
+        identity() {
+            this.triggerPolkadotIconUpdate();
+        }
     }
 })
 export default class IdentityListItem extends Vue {
     identity!: Identity;
+    showPolkadotIcon = true;
 
     get profileAddress() {
         return (
@@ -90,6 +96,15 @@ export default class IdentityListItem extends Vue {
             "/identity/" +
             this.identity.basicInfo.address
         );
+    }
+
+    //  manually remove and add the polkadot icon, else the icon isn't
+    //  auto updating based on the passed address...
+    triggerPolkadotIconUpdate() {
+        this.showPolkadotIcon = false;
+        this.$nextTick(() => {
+            this.showPolkadotIcon = true;
+        });
     }
 }
 </script>
