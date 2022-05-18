@@ -52,6 +52,7 @@ header {
         color: $secondary;
         background-color: transparent;
         height: $headerHeight;
+        top: 0;
 
         img {
             height: 38px;

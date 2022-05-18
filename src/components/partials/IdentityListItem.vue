@@ -197,6 +197,12 @@ export default class IdentityListItem extends Vue {
     }
 }
 
+.chain-name-badge {
+    @include media-breakpoint-down(md) {
+        width: 120px;
+    }
+}
+
 polkadot-web-identicon {
     transform: translateY(9px);
 }

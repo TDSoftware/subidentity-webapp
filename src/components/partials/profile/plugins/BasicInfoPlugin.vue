@@ -1,6 +1,6 @@
 <template>
     <Accordion>
-        <template #title>Basic Info</template>
+        <template #title>BASIC INFO</template>
         <template #body>
             <div v-if="identity.basicInfo.address">
                 <p class="mb-0 fw-bold">Address</p>
@@ -22,7 +22,7 @@
                 <p class="fw-light text-muted">{{ balance }}</p>
             </div>
             <div v-if="identity.basicInfo.legal">
-                <p class="mb-0 fw-bold">Full name</p>
+                <p class="mb-0 fw-bold">Full Name</p>
                 <div class="d-flex flex-row">
                     <p class="fw-light text-muted">
                         {{ identity.basicInfo.legal }}
