@@ -160,6 +160,7 @@ export default class IdentitySearch extends Vue {
 
         this.$emit("search", searchData);
         this.busy = false;
+        (this.$refs.searchButton as HTMLButtonElement).blur();
     }
 
     onEditCustomNodeClick() {
