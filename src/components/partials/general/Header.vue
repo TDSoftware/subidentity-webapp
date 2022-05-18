@@ -33,6 +33,9 @@ header {
     img {
         height: 28px;
         margin: 15px;
+        &:hover {
+            cursor: pointer;
+        }
     }
 
     h1 {
@@ -52,6 +55,7 @@ header {
         color: $secondary;
         background-color: transparent;
         height: $headerHeight;
+        top: 0;
 
         img {
             height: 38px;

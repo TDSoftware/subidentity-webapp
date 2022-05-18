@@ -5,7 +5,7 @@
                 <IdentitySearch @search="onSearch" />
             </div>
         </div>
-        <div class="subidentity-container pb-5">
+        <div class="subidentity-container">
             <div class="container-medium p-0">
                 <IdentityList @onPagechange="onPageChange" />
             </div>
@@ -34,31 +34,41 @@ import { useStore } from "../store";
 })
 export default class ListView extends Vue {
     store = useStore();
+    searchTerm = "";
+    selectedChainKey = "";
 
     async created() {
         this.dispatchSearchIdentities();
     }
 
-    async dispatchSearchIdentities(currentPage = 1) {
+    async dispatchSearchIdentities() {
         const searchParams = new URLSearchParams(window.location.search);
-        const searchTerm = searchParams.get("query") ?? "";
-        const selectedChainKey = searchParams.get("chain") ?? "";
+        this.searchTerm = searchParams.get("query") ?? "";
+        this.selectedChainKey = searchParams.get("chain") ?? "";
+        const page = parseInt(searchParams.get("page") ?? "");
 
         const searchData: SearchData<void> = {
-            searchTerm,
-            selectedChainKey: selectedChainKey,
+            searchTerm: this.searchTerm,
+            selectedChainKey: this.selectedChainKey,
             results: [],
             timestamp: Date.now()
         };
 
         await this.store.dispatch("SEARCH_IDENTITIES", {
             searchData,
-            currentPage
+            currentPage: page
         });
     }
 
     async onPageChange(page: number) {
-        await this.dispatchSearchIdentities(page);
+        router.push({
+            path: "/search",
+            query: {
+                query: this.searchTerm,
+                chain: this.selectedChainKey,
+                page: page
+            }
+        });
     }
 
     onSearch(searchData: SearchData<void>) {
@@ -66,7 +76,8 @@ export default class ListView extends Vue {
             path: "/search",
             query: {
                 query: searchData.searchTerm,
-                chain: searchData.selectedChainKey
+                chain: searchData.selectedChainKey,
+                page: 1
             }
         });
     }

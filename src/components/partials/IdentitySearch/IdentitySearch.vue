@@ -1,6 +1,6 @@
 <template>
     <form @submit.prevent="submitIdentitySearch">
-        <div class="bg-white shadow text-dark p-0 rounded">
+        <div class="bg-white shadow text-dark p-0 rounded search-container">
             <div class="row align-items-center">
                 <div class="col-lg col-12">
                     <div class="input-group">
@@ -92,7 +92,6 @@ export default class IdentitySearch extends Vue {
     store = useStore();
     searchTerm = "";
     selectedChainKey = "";
-    busy = false;
     implementsPallet = false;
     editCustomNodeModalOpen = false;
     customNode?: ChainInfo;
@@ -104,20 +103,14 @@ export default class IdentitySearch extends Vue {
         this.selectedChainKey = searchParams.get("chain") ?? "";
         this.loadCustomNodeFromStorage();
         this.setChainOptions();
-
-        //  On page load/reload submit the search if a searchTerm is
-        //  given in the URL params
-        const shouldSubmitSearch =
-            this.searchTerm &&
-            this.selectedChainKey &&
-            this.store.getters.lastSearchTerm !== this.searchTerm;
-        if (shouldSubmitSearch) {
-            this.submitIdentitySearch();
-        }
     }
 
     loadCustomNodeFromStorage() {
         this.customNode = get<ChainInfo>(StoreKey.CustomNode);
+    }
+
+    get busy() {
+        return this.store.getters.isBusy;
     }
 
     get submitButtonDisabled() {
@@ -128,7 +121,7 @@ export default class IdentitySearch extends Vue {
         const options = chains.map((chainInfo: ChainInfo) => {
             return {
                 key: chainInfo.key,
-                displayValue: "In " + chainInfo.name
+                displayValue: chainInfo.name
             };
         });
         if (this.customNode) {
@@ -145,7 +138,6 @@ export default class IdentitySearch extends Vue {
      *  we cannot search for identities...
      */
     async checkIdentityPalletExists() {
-        this.busy = true;
         this.implementsPallet = await this.store.dispatch(
             "IDENTITY_PALLET_EXISTS",
             this.selectedChainKey
@@ -156,20 +148,17 @@ export default class IdentitySearch extends Vue {
                 "Sorry, the selected node is not available or does not implement the identity pallet"
             );
         }
-        this.busy = false;
     }
 
     submitIdentitySearch() {
-        this.busy = true;
         const searchData: SearchData<void> = {
             searchTerm: this.searchTerm,
             selectedChainKey: this.selectedChainKey,
             results: [],
             timestamp: Date.now()
         };
-
         this.$emit("search", searchData);
-        this.busy = false;
+        (this.$refs.searchButton as HTMLButtonElement).blur();
     }
 
     onEditCustomNodeClick() {
@@ -202,6 +191,7 @@ input:disabled.search-input.form-control {
 
 .custom-select-container {
     transition: opacity 0.3s ease-out;
+
     @include media-breakpoint-up(lg) {
         border-left: 1px solid #dee2e6;
         border-right: 1px solid #dee2e6;
@@ -216,11 +206,13 @@ input:disabled.search-input.form-control {
     }
 }
 
-.search-button-col {
-    .btn.btn-primary {
-        border-radius: 0 0 0.25rem 0.25rem;
+.input-group {
+    @include media-breakpoint-down(lg) {
+        border-bottom: 1px solid #dee2e6;
     }
+}
 
+.search-button-col {
     @include media-breakpoint-up(lg) {
         flex: 0 0 150px;
         padding: 0 18px 0 6px;
@@ -259,6 +251,12 @@ input:disabled.search-input.form-control {
         ion-icon {
             margin: 0 8px 0 0;
         }
+    }
+}
+
+.search-container {
+    @include media-breakpoint-down(lg) {
+        height: 72px;
     }
 }
 </style>
