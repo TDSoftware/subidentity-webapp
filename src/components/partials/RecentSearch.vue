@@ -61,7 +61,7 @@
                                 result-count
                             "
                         >
-                            {{ recentSearch.results.length }} results
+                            {{ recentSearch.totalItemCount }} results
                         </span>
                     </div>
                 </div>

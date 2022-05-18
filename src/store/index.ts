@@ -55,6 +55,12 @@ export const store = createStore({
             return state.recentSearches[
                 state.recentSearches.length - 1
             ]?.selectedChainKey;
+        },
+
+        lastTotalItemCount(state: StoreI) {
+            return state.recentSearches[
+                state.recentSearches.length - 1
+            ]?.totalItemCount;
         }
     },
     mutations: {
@@ -112,6 +118,7 @@ export const store = createStore({
             console.log("[store/index] Got identities: ", page);
             context.commit("paginateSearchResult", page);
             searchData.results = page.items;
+            searchData.totalItemCount = page.totalItemsCount;
             context.commit("storeAsRecentSearch", searchData);
         },
 

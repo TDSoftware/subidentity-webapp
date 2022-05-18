@@ -51,6 +51,7 @@ export default class ListView extends Vue {
             searchTerm: this.searchTerm,
             selectedChainKey: this.selectedChainKey,
             results: [],
+            totalItemCount: 0,
             timestamp: Date.now()
         };
 
