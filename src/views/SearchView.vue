@@ -30,6 +30,7 @@ import RecentSearch from "@/components/partials/RecentSearch.vue";
 import { SearchData } from "@/interfaces/SearchData";
 import router from "@/router";
 import { useStore } from "@/store";
+import { Identity } from "@npmjs_tdsoftware/subidentity";
 
 @Options({
     components: {
@@ -45,18 +46,43 @@ export default class SearchView extends Vue {
         return this.store.state.recentSearches.length > 0;
     }
 
-    onSearch(searchData: SearchData<void>) {
-        router.push({
-            path: "/search",
-            query: {
-                query: searchData.searchTerm,
-                chain: searchData.selectedChainKey,
-                page: 1
-            }
-        });
+    get searchResults() {
+        return this.store.getters.lastSearchResults;
     }
 
-    recallSearch(searchData: SearchData<void>) {
+    async onSearch(searchData: SearchData<void>) {
+        await this.store.dispatch("SEARCH_IDENTITIES", {
+            searchData,
+            currentPage: 1
+        });
+        if (this.searchResults.length === 1) {
+            this.searchResults.forEach((identity: Identity) => {
+                const url = `/chain/${identity.chain.toLowerCase()}/identity/${
+                    identity.basicInfo.address
+                }`;
+                return router.push(url);
+            });
+        } else {
+            router.push({
+                path: "/search",
+                query: {
+                    query: searchData.searchTerm,
+                    chain: searchData.selectedChainKey,
+                    page: 1
+                }
+            });
+        }
+    }
+
+    recallSearch(searchData: SearchData<Identity>) {
+        if (searchData?.results?.length === 1) {
+            const identity = searchData.results[0];
+            const url = `/chain/${identity.chain.toLowerCase()}/identity/${
+                identity.basicInfo.address
+            }`;
+            return router.push(url);
+        }
+
         router.push({
             path: "/search",
             query: {
