@@ -155,6 +155,7 @@ export default class IdentitySearch extends Vue {
             searchTerm: this.searchTerm,
             selectedChainKey: this.selectedChainKey,
             results: [],
+            totalItemCount: 0,
             timestamp: Date.now()
         };
         this.$emit("search", searchData);

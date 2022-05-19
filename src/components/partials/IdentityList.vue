@@ -1,12 +1,12 @@
 <template>
     <div class="pb-5 desktop-header">
         <p class="h4">
-            {{ searchResults.length }} Search Results for "{{ lastSearchTerm }}"
+            {{ lastTotalItemCount }} Search Results for "{{ lastSearchTerm }}"
             in "{{ chainName }}"
         </p>
     </div>
     <div class="pb-4 mobile-header">
-        <p class="h4 mb-2 pt-3">{{ searchResults.length }} Search Results</p>
+        <p class="h4 mb-2 pt-3">{{ lastTotalItemCount }} Search Results</p>
         <p class="text-muted">
             for "{{ lastSearchTerm }}" in "{{ chainName }}"
         </p>
@@ -75,7 +75,8 @@ import Alert from "@/components/common/Alert.vue";
         Pagination,
         Spinner,
         Alert
-    }
+    },
+    emits: ["onPagechange"]
 })
 export default class IdentityList extends Vue {
     store = useStore();
@@ -94,6 +95,9 @@ export default class IdentityList extends Vue {
 
     get pagination() {
         return this.store.state.identitySearchPagination;
+    }
+    get lastTotalItemCount() {
+        return this.store.getters.lastTotalItemCount;
     }
 
     get busy() {
