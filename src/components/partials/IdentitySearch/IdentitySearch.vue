@@ -13,11 +13,11 @@
                         <input
                             :disabled="busy"
                             autofocus
-                            v-model="searchTerm"
                             class="form-control text-muted search-input"
                             placeholder="Search for a Name, E-Mail, Address"
                             type="text"
-                            v-on:keyup="onKeyPress"
+                            :value="searchTerm"
+                            @keyup="onInputKeyUp"
                         />
                     </div>
                 </div>
@@ -97,7 +97,6 @@ export default class IdentitySearch extends Vue {
     editCustomNodeModalOpen = false;
     customNode?: ChainInfo;
     chainOptions: UISelectOption[] = [];
-    keyPressed = false;
 
     created() {
         const searchParams = new URLSearchParams(window.location.search);
@@ -105,13 +104,11 @@ export default class IdentitySearch extends Vue {
         this.selectedChainKey = searchParams.get("chain") ?? "";
         this.loadCustomNodeFromStorage();
         this.setChainOptions();
-        if (this.searchTerm) {
-            this.keyPressed = true;
-        }
     }
 
-    onKeyPress() {
-        this.keyPressed = true;
+    onInputKeyUp(event: Event) {
+        const target = event.target as HTMLTextAreaElement;
+        this.searchTerm = target.value;
     }
 
     loadCustomNodeFromStorage() {
@@ -123,12 +120,7 @@ export default class IdentitySearch extends Vue {
     }
 
     get submitButtonDisabled() {
-        return (
-            !this.searchTerm ||
-            this.busy ||
-            !this.implementsPallet ||
-            !this.keyPressed
-        );
+        return !this.searchTerm || this.busy || !this.implementsPallet;
     }
 
     setChainOptions() {
