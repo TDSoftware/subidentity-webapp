@@ -121,13 +121,15 @@ export default class IdentitySearch extends Vue {
         const options = chains.map((chainInfo: ChainInfo) => {
             return {
                 key: chainInfo.key,
-                displayValue: chainInfo.name
+                displayValue: chainInfo.name,
+                subText: ""
             };
         });
         if (this.customNode) {
             options.push({
                 key: this.customNode.key,
-                displayValue: this.customNode.name
+                displayValue: this.customNode.name,
+                subText: this.customNode.address
             });
         }
         this.chainOptions = options;

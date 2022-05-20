@@ -22,6 +22,12 @@
                 @click="setOption(option)"
             >
                 {{ option.displayValue }}
+                <p
+                    v-if="option.subText"
+                    class="fw-light text-muted subtext mb-0"
+                >
+                    {{ option.subText }}
+                </p>
             </div>
         </div>
     </div>
@@ -64,7 +70,8 @@ export default class CustomSelect extends Vue {
     selectedKey!: string;
     selected?: UISelectOption = {
         key: "",
-        displayValue: ""
+        displayValue: "",
+        subText: ""
     };
     open = false;
 
@@ -162,6 +169,10 @@ export default class CustomSelect extends Vue {
             padding-left: 1em;
             cursor: pointer;
             user-select: none;
+
+            .subtext {
+                margin-top: -20px;
+            }
 
             &:hover {
                 background-color: #eeeeee;
