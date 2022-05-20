@@ -9,14 +9,13 @@
         </div>
         <div class="mx-4 col">
             <h4>{{ identity.basicInfo.display }}</h4>
-            <div class="d-flex flex-row">
+            <div class="d-flex flex-row" @click="copy(identity.basicInfo.address)">
                 <p class="fw-light text-muted" style="overflow-wrap: anywhere">
                     Address: {{ identity.basicInfo.address }}
                 </p>
-                <!-- TODO: add copy to clip board feature -->
-                <!-- <span class="text-decoration-none link-primary mx-2">                    
+                <span class="text-decoration-none link-primary mx-2">
                     <ion-icon size="small" name="copy-outline"></ion-icon>
-                </span> -->
+                </span>
             </div>
             <div class="d-flex flex-row">
                 <div
@@ -74,6 +73,11 @@ export default class ProfileHeader extends Vue {
 
     sendToken() {
         alert("Feature will come soon :)");
+    }
+    async copy(s: string) {
+        if(!s) return;
+        await navigator.clipboard.writeText(s);
+        //this.$toastr.success("Copied!", true);
     }
 }
 </script>
