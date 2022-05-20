@@ -3,4 +3,5 @@ export interface SearchData<T> {
     selectedChainKey: string;
     results: T[];
     timestamp: number;
+    totalItemCount: number
 }
