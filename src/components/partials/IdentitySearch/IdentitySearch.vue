@@ -13,10 +13,11 @@
                         <input
                             :disabled="busy"
                             autofocus
-                            v-model="searchTerm"
                             class="form-control text-muted search-input"
                             placeholder="Search for a Name, E-Mail, Address"
                             type="text"
+                            :value="searchTerm"
+                            @keyup="onInputKeyUp"
                         />
                     </div>
                 </div>
@@ -103,6 +104,11 @@ export default class IdentitySearch extends Vue {
         this.selectedChainKey = searchParams.get("chain") ?? "";
         this.loadCustomNodeFromStorage();
         this.setChainOptions();
+    }
+
+    onInputKeyUp(event: Event) {
+        const target = event.target as HTMLTextAreaElement;
+        this.searchTerm = target.value;
     }
 
     loadCustomNodeFromStorage() {
