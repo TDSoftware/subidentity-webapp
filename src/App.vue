@@ -8,8 +8,13 @@ import "../node_modules/polkadot-web-identicon/polyfills.js";
 import "../node_modules/polkadot-web-identicon/runtime.js";
 import { Options, Vue } from "vue-class-component";
 import "./styles/app.scss";
+import { apiAvailable } from "./util/http";
 
 @Options({})
-export default class App extends Vue {}
+export default class App extends Vue {
+    created() {
+        apiAvailable(); // once called the value is cached, that triggers the cache
+    }
+}
 </script>
 
