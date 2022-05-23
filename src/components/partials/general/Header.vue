@@ -7,13 +7,21 @@
             @click="$router.push('/')"
         />
         <h1 @click="$router.push('/')">SubIdentity</h1>
+        <h1 class="mobile-header" @click="$router.push('/')">{{ titel }}</h1>
     </header>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 
-@Options({})
+@Options({
+    props: {
+        titel: {
+            type: String,
+            required: true
+        }
+    }
+})
 export default class Header extends Vue {}
 </script>
 
@@ -44,11 +52,15 @@ header {
         font-size: 16px;
         line-height: 28px;
         margin: 15px 0;
-        display: inline-block;
+        display: none;
 
         &:hover {
             cursor: pointer;
         }
+    }
+
+    .mobile-header {
+        display: block;
     }
 
     @include media-breakpoint-up(lg) {
@@ -62,7 +74,7 @@ header {
             margin: 28px 15px 28px 22px;
         }
 
-        h1 {
+        .mobile-header {
             display: none;
         }
     }
