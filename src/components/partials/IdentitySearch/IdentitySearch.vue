@@ -177,6 +177,10 @@ export default class IdentitySearch extends Vue {
     onCustomNodeSaved() {
         this.loadCustomNodeFromStorage();
         this.setChainOptions();
+        if (this.customNode) {
+            this.selectedChainKey = this.customNode?.key;
+        }
+
         this.editCustomNodeModalOpen = false;
     }
 }
