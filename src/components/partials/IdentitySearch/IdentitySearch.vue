@@ -87,7 +87,7 @@ import CustomNodeModal from "./CustomNodeModal.vue";
             this.checkIdentityPalletExists();
         }
     },
-    emits: ["search"]
+    emits: ["search", "error"]
 })
 export default class IdentitySearch extends Vue {
     store = useStore();
@@ -149,10 +149,8 @@ export default class IdentitySearch extends Vue {
             this.selectedChainKey
         );
         if (!this.implementsPallet) {
-            // TODO: show nice error partial component instead of standard alert
-            alert(
-                "Sorry, the selected node is not available or does not implement the identity pallet"
-            );
+            const message = "Sorry, the selected node is not available or does not implement the identity pallet";
+            this.$emit("error", message);
         }
     }
 

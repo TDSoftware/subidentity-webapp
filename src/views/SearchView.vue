@@ -4,8 +4,9 @@
             <Logo />
         </div>
         <div class="pt-5 p-0 container-medium fade-in">
-            <IdentitySearch @search="onSearch" />
+            <IdentitySearch @search="onSearch" @error="handleError"/>
         </div>
+      <Alert v-if="error" class="p-0 container-medium fade-in mt-4" :message="error"></Alert>
     </div>
     <div
         v-if="showRecentSearch"
@@ -31,16 +32,19 @@ import { SearchData } from "@/interfaces/SearchData";
 import router from "@/router";
 import { useStore } from "@/store";
 import { Identity } from "@npmjs_tdsoftware/subidentity";
+import Alert from "@/components/common/Alert.vue";
 
 @Options({
     components: {
         Logo,
         IdentitySearch,
-        RecentSearch
+        RecentSearch,
+        Alert
     }
 })
 export default class SearchView extends Vue {
     store = useStore();
+    error = "";
 
     get showRecentSearch(): boolean {
         return this.store.state.recentSearches.length > 0;
@@ -51,10 +55,24 @@ export default class SearchView extends Vue {
     }
 
     async onSearch(searchData: SearchData<void>) {
+        try {
+            await this.store.dispatch("SEARCH_IDENTITIES", {
+                searchData,
+                currentPage: 1
+            });
+        }
+        catch (e: unknown) {
+            this.error = "An error occurred, please try again later: ";
+            if (e instanceof Error){
+                this.error = this.error + e.message;
+            }
+        }
+        /*
         await this.store.dispatch("SEARCH_IDENTITIES", {
             searchData,
             currentPage: 1
         });
+        */
         if (this.searchResults.length === 1) {
             this.searchResults.forEach((identity: Identity) => {
                 const url = `/chain/${identity.chain.toLowerCase()}/identity/${
@@ -91,6 +109,9 @@ export default class SearchView extends Vue {
                 page: 1
             }
         });
+    }
+    handleError(message: string){
+        this.error = message;
     }
 }
 </script>
