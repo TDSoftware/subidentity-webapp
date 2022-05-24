@@ -110,7 +110,6 @@ export default class CustomNodeModal extends Vue {
         this.busy = true;
         try {
             if (!this.validateCustomNodeAddress()) {
-                this.busy = false;
                 throw new Error("InvalidAddressError");
             }
 
@@ -127,11 +126,13 @@ export default class CustomNodeModal extends Vue {
             if (e.message === "InvalidAddressError") {
                 return (this.error =
                     "The address is invalid. It should start with 'wss://'.");
+            } else {
+                return (this.error =
+                    "Could not reach your entered address. Please check again and enter a valid address.");
             }
-            this.error =
-                "Could not reach your entered address. Please check again and enter a valid address.";
+        } finally {
+            this.busy = false;
         }
-        this.busy = false;
     }
 }
 </script>
