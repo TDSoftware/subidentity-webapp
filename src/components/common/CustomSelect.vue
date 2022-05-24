@@ -62,6 +62,13 @@ import { UISelectOption } from "@/interfaces/UISelectOption";
                 this.options.find(
                     ({ key }: UISelectOption) => key === this.selectedKey
                 ) ?? this.options[0];
+        },
+        options() {
+            this.selected =
+                this.options.find(
+                    ({ key }: UISelectOption) => key === this.selectedKey
+                ) ?? this.options[this.options.length - 1];
+            this.$emit("update:selectedKey", this.selected?.key);
         }
     }
 })

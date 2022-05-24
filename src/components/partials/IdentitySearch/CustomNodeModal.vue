@@ -107,7 +107,7 @@ export default class CustomNodeModal extends Vue {
         try {
             const chainName = await getChainName(this.newCustomNodeAddress);
             const customNode = {
-                key: "customNode",
+                key: `customNode-${chainName}`,
                 name: chainName,
                 address: this.newCustomNodeAddress,
                 modifiedAt: Date.now()
