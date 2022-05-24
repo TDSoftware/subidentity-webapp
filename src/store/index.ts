@@ -8,6 +8,8 @@ import { LoadIdentityRequest } from "@/interfaces/LoadIdentityRequest";
 import { Pagination } from "@/interfaces/Pagination";
 import { ImplementsPalletStoreItem } from "@/interfaces/ImplementsPalletStoreItem";
 import config from "@/config";
+import { apiAvailable, getRequest } from "@/util/http";
+import { GetIdentitiesResponse } from "@/interfaces/http/GetIdentitiesResponse";
 
 
 export interface StoreI {
@@ -129,7 +131,13 @@ export const store = createStore({
                 return console.error("[store/index] No address given for chain: ", searchData.selectedChainKey);
             }
             context.commit("incrementBusyCounter");
-            const page: Page<Identity> = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
+            let page: Page<Identity>;
+            if (await apiAvailable()) {
+                const response = await getRequest<GetIdentitiesResponse>(`/identities/search?wsProvider=${encodeURIComponent(wsAddress)}&page=${currentPage}&limit=${this.state.identitySearchPagination.limit}&searchKey=${encodeURIComponent(searchData.searchTerm)}`);
+                page = response.identities;
+            } else {
+                page = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
+            }
             console.log("[store/index] Got identities: ", page);
             context.commit("paginateSearchResult", page);
             searchData.results = page.items;
