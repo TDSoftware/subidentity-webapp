@@ -7,7 +7,7 @@
             @click="$router.push('/')"
         />
         <h1 @click="$router.push('/')">SubIdentity</h1>
-        <h1 class="mobile-header" @click="$router.push('/')">{{ titel }}</h1>
+        <h1 class="mobile-header" @click="$router.push('/')">{{ title }}</h1>
     </header>
 </template>
 
@@ -16,7 +16,7 @@ import { Options, Vue } from "vue-class-component";
 
 @Options({
     props: {
-        titel: {
+        title: {
             type: String,
             required: true
         }
