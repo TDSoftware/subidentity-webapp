@@ -10,6 +10,7 @@ import { ImplementsPalletStoreItem } from "@/interfaces/ImplementsPalletStoreIte
 import config from "@/config";
 import { apiAvailable, getRequest } from "@/util/http";
 import { GetIdentitiesResponse } from "@/interfaces/http/GetIdentitiesResponse";
+import { GetChainStatusResponse } from "@/interfaces/http/GetChainStatusResponse";
 import { GetVersionResponse } from "@/interfaces/http/GetVersionResponse";
 
 
@@ -139,8 +140,13 @@ export const store = createStore({
             context.commit("incrementBusyCounter");
             let page: Page<Identity>;
             if (await apiAvailable()) {
-                const response = await getRequest<GetIdentitiesResponse>(`/identities/search?wsProvider=${encodeURIComponent(wsAddress)}&page=${currentPage}&limit=${this.state.identitySearchPagination.limit}&searchKey=${encodeURIComponent(searchData.searchTerm)}`);
-                page = response.identities;
+                const chainStatusResponse = await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(wsAddress)}`);
+                if (chainStatusResponse.chainStatus.isIndexed) {
+                    const response = await getRequest<GetIdentitiesResponse>(`/identities/search?wsProvider=${encodeURIComponent(wsAddress)}&page=${currentPage}&limit=${this.state.identitySearchPagination.limit}&searchKey=${encodeURIComponent(searchData.searchTerm)}`);
+                    page = response.identities;
+                } else {
+                    page = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
+                }
             } else {
                 page = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
             }
@@ -181,7 +187,13 @@ export const store = createStore({
                 return implementsPalletStoreItem.implementsPallet;
             }
             context.commit("incrementBusyCounter");
-            const implementsPallet = await implementsIdentityPallet(wsAddress);
+            let implementsPallet: boolean;
+            if (await apiAvailable()) {
+                const chainStatusResponse = await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(wsAddress)}`);
+                implementsPallet = chainStatusResponse.chainStatus.implementsIdentityPallet;
+            } else {
+                implementsPallet = await implementsIdentityPallet(wsAddress);
+            }
             set<ImplementsPalletStoreItem>(localStorageKey, {
                 chainAddress: wsAddress,
                 timestamp: Date.now(),
