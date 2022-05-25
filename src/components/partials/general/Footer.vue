@@ -8,7 +8,8 @@
                         Web3Foundations grant program.</i
                     >
                     <br />
-                    client: {{ version }} | server: {{ apiVersion }}
+                    client: {{ version }}
+                    <span v-if="apiVersion">| server: {{ apiVersion }}</span>
                 </p>
             </div>
         </div>
