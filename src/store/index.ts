@@ -11,6 +11,7 @@ import config from "@/config";
 import { apiAvailable, getRequest } from "@/util/http";
 import { GetIdentitiesResponse } from "@/interfaces/http/GetIdentitiesResponse";
 import { GetChainStatusResponse } from "@/interfaces/http/GetChainStatusResponse";
+import { GetVersionResponse } from "@/interfaces/http/GetVersionResponse";
 
 
 export interface StoreI {
@@ -18,7 +19,8 @@ export interface StoreI {
     busyCounter: 0;
     recentSearches: SearchData<Identity>[];
     currentSearch?: SearchData<Identity>;
-    identitySearchPagination: Pagination
+    identitySearchPagination: Pagination;
+    apiVersion: string
 
 }
 
@@ -39,7 +41,8 @@ export const store = createStore({
             next: 0,
             currentPage: 1,
             limit: 5
-        }
+        },
+        apiVersion: ""
 
     },
     getters: {
@@ -115,6 +118,9 @@ export const store = createStore({
 
         paginateSearchResult(state: StoreI, page) {
             state.identitySearchPagination = { totalPageCount: page.totalPageCount, previous: page.previous, next: page.next, currentPage: page.next - 1 || page.previous + 1 || 1, limit: 5 };
+        },
+        setApiVersion(state: StoreI, versionData) {
+            state.apiVersion = `${versionData.version} (${versionData.commitHash})`;
         }
 
     },
@@ -160,6 +166,13 @@ export const store = createStore({
             const identity: Identity = await getIdentity(wsAddress, request.address);
             console.log("[store/index] Got identity by address: ", identity);
             return identity;
+        },
+
+        async GET_API_VERSION(context: ActionContext<StoreI, StoreI>) {
+            if (await apiAvailable()) {
+                const response = await getRequest<GetVersionResponse>("/version");
+                context.commit("setApiVersion", response);
+            }
         },
 
         async IDENTITY_PALLET_EXISTS(context: ActionContext<StoreI, StoreI>, chainKey: string): Promise<boolean> {

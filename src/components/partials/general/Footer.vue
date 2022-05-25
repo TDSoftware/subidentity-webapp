@@ -8,7 +8,8 @@
                         Web3Foundations grant program.</i
                     >
                     <br />
-                    {{ version }}
+                    client: {{ version }}
+                    <span v-if="apiVersion">| server: {{ apiVersion }}</span>
                 </p>
             </div>
         </div>
@@ -17,9 +18,12 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import { useStore } from "@/store";
 
 @Options({})
 export default class Footer extends Vue {
+    store = useStore();
+
     get version() {
         return (
             process.env.VUE_APP_VERSION +
@@ -27,6 +31,10 @@ export default class Footer extends Vue {
             process.env.VUE_APP_GIT_COMMIT_HASH +
             ")"
         );
+    }
+
+    get apiVersion() {
+        return this.store.state.apiVersion;
     }
 }
 </script>
