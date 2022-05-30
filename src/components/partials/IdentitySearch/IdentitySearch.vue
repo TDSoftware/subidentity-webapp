@@ -155,7 +155,8 @@ export default class IdentitySearch extends Vue {
             }
         }
         catch (e) {
-            this.$emit("error", "Sorry, the connection to the node could not be established");
+            const message = "Sorry, the connection to the node could not be established";
+            this.$emit("error", message);
         }
     }
 
