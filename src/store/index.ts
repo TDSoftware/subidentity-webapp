@@ -163,7 +163,18 @@ export const store = createStore({
             if (!wsAddress) {
                 throw new Error("[store/index] No address given for chain: " + request.chain);
             }
-            const identity: Identity = await getIdentity(wsAddress, request.address);
+            let identity;
+            if (await apiAvailable()) {
+                const chainStatusResponse = await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(wsAddress)}`);
+                if (chainStatusResponse.chainStatus.isIndexed) {
+                    identity = await getRequest<Identity>(`/identities/${request.address}?wsProvider=${encodeURIComponent(wsAddress)}`);
+                } else {
+                    identity = await getIdentity(wsAddress, request.address);
+                }
+            } else {
+                identity = await getIdentity(wsAddress, request.address);
+            }
+
             console.log("[store/index] Got identity by address: ", identity);
             return identity;
         },
