@@ -55,6 +55,7 @@ export default class SearchView extends Vue {
     }
 
     async onSearch(searchData: SearchData<void>) {
+        this.error = "";
         try {
             await this.store.dispatch("SEARCH_IDENTITIES", {
                 searchData,
