@@ -28,7 +28,7 @@
         v-if="searchResults.length > 0 && pagination.totalPageCount !== 0"
     >
         <div class="row mx-0 p-2 text-muted fw-bold labels">
-            <h6 class="col">Name</h6>
+            <h6 class="col">NAME</h6>
             <h6 class="col">E-MAIL</h6>
             <h6 class="col address-col">ADDRESS</h6>
             <h6 class="col" style="flex: 0 0 150px">CHAIN</h6>
