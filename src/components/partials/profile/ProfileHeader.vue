@@ -40,7 +40,10 @@
                     <div class="mx-1">{{ identity.chain }}</div>
 
                 </div>
-                <div class="verification">Verified by {{identity.judgements.length}} registrars</div>
+                <div v-if="identity.judgements.length > 1" class="verified">Verified by {{identity.judgements.length}} registrars</div>
+                <div v-else-if="identity.judgements.length = 1" class="verified">Verified by {{identity.judgements.length}} registrar</div>
+                <div v-else-if="identity.judgements.length = 0" class="not-verified">Not verified</div>
+                <div>okay {{identity.judgements.isArray}} sure</div>
 
                 <!-- <p class="text-success m-0 mx-3">Verified by 9 registrars</p> -->
                 <!-- TODO: add this info from getIdentity -->
@@ -86,10 +89,13 @@ export default class ProfileHeader extends Vue {
 
 <style lang="scss" scoped>
 @import "../../../styles/variables";
-.verification{
+.verified{
   margin-left: 15px;
   color: #198754;
-;
+}
+.not-verified{
+  margin-left: 15px;
+  color: $primary;
 }
 .text-success {
     line-height: 40px;
