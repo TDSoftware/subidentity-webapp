@@ -144,19 +144,19 @@ export default class IdentitySearch extends Vue {
      *  we cannot search for identities...
      */
     async checkIdentityPalletExists() {
-      try {
-        this.implementsPallet = await this.store.dispatch(
-            "IDENTITY_PALLET_EXISTS",
-            this.selectedChainKey
-        );
-        if (!this.implementsPallet) {
-          const message = "Sorry, the selected node is not available or does not implement the identity pallet";
-          this.$emit("error", message);
+        try {
+            this.implementsPallet = await this.store.dispatch(
+                "IDENTITY_PALLET_EXISTS",
+                this.selectedChainKey
+            );
+            if (!this.implementsPallet) {
+                const message = "Sorry, the selected node is not available or does not implement the identity pallet";
+                this.$emit("error", message);
+            }
         }
-      }
-      catch (e) {
-        this.$emit("error", "Sorry, the connection to the node could not be established")
-      }
+        catch (e) {
+            this.$emit("error", "Sorry, the connection to the node could not be established");
+        }
     }
 
     submitIdentitySearch() {
