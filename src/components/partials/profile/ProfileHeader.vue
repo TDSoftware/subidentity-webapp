@@ -17,7 +17,7 @@
                     <ion-icon size="small" name="copy-outline"></ion-icon>
                 </span>
             </div>
-            <div class="d-flex flex-row">
+            <div class="d-flex flex-row" style="align-items: center">
                 <div
                     class="
                         d-flex
@@ -38,7 +38,9 @@
                     ></ion-icon>
 
                     <div class="mx-1">{{ identity.chain }}</div>
+
                 </div>
+                <div class="verification">Verified by {{identity.judgements.length}} registrars</div>
 
                 <!-- <p class="text-success m-0 mx-3">Verified by 9 registrars</p> -->
                 <!-- TODO: add this info from getIdentity -->
@@ -84,6 +86,11 @@ export default class ProfileHeader extends Vue {
 
 <style lang="scss" scoped>
 @import "../../../styles/variables";
+.verification{
+  margin-left: 15px;
+  color: #198754;
+;
+}
 .text-success {
     line-height: 40px;
 }
