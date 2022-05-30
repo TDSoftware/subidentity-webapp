@@ -103,7 +103,10 @@ export default class CustomNodeModal extends Vue {
     }
 
     validateCustomNodeAddress() {
-        return this.newCustomNodeAddress.startsWith("wss://");
+        return (
+            this.newCustomNodeAddress.startsWith("wss://") ||
+            this.newCustomNodeAddress.startsWith("ws://")
+        );
     }
 
     async saveCustomNode() {
@@ -123,13 +126,12 @@ export default class CustomNodeModal extends Vue {
             set<ChainInfo>(StoreKey.CustomNode, customNode);
             this.$emit("save", customNode);
         } catch (e) {
-            if (e.message === "InvalidAddressError") {
-                return (this.error =
-                    "The address is invalid. It should start with 'wss://'.");
-            } else {
-                return (this.error =
-                    "Could not reach your entered address. Please check again and enter a valid address.");
-            }
+            if (e.message === "InvalidAddressError")
+                this.error =
+                    "The address is invalid. It should start with 'wss://'.";
+            else
+                this.error =
+                    "Could not reach your entered address. Please check again and enter a valid address.";
         } finally {
             this.busy = false;
         }
