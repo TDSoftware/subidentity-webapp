@@ -2,7 +2,10 @@
     <Accordion>
         <template #title>BASIC INFO</template>
         <template #body>
-            <div v-if="identity.basicInfo.address" @click="copy(identity.basicInfo.address)">
+            <div
+                v-if="identity.basicInfo.address"
+                @click="copy(identity.basicInfo.address)"
+            >
                 <p class="mb-0 fw-bold">Address</p>
                 <div class="d-flex flex-row">
                     <p
@@ -11,6 +14,7 @@
                     >
                         {{ identity.basicInfo.address }}
                     </p>
+                    <!-- TODO: add copy to clip board feature -->
                     <span class="text-decoration-none link-primary mx-2">
                         <ion-icon size="small" name="copy-outline"></ion-icon>
                     </span>
@@ -115,16 +119,18 @@ export default class BasicInfoPlugin extends Vue {
     get balance() {
         const { total, symbol } = this.identity.balance ?? {};
         if (!total || !symbol) return "";
-        return `${this.getNumberFormatter(symbol).format(Number(total))}`;
+        return this.getNumberFormatter(symbol, total);
     }
 
-    getNumberFormatter(currency: string) {
-        return new Intl.NumberFormat("en-US", { style: "currency", currency });
-    }
-    async copy(s: string) {
-        if(!s) return;
-        await navigator.clipboard.writeText(s);
-        //this.$toastr.success("Copied!", true);
+    getNumberFormatter(currency: string, total: string) {
+        try {
+            return new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency
+            }).format(Number(total));
+        } catch (error) {
+            return `${currency} ${total}`;
+        }
     }
 }
 </script>
