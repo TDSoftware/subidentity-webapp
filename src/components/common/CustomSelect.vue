@@ -22,6 +22,12 @@
                 @click="setOption(option)"
             >
                 {{ option.displayValue }}
+                <p
+                    v-if="option.subText"
+                    class="fw-light text-muted subtext mb-0"
+                >
+                    {{ option.subText }}
+                </p>
             </div>
         </div>
     </div>
@@ -56,6 +62,13 @@ import { UISelectOption } from "@/interfaces/UISelectOption";
                 this.options.find(
                     ({ key }: UISelectOption) => key === this.selectedKey
                 ) ?? this.options[0];
+        },
+        options() {
+            this.selected =
+                this.options.find(
+                    ({ key }: UISelectOption) => key === this.selectedKey
+                ) ?? this.options[this.options.length - 1];
+            this.$emit("update:selectedKey", this.selected?.key);
         }
     }
 })
@@ -64,7 +77,8 @@ export default class CustomSelect extends Vue {
     selectedKey!: string;
     selected?: UISelectOption = {
         key: "",
-        displayValue: ""
+        displayValue: "",
+        subText: ""
     };
     open = false;
 
@@ -162,6 +176,10 @@ export default class CustomSelect extends Vue {
             padding-left: 1em;
             cursor: pointer;
             user-select: none;
+
+            .subtext {
+                margin-top: -20px;
+            }
 
             &:hover {
                 background-color: #eeeeee;

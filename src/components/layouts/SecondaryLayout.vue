@@ -1,5 +1,5 @@
 <template>
-    <Header />
+    <Header :title="$route.path === '/search' ? 'Search' : 'Profile'" />
     <div class="subidentity-container has-bg-image">
         <router-view />
     </div>
