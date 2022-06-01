@@ -40,6 +40,7 @@
                         class="btn btn-primary text-white d-block"
                         :disabled="!newCustomNodeAddress || busy"
                         @click="saveCustomNode"
+                        ref="saveNode"
                     >
                         <Spinner v-if="busy" />
                         SAVE NODE
@@ -49,6 +50,7 @@
                     <button
                         class="btn btn-dark d-block"
                         :disabled="busy"
+                        ref="cancelButton"
                         @click="$emit('update:open', false)"
                     >
                         CANCEL
