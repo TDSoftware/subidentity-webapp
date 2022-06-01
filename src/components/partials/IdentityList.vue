@@ -35,15 +35,12 @@
             <h6 class="col" style="flex: 0 0 100px">PROFILE</h6>
         </div>
         <div class="spinner-wrapper fade-in" v-if="busy">
-            <Spinner color="#D0D0D0" :size="40" :width="3" />
+            <Spinner color="#EA268E" :size="40" :width="3" />
         </div>
         <div
             class="fade-in"
-            v-if="
-                !busy &&
-                searchResults.length > 0 &&
-                pagination.totalPageCount > 0
-            "
+            ref="identityList"
+            v-if="searchResults.length > 0 && pagination.totalPageCount > 0"
         >
             <template v-for="(identity, i) of searchResults" :key="i">
                 <IdentityListItem :identity="identity" />
@@ -53,7 +50,7 @@
 
     <div
         class="container-medium pt-5 fade-in"
-        v-if="searchResults.length > 0 && pagination.totalPageCount > 0"
+        v-if="searchResults.length > 1 && pagination.totalPageCount > 1"
     >
         <div class="d-flex justify-content-center pt-3 pb-2 text-white-50">
             <Pagination
@@ -137,10 +134,11 @@ h6 {
 }
 
 .spinner-wrapper {
-    width: 100%;
-    display: flex;
     padding: 6rem 0;
+    display: flex;
     justify-content: center;
+    position: absolute;
+    width: 70%;
 }
 
 .mobile-header {
