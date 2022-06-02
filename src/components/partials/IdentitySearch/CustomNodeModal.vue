@@ -154,24 +154,25 @@ export default class CustomNodeModal extends Vue {
 }
 
 .buttons {
-    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
     & > div {
-        &:first-child {
-            margin-bottom: 0.75rem;
-        }
-        button {
-            display: block;
-            width: 100%;
-        }
+        margin-right: 1rem;
     }
-    @include media-breakpoint-up(md) {
-        display: flex;
-        flex-direction: row;
+}
+
+@include media-breakpoint-down(lg) {
+    .buttons {
+        margin-top: 1rem;
         & > div {
-            margin-right: 1rem;
+            width: 100%;
+            &:first-child {
+                margin-bottom: 0.75rem;
+            }
             button {
-                padding-left: 1.5rem;
-                padding-right: 1.5rem;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
             }
         }
     }
