@@ -14,7 +14,6 @@
                     >
                         {{ identity.basicInfo.address }}
                     </p>
-                    <!-- TODO: add copy to clip board feature -->
                     <span class="text-decoration-none link-primary mx-2">
                         <ion-icon size="small" name="copy-outline"></ion-icon>
                     </span>
@@ -120,6 +119,12 @@ export default class BasicInfoPlugin extends Vue {
         const { total, symbol } = this.identity.balance ?? {};
         if (!total || !symbol) return "";
         return this.getNumberFormatter(symbol, total);
+    }
+
+    async copy(s: string) {
+        if (!s) return;
+        await navigator.clipboard.writeText(s);
+        //this.$toastr.success("Copied!", true);
     }
 
     getNumberFormatter(currency: string, total: string) {
