@@ -4,13 +4,13 @@
             {{ customNode ? "Edit" : "Add" }} your custom node
         </template>
         <template #body>
-            <div class="row">
+            <div class="row inputs">
                 <div class="mb-3 col">
-                    <label class="form-label">Address</label>
+                    <label class="form-label fw-bold">Address</label>
                     <input
                         v-model="newCustomNodeAddress"
                         type="text"
-                        class="form-control"
+                        class="form-control input-address"
                         placeholder="e.g.: wss://127.0.0.1:9944"
                         @keypress.enter="saveCustomNode"
                     />
@@ -23,11 +23,11 @@
                         newCustomNodeAddress === customNode.address
                     "
                 >
-                    <label class="form-label">Name</label>
+                    <label class="form-label fw-bold">Name</label>
                     <input
                         v-model="customNode.name"
                         type="text"
-                        class="form-control"
+                        class="form-control input-name"
                         placeholder="Name..."
                         disabled
                         readonly
@@ -143,8 +143,14 @@ export default class CustomNodeModal extends Vue {
 <style lang="scss" scoped>
 @import "../../../styles/variables";
 
-input {
+.input-address {
     border: solid 1px #dee2e6 !important;
+}
+
+.input-name {
+    border-style: none;
+    background: none;
+    padding-left: 0;
 }
 
 .buttons {
@@ -168,6 +174,13 @@ input {
                 padding-right: 1.5rem;
             }
         }
+    }
+}
+
+@include media-breakpoint-down(lg) {
+    .inputs {
+        display: flex;
+        flex-direction: column;
     }
 }
 </style>
