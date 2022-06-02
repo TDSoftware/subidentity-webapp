@@ -59,7 +59,7 @@ export default class IdentityView extends Vue {
     store = useStore();
 
     address = this.route.params.address as string;
-    chain = (this.route.params.chain as string).toLowerCase();
+    chain = this.route.params.chain as string;
     loaded = false;
     identity?: Identity;
     error = "";
