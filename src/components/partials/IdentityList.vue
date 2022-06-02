@@ -1,5 +1,5 @@
 <template>
-    <div class="pb-5 desktop-header">
+    <div class="pb-5 desktop-header" v-if="!pageError">
         <p class="h4">
             {{ lastTotalItemCount }} Search
             <span v-if="lastTotalItemCount > 1">Results</span>
@@ -8,7 +8,7 @@
             }}"
         </p>
     </div>
-    <div class="pb-4 mobile-header">
+    <div class="pb-4 mobile-header" v-if="!pageError">
         <p class="h4 mb-2 pt-3">
             {{ lastTotalItemCount }} Search
             <span v-if="lastTotalItemCount > 1">Results</span>
@@ -18,11 +18,11 @@
             for "{{ lastSearchTerm }}" in "{{ chainName }}"
         </p>
     </div>
-
     <Alert
-        v-if="!busy && searchResults.length === 0"
+        v-if="!busy && lastTotalItemCount === 0"
         message="Sorry, there are no results for your search term - Please try again"
     />
+    <Alert v-if="pageError" :message="pageError" />
     <div
         class="bg-white p-0 fade-in"
         v-if="searchResults.length > 0 && pagination.totalPageCount !== 0"
@@ -53,7 +53,7 @@
 
     <div
         class="container-medium pt-5 fade-in"
-        v-if="searchResults.length > 0 && pagination.totalPageCount > 0"
+        v-if="searchResults.length >= 1 && pagination.totalPageCount > 1"
     >
         <div class="d-flex justify-content-center pt-3 pb-2 text-white-50">
             <Pagination
@@ -83,7 +83,12 @@ import Alert from "@/components/common/Alert.vue";
         Spinner,
         Alert
     },
-    emits: ["onPagechange"]
+    emits: ["onPagechange"],
+    props: {
+        pageError: {
+            type: String
+        }
+    }
 })
 export default class IdentityList extends Vue {
     store = useStore();
