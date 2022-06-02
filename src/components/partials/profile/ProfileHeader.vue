@@ -40,10 +40,10 @@
                     <div class="mx-1">{{ identity.chain }}</div>
 
                 </div>
-                <div v-if="identity.judgements.length > 1" class="verified">Verified by {{identity.judgements.length}} registrars</div>
-                <div v-else-if="identity.judgements.length = 1" class="verified">Verified by {{identity.judgements.length}} registrar</div>
-                <div v-else-if="identity.judgements.length = 0" class="not-verified">Not verified</div>
-                <div>okay {{identity.judgements.isArray}} sure</div>
+                <div v-if="checkJudgements() > 1" class="verified">Verified by {{checkJudgements()}} registrars</div>
+                <div v-else-if="checkJudgements() === 1" class="verified">Verified by {{checkJudgements()}} registrar</div>
+                <div v-else-if="checkJudgements() === 0" class="not-verified text-muted"> <ion-icon name="information-circle-outline" class="info-pink" size="small"></ion-icon> Not verified</div>
+                <div v-else-if="checkJudgements() < 0" class="pending text-muted">Judgement in progress</div>
 
                 <!-- <p class="text-success m-0 mx-3">Verified by 9 registrars</p> -->
                 <!-- TODO: add this info from getIdentity -->
@@ -75,6 +75,35 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class ProfileHeader extends Vue {
     identity!: Identity;
+    checkJudgements(){
+        if(this.identity){
+            if(this.identity.judgements){
+                const keys = this.identity.judgements?.keys();
+                let count = 0;
+                let pending = 0;
+                for (let x of keys!){
+                    if (this.identity.judgements![x] !== undefined){
+                        if (this.identity.judgements![x] !== "FeePaid"){
+                            count ++;
+                        }
+                        else{
+                            pending ++;
+                        }
+                    }
+                }
+                if (count !== 0){
+                    return count;
+                }
+                else if(pending !== 0){
+                    return -pending;
+                }
+                else{
+                    return count;
+                }
+            }
+        }
+
+    }
 
     sendToken() {
         alert("Feature will come soon :)");
@@ -89,13 +118,22 @@ export default class ProfileHeader extends Vue {
 
 <style lang="scss" scoped>
 @import "../../../styles/variables";
+.info-pink{
+  color: $primary;
+  margin-right: 2px;
+}
 .verified{
   margin-left: 15px;
   color: #198754;
 }
 .not-verified{
   margin-left: 15px;
-  color: $primary;
+  display: flex;
+  align-items: center;
+  //color: $primary;
+}
+.pending{
+  margin-left: 15px;
 }
 .text-success {
     line-height: 40px;
