@@ -66,7 +66,9 @@ export default class ListView extends Vue {
             });
         }
         catch (e) {
-            router.push("/?errorMsg=You+got+redirected+because+an+invalid+chain+was+chosen");
+            this.store.dispatch("decrementBusyCounter");
+            let query = "?errorMsg= " + encodeURI(e.message);
+            router.push("/" +query);
         }
 
         if (page > this.pagination.totalPageCount) {
@@ -81,10 +83,6 @@ export default class ListView extends Vue {
 
     get pagination() {
         return this.store.state.identitySearchPagination;
-    }
-
-    get busy() {
-        return this.store.getters.isBusy;
     }
 
     get busy() {

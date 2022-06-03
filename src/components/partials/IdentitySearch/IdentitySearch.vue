@@ -159,7 +159,7 @@ export default class IdentitySearch extends Vue {
         catch (e) {
             const message = "Sorry, the connection to the node could not be established";
             this.$emit("error", message);
-            await this.store.dispatch("RESET_BUSY");
+            await this.store.dispatch("DECREASE_BUSY");
         }
     }
 
@@ -175,7 +175,7 @@ export default class IdentitySearch extends Vue {
             this.$emit("search", searchData);
         } catch (e) {
             this.$emit("error", "Sorry, but we have a problem processing your search");
-            this.store.dispatch("RESET_BUSY");
+            this.store.dispatch("DECREASE_BUSY");
         }
         (this.$refs.searchButton as HTMLButtonElement).blur();
     }
