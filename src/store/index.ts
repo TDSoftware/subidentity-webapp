@@ -159,7 +159,7 @@ export const store = createStore({
             context.commit("decrementBusyCounter");
         },
         
-        async DECREASE_BUSY(context:ActionContext<StoreI, StoreI>){
+        async DECREMENT_BUSY(context:ActionContext<StoreI, StoreI>){
             context.commit("decrementBusyCounter");
         },
 
