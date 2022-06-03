@@ -44,10 +44,8 @@ import Alert from "@/components/common/Alert.vue";
 })
 export default class SearchView extends Vue {
     store = useStore();
-    //queryString = window.location.search;
     urlParams = new URLSearchParams(window.location.search);
     error = "" || this.urlParams.get("errorMsg");
-    //error = "" || urlParams.get('errorMsg');
 
     get showRecentSearch(): boolean {
         return this.store.state.recentSearches.length > 0;
@@ -71,12 +69,7 @@ export default class SearchView extends Vue {
                 this.error = this.error + e.message;
             }
         }
-        /*
-        await this.store.dispatch("SEARCH_IDENTITIES", {
-            searchData,
-            currentPage: 1
-        });
-        */
+        
         if (this.searchResults.length === 1) {
             this.searchResults.forEach((identity: Identity) => {
                 const url = `/chain/${identity.chain.toLowerCase()}/identity/${
