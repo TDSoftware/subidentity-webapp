@@ -6,7 +6,7 @@
             </div>
         </div>
         <div class="subidentity-container">
-            <div class="container-medium p-0">
+            <div class="container-medium p-0" :class="busy ? 'is-blur' : ''">
                 <IdentityList
                     @onPagechange="onPageChange"
                     :pageError="pageError"/>
@@ -87,6 +87,10 @@ export default class ListView extends Vue {
         return this.store.getters.isBusy;
     }
 
+    get busy() {
+        return this.store.getters.isBusy;
+    }
+
     async onPageChange(page: number) {
         router.push({
             path: "/search",
@@ -138,5 +142,9 @@ export default class ListView extends Vue {
     @include media-breakpoint-up(lg) {
         padding-top: $headerHeight;
     }
+}
+.is-blur {
+    background: white;
+    opacity: 0.4;
 }
 </style>

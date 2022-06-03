@@ -8,6 +8,10 @@ import { LoadIdentityRequest } from "@/interfaces/LoadIdentityRequest";
 import { Pagination } from "@/interfaces/Pagination";
 import { ImplementsPalletStoreItem } from "@/interfaces/ImplementsPalletStoreItem";
 import config from "@/config";
+import { apiAvailable, getRequest } from "@/util/http";
+import { GetIdentitiesResponse } from "@/interfaces/http/GetIdentitiesResponse";
+import { GetChainStatusResponse } from "@/interfaces/http/GetChainStatusResponse";
+import { GetVersionResponse } from "@/interfaces/http/GetVersionResponse";
 
 
 export interface StoreI {
@@ -15,7 +19,8 @@ export interface StoreI {
     busyCounter: 0;
     recentSearches: SearchData<Identity>[];
     currentSearch?: SearchData<Identity>;
-    identitySearchPagination: Pagination
+    identitySearchPagination: Pagination;
+    apiVersion: string
 
 }
 
@@ -36,7 +41,8 @@ export const store = createStore({
             next: 0,
             currentPage: 1,
             limit: 5
-        }
+        },
+        apiVersion: ""
 
     },
     getters: {
@@ -116,6 +122,9 @@ export const store = createStore({
 
         paginateSearchResult(state: StoreI, page) {
             state.identitySearchPagination = { totalPageCount: page.totalPageCount, previous: page.previous, next: page.next, currentPage: page.next - 1 || page.previous + 1 || 1, limit: 5 };
+        },
+        setApiVersion(state: StoreI, versionData) {
+            state.apiVersion = `${versionData.version} (${versionData.commitHash})`;
         }
 
     },
@@ -134,7 +143,18 @@ export const store = createStore({
                 return console.error("[store/index] No address given for chain: ", searchData.selectedChainKey);
             }
             context.commit("incrementBusyCounter");
-            const page: Page<Identity> = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
+            let page: Page<Identity>;
+            if (await apiAvailable()) {
+                const chainStatusResponse = await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(wsAddress)}`);
+                if (chainStatusResponse.chainStatus.isIndexed) {
+                    const response = await getRequest<GetIdentitiesResponse>(`/identities/search?wsProvider=${encodeURIComponent(wsAddress)}&page=${currentPage}&limit=${this.state.identitySearchPagination.limit}&searchKey=${encodeURIComponent(searchData.searchTerm)}`);
+                    page = response.identities;
+                } else {
+                    page = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
+                }
+            } else {
+                page = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
+            }
             console.log("[store/index] Got identities: ", page);
             context.commit("paginateSearchResult", page);
             searchData.results = page.items;
@@ -148,9 +168,27 @@ export const store = createStore({
             if (!wsAddress) {
                 throw new Error("[store/index] No address given for chain: " + request.chain);
             }
-            const identity: Identity = await getIdentity(wsAddress, request.address);
+            let identity;
+            if (await apiAvailable()) {
+                const chainStatusResponse = await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(wsAddress)}`);
+                if (chainStatusResponse.chainStatus.isIndexed) {
+                    identity = await getRequest<Identity>(`/identities/${request.address}?wsProvider=${encodeURIComponent(wsAddress)}`);
+                } else {
+                    identity = await getIdentity(wsAddress, request.address);
+                }
+            } else {
+                identity = await getIdentity(wsAddress, request.address);
+            }
+
             console.log("[store/index] Got identity by address: ", identity);
             return identity;
+        },
+
+        async GET_API_VERSION(context: ActionContext<StoreI, StoreI>) {
+            if (await apiAvailable()) {
+                const response = await getRequest<GetVersionResponse>("/version");
+                context.commit("setApiVersion", response);
+            }
         },
 
         async IDENTITY_PALLET_EXISTS(context: ActionContext<StoreI, StoreI>, chainKey: string): Promise<boolean> {
@@ -165,7 +203,13 @@ export const store = createStore({
                 return implementsPalletStoreItem.implementsPallet;
             }
             context.commit("incrementBusyCounter");
-            const implementsPallet = await implementsIdentityPallet(wsAddress);
+            let implementsPallet: boolean;
+            if (await apiAvailable()) {
+                const chainStatusResponse = await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(wsAddress)}`);
+                implementsPallet = chainStatusResponse.chainStatus.implementsIdentityPallet;
+            } else {
+                implementsPallet = await implementsIdentityPallet(wsAddress);
+            }
             set<ImplementsPalletStoreItem>(localStorageKey, {
                 chainAddress: wsAddress,
                 timestamp: Date.now(),

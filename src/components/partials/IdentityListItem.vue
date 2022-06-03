@@ -88,11 +88,17 @@ import { Identity } from "@npmjs_tdsoftware/subidentity";
 export default class IdentityListItem extends Vue {
     identity!: Identity;
     showPolkadotIcon = true;
+    chain = "";
+
+    created() {
+        const searchParams = new URLSearchParams(window.location.search);
+        this.chain = searchParams.get("chain") ?? "";
+    }
 
     get profileAddress() {
         return (
             "/chain/" +
-            this.identity.chain.toLowerCase() +
+            this.chain +
             "/identity/" +
             this.identity.basicInfo.address
         );

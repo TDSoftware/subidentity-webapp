@@ -30,7 +30,7 @@ export const chains: ChainInfo[] = [
  * @returns the address to connect to via wbe3
  */
 export function getChainAddress(chainKey: string): string | undefined {
-    if (chainKey === "customNode") {
+    if (chainKey.startsWith("customNode")) {
         const customNode = get<ChainInfo>(StoreKey.CustomNode);
         if (!customNode) {
             console.error("[store/index] No custom node available!!!");
@@ -45,7 +45,7 @@ export function getChainAddress(chainKey: string): string | undefined {
  * @param chainKey - example: "polkadot" 
  */
 export function getChainName(chainKey: string): string | undefined {
-    if (chainKey === "customNode") {
+    if (chainKey.startsWith("customNode")) {
         const customNode = get<ChainInfo>(StoreKey.CustomNode);
         if (!customNode) {
             console.error("[store/index] No custom node available!!!");

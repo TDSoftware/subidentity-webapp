@@ -53,7 +53,11 @@
 
     <div
         class="container-medium pt-5 fade-in"
+<<<<<<< HEAD
         v-if="searchResults.length >= 1 && pagination.totalPageCount > 1"
+=======
+        v-if="searchResults.length > 1 && pagination.totalPageCount > 1"
+>>>>>>> a9c4997d97338ff56131e8b7371d406d289faa5b
     >
         <div class="d-flex justify-content-center pt-3 pb-2 text-white-50">
             <Pagination
@@ -132,7 +136,7 @@ export default class IdentityList extends Vue {
 
 .list-alert{
 
-  @include media-breakpoint-down(lg)  {
+  @media screen and (min-width: 1600px) {
     margin-top: -27px;
   }
 }
