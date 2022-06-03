@@ -112,12 +112,7 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class BasicInfoPlugin extends Vue {
     identity!: Identity;
-
-    /*get judgements() {
-        return this.identity.judgements
-            ?.map((judgement: string) => judgement.toLowerCase())
-            .join(", ");
-    }*/
+  
     get judgements() {
         return this.identity.judgements?.map((judgement: string) => judgement.toLowerCase());
     }
