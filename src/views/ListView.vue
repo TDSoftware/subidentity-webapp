@@ -66,7 +66,7 @@ export default class ListView extends Vue {
             });
         }
         catch (e) {
-            this.store.dispatch("decrementBusyCounter");
+            this.store.dispatch("DECREMENT_BUSY");
             let query = "?errorMsg= " + encodeURI(e.message);
             router.push("/" +query);
         }
