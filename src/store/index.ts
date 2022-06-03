@@ -79,6 +79,10 @@ export const store = createStore({
             state.busyCounter--;
         },
 
+        resetBusyCounter(state: StoreI){
+            state.busyCounter = 0;
+        },
+
         login(state: StoreI) {
             state.isAuthenticated = true;
         },
@@ -168,6 +172,10 @@ export const store = createStore({
             });
             context.commit("decrementBusyCounter");
             return implementsPallet;
+        },
+
+        async RESET_BUSY(context: ActionContext<StoreI, StoreI>): Promise<void> {
+            context.commit("resetBusyCounter");
         }
     },
     modules: {}

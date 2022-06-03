@@ -1,5 +1,5 @@
 <template>
-    <div class="pb-5 desktop-header">
+    <div class="pb-5 desktop-header" v-if="lastTotalItemCount > 0">
         <p class="h4">
             {{ lastTotalItemCount }} Search
             <span v-if="lastTotalItemCount > 1">Results</span>
@@ -8,7 +8,7 @@
             }}"
         </p>
     </div>
-    <div class="pb-4 mobile-header">
+    <div v-if="lastTotalItemCount > 0" class="pb-4 mobile-header">
         <p class="h4 mb-2 pt-3">
             {{ lastTotalItemCount }} Search
             <span v-if="lastTotalItemCount > 1">Results</span>
@@ -20,7 +20,7 @@
     </div>
 
     <Alert
-        v-if="!busy && searchResults.length === 0"
+        v-if="!busy && searchResults.length === 0" style="margin-top: -27px"
         message="Sorry, there are no results for your search term - Please try again"
     />
     <div

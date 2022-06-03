@@ -2,7 +2,18 @@
     <div class="sid-wrapper">
         <div class="subidentity-container pb-5">
             <div class="container-medium">
-                <div
+                <div v-if="error"
+                    class="d-flex flex-row pt-4 link-primary"
+                    @click="$router.push('/')"
+                >
+                    <ion-icon
+                        class="icon back-arrow"
+                        name="arrow-back-outline"
+                    />
+                    <p class="mx-2">Back to home</p>
+
+                </div>
+                <div v-else
                     class="d-flex flex-row pt-4 link-primary"
                     @click="$router.go(-1)"
                 >
@@ -19,11 +30,11 @@
                     <Spinner color="#D0D0D0" :size="40" :width="3" />
                 </div>
                 <ProfileHeader
-                    v-if="loaded"
+                    v-if="loaded && !error"
                     class="mb-5"
                     :identity="identity"
                 />
-                <div v-if="loaded" class="plugins fade-in">
+                <div v-if="loaded && !error" class="plugins fade-in">
                     <BasicInfoPlugin :identity="identity" />
                     <!--
 
@@ -40,7 +51,8 @@
 import { Options, Vue } from "vue-class-component";
 import ProfileHeader from "@/components/partials/profile/ProfileHeader.vue";
 import BasicInfoPlugin from "@/components/partials/profile/plugins/BasicInfoPlugin.vue";
-import { useRoute } from "vue-router";
+import { useRoute} from "vue-router";
+//import router from "@/router";
 import { useStore } from "@/store";
 import { Identity } from "@npmjs_tdsoftware/subidentity";
 import Spinner from "@/components/common/Spinner.vue";
@@ -80,6 +92,9 @@ export default class IdentityView extends Vue {
             this.error =
                 "Sorry, could not find identity with the given address";
         }
+    }
+    handleError(message: string){
+        this.error = message;
     }
 }
 </script>
