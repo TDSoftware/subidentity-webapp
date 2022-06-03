@@ -7,7 +7,9 @@
         </div>
         <div class="subidentity-container">
             <div class="container-medium p-0">
-                <IdentityList @onPagechange="onPageChange" />
+                <IdentityList
+                    @onPagechange="onPageChange"
+                    :pageError="pageError"/>
             </div>
         </div>
     </div>
@@ -37,12 +39,14 @@ export default class ListView extends Vue {
     store = useStore();
     searchTerm = "";
     selectedChainKey = "";
+    pageError ="";
 
     async created() {
         this.dispatchSearchIdentities();
     }
 
     async dispatchSearchIdentities() {
+        this.pageError = "";
         const searchParams = new URLSearchParams(window.location.search);
         this.searchTerm = searchParams.get("query") ?? "";
         this.selectedChainKey = searchParams.get("chain") ?? "";
@@ -60,6 +64,22 @@ export default class ListView extends Vue {
             searchData,
             currentPage: page
         });
+        if (page > this.pagination.totalPageCount) {
+            this.pageError =
+                "Sorry, there are no results on the selected page - Please try again";
+        }
+        if (this.pagination.totalPageCount === 0) {
+            this.pageError = "";
+        }
+
+    }
+
+    get pagination() {
+        return this.store.state.identitySearchPagination;
+    }
+
+    get busy() {
+        return this.store.getters.isBusy;
     }
 
     async onPageChange(page: number) {
