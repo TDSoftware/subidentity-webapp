@@ -108,7 +108,7 @@ export default class IdentitySearch extends Vue {
 
     onInputKeyUp(event: Event) {
         const target = event.target as HTMLTextAreaElement;
-        this.searchTerm = target.value;
+        this.searchTerm = target.value.trim();
     }
 
     loadCustomNodeFromStorage() {

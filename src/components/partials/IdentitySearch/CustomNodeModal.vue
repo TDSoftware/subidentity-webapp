@@ -4,19 +4,17 @@
             {{ customNode ? "Edit" : "Add" }} your custom node
         </template>
         <template #body>
-            <div class="row">
+            <div class="row inputs">
                 <div class="mb-3 col">
-                    <label class="form-label">Address</label>
+                    <label class="form-label fw-bold">Address</label>
                     <input
                         v-model="newCustomNodeAddress"
                         type="text"
-                        class="form-control"
-                        placeholder="e.g.: ws://127.0.0.1:9944"
+                        class="form-control input-address"
+                        placeholder="e.g.: wss://127.0.0.1:9944"
                         @keypress.enter="saveCustomNode"
                     />
-                    <div class="alert alert-danger mt-2" v-if="error">
-                        {{ error }}
-                    </div>
+                    <Alert class="mt-3" v-if="error" :message="error" />
                 </div>
                 <div
                     class="mb-3 col"
@@ -25,11 +23,11 @@
                         newCustomNodeAddress === customNode.address
                     "
                 >
-                    <label class="form-label">Name</label>
+                    <label class="form-label fw-bold">Name</label>
                     <input
                         v-model="customNode.name"
                         type="text"
-                        class="form-control"
+                        class="form-control input-name"
                         placeholder="Name..."
                         disabled
                         readonly
@@ -42,6 +40,7 @@
                         class="btn btn-primary text-white d-block"
                         :disabled="!newCustomNodeAddress || busy"
                         @click="saveCustomNode"
+                        ref="saveNode"
                     >
                         <Spinner v-if="busy" />
                         SAVE NODE
@@ -51,6 +50,7 @@
                     <button
                         class="btn btn-dark d-block"
                         :disabled="busy"
+                        ref="cancelButton"
                         @click="$emit('update:open', false)"
                     >
                         CANCEL
@@ -69,11 +69,13 @@ import { Options, Vue } from "vue-class-component";
 import Modal from "../../common/Modal.vue";
 import { getChainName } from "@npmjs_tdsoftware/subidentity";
 import Spinner from "@/components/common/Spinner.vue";
+import Alert from "@/components/common/Alert.vue";
 
 @Options({
     components: {
         Modal,
-        Spinner
+        Spinner,
+        Alert
     },
     props: {
         open: {
@@ -102,9 +104,20 @@ export default class CustomNodeModal extends Vue {
         this.newCustomNodeAddress = this.customNode?.address ?? "";
     }
 
+    validateCustomNodeAddress() {
+        return (
+            this.newCustomNodeAddress.startsWith("wss://") ||
+            this.newCustomNodeAddress.startsWith("ws://")
+        );
+    }
+
     async saveCustomNode() {
         this.busy = true;
         try {
+            if (!this.validateCustomNodeAddress()) {
+                throw new Error("InvalidAddressError");
+            }
+
             const chainName = await getChainName(this.newCustomNodeAddress);
             const customNode = {
                 key: `customNode-${chainName}`,
@@ -115,10 +128,15 @@ export default class CustomNodeModal extends Vue {
             set<ChainInfo>(StoreKey.CustomNode, customNode);
             this.$emit("save", customNode);
         } catch (e) {
-            this.error =
-                "Could not reach your entered address. Please check again and enter a valid address.";
+            if (e.message === "InvalidAddressError")
+                this.error =
+                    "The address is invalid. It should start with 'wss://'.";
+            else
+                this.error =
+                    "Could not reach your entered address. Please check again and enter a valid address.";
+        } finally {
+            this.busy = false;
         }
-        this.busy = false;
     }
 }
 </script>
@@ -127,31 +145,45 @@ export default class CustomNodeModal extends Vue {
 <style lang="scss" scoped>
 @import "../../../styles/variables";
 
-input {
+.input-address {
     border: solid 1px #dee2e6 !important;
 }
 
+.input-name {
+    border-style: none;
+    background: none;
+    padding-left: 0;
+}
+
 .buttons {
-    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
     & > div {
-        &:first-child {
-            margin-bottom: 0.75rem;
-        }
-        button {
-            display: block;
-            width: 100%;
-        }
+        margin-right: 1rem;
     }
-    @include media-breakpoint-up(md) {
-        display: flex;
-        flex-direction: row;
+}
+
+@include media-breakpoint-down(lg) {
+    .buttons {
+        margin-top: 1rem;
         & > div {
-            margin-right: 1rem;
+            width: 100%;
+            &:first-child {
+                margin-bottom: 0.75rem;
+            }
             button {
-                padding-left: 1.5rem;
-                padding-right: 1.5rem;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
             }
         }
+    }
+}
+
+@include media-breakpoint-down(lg) {
+    .inputs {
+        display: flex;
+        flex-direction: column;
     }
 }
 </style>
