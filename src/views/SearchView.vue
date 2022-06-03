@@ -44,8 +44,7 @@ import Alert from "@/components/common/Alert.vue";
 })
 export default class SearchView extends Vue {
     store = useStore();
-    urlParams = new URLSearchParams(window.location.search);
-    error = "" || this.urlParams.get("errorMsg");
+    error = "";
 
     get showRecentSearch(): boolean {
         return this.store.state.recentSearches.length > 0;

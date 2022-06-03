@@ -2,14 +2,15 @@
     <div class="sid-wrapper">
         <div class="search-container">
             <div class="search container-medium p-0 fade-in">
-                <IdentitySearch @search="onSearch" />
+                <IdentitySearch @search="onSearch" @error="error = $event" />
             </div>
         </div>
         <div class="subidentity-container">
             <div class="container-medium p-0" :class="busy ? 'is-blur' : ''">
                 <IdentityList
                     @onPagechange="onPageChange"
-                    :pageError="pageError"/>
+                    :pageError="pageError"
+                    :error="error"/>
             </div>
         </div>
     </div>
@@ -40,6 +41,7 @@ export default class ListView extends Vue {
     searchTerm = "";
     selectedChainKey = "";
     pageError ="";
+    error = "";
 
     async created() {
         this.dispatchSearchIdentities();
@@ -47,6 +49,7 @@ export default class ListView extends Vue {
 
     async dispatchSearchIdentities() {
         this.pageError = "";
+        this.error = "";
         const searchParams = new URLSearchParams(window.location.search);
         this.searchTerm = searchParams.get("query") ?? "";
         this.selectedChainKey = searchParams.get("chain") ?? "";
@@ -67,8 +70,8 @@ export default class ListView extends Vue {
         }
         catch (e) {
             this.store.dispatch("DECREMENT_BUSY");
-            let query = "?errorMsg= " + encodeURI(e.message);
-            router.push("/" +query);
+            this.error = e.message;
+            console.log(this.error);
         }
 
         if (page > this.pagination.totalPageCount) {

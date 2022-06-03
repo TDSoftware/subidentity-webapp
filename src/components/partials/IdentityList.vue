@@ -1,5 +1,5 @@
 <template>
-    <div class="pb-5 desktop-header" v-if="!pageError && !error">
+    <div class="pb-5 desktop-header" v-if="!pageError && !error" @click="checkError">
         <p class="h4">
             {{ lastTotalItemCount }} Search
             <span v-if="lastTotalItemCount > 1">Results</span>
@@ -87,12 +87,15 @@ import Alert from "@/components/common/Alert.vue";
     props: {
         pageError: {
             type: String
+        },
+        error:{
+            type: String
         }
     }
 })
 export default class IdentityList extends Vue {
     store = useStore();
-    error = "";
+    //error1 = "";
 
     get searchResults() {
         return this.store.getters.lastSearchResults;
@@ -121,9 +124,12 @@ export default class IdentityList extends Vue {
         this.$emit("onPagechange", page);
     }
 
-    handleError(message: string){
-        this.error = message;
+    /*handleError(message: string){
+        this.error1 = message;
     }
+    checkError(){
+        console.log("Checking Error: "+this.error1);
+    }*/
 }
 </script>
 
