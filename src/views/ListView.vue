@@ -59,11 +59,16 @@ export default class ListView extends Vue {
             totalItemCount: 0,
             timestamp: Date.now()
         };
+        try {
+            await this.store.dispatch("SEARCH_IDENTITIES", {
+                searchData,
+                currentPage: page
+            });
+        }
+        catch (e) {
+            router.push("/?errorMsg=You+got+redirected+because+an+invalid+chain+was+chosen");
+        }
 
-        await this.store.dispatch("SEARCH_IDENTITIES", {
-            searchData,
-            currentPage: page
-        });
         if (page > this.pagination.totalPageCount) {
             this.pageError =
                 "Sorry, there are no results on the selected page - Please try again";
