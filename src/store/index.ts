@@ -144,11 +144,14 @@ export const store = createStore({
                     const response = await getRequest<GetIdentitiesResponse>(`/identities/search?wsProvider=${encodeURIComponent(wsAddress)}&page=${currentPage}&limit=${this.state.identitySearchPagination.limit}&searchKey=${encodeURIComponent(searchData.searchTerm)}`);
                     page = response.identities;
                 } catch (error) {
-                    if (["Provided node is not an archive node", "Chain is not indexed yet"].includes(error.message)) {
+                    if (["Provided node is not an archive node.", "Chain is not indexed yet.", "Could not connect to endpoint."].includes(error.message)) {
                         page = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
                         return;
                     }
-                    throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
+                    else {
+                        throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
+                    }
+
                 }
             } else {
                 page = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
@@ -171,11 +174,13 @@ export const store = createStore({
                 try {
                     identity = await getRequest<Identity>(`/identities/${request.address}?wsProvider=${encodeURIComponent(wsAddress)}`);
                 } catch (error) {
-                    if (error.message === "Unable to find an identity with the provided address.") {
+                    if (["Provided node is not an archive node.", "Chain is not indexed yet.", "Unable to find an identity with the provided address.", "Could not connect to endpoint."].includes(error.message)) {
                         identity = await getIdentity(wsAddress, request.address);
                         return identity;
                     }
-                    throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
+                    else {
+                        throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
+                    }
                 }
             } else {
                 identity = await getIdentity(wsAddress, request.address);
