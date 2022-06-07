@@ -165,6 +165,7 @@ export default class IdentitySearch extends Vue {
     }
 
     submitIdentitySearch() {
+        this.$emit("error", "");
         const searchData: SearchData<void> = {
             searchTerm: this.searchTerm,
             selectedChainKey: this.selectedChainKey,
