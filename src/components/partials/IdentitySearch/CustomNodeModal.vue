@@ -38,7 +38,7 @@
                 <div>
                     <button
                         class="btn btn-primary text-white d-block"
-                        :disabled="!newCustomNodeAddress || busy"
+                        :disabled="busy"
                         @click="saveCustomNode"
                         ref="saveNode"
                     >
@@ -51,7 +51,7 @@
                         class="btn btn-dark d-block"
                         :disabled="busy"
                         ref="cancelButton"
-                        @click="$emit('update:open', false)"
+                        @click="close"
                     >
                         CANCEL
                     </button>
@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import { ChainInfo } from "@/util/chains";
-import { set, StoreKey } from "@/util/storage";
+import { set, remove, StoreKey } from "@/util/storage";
 import { Options, Vue } from "vue-class-component";
 import Modal from "../../common/Modal.vue";
 import { getChainName } from "@npmjs_tdsoftware/subidentity";
@@ -111,31 +111,50 @@ export default class CustomNodeModal extends Vue {
         );
     }
 
+    close(){
+        this.newCustomNodeAddress = this.customNode?.address ?? "";
+        this.$emit("update:open", false);
+    }
+
     async saveCustomNode() {
         this.busy = true;
-        try {
-            if (!this.validateCustomNodeAddress()) {
-                throw new Error("InvalidAddressError");
+        if (!this.newCustomNodeAddress){
+            try {
+                remove(StoreKey.CustomNode);
+                this.$emit("delete");
             }
+            catch (e) {
+                this.error = "We had a problem deleting the custom node, please try again.";
+            }
+            finally {
+                this.busy = false;
+            }
+        }
+        else{
+            try {
+                if (!this.validateCustomNodeAddress()) {
+                    throw new Error("InvalidAddressError");
+                }
 
-            const chainName = await getChainName(this.newCustomNodeAddress);
-            const customNode = {
-                key: `customNode-${chainName}`,
-                name: chainName,
-                address: this.newCustomNodeAddress,
-                modifiedAt: Date.now()
-            };
-            set<ChainInfo>(StoreKey.CustomNode, customNode);
-            this.$emit("save", customNode);
-        } catch (e) {
-            if (e.message === "InvalidAddressError")
-                this.error =
-                    "The address is invalid. It should start with 'wss://'.";
-            else
-                this.error =
-                    "Could not reach your entered address. Please check again and enter a valid address.";
-        } finally {
-            this.busy = false;
+                const chainName = await getChainName(this.newCustomNodeAddress);
+                const customNode = {
+                    key: `customNode-${chainName}`,
+                    name: chainName,
+                    address: this.newCustomNodeAddress,
+                    modifiedAt: Date.now()
+                };
+                set<ChainInfo>(StoreKey.CustomNode, customNode);
+                this.$emit("save", customNode);
+            } catch (e) {
+                if (e.message === "InvalidAddressError")
+                    this.error =
+                        "The address is invalid. It should start with 'wss://'.";
+                else
+                    this.error =
+                        "Could not reach your entered address. Please check again and enter a valid address.";
+            } finally {
+                this.busy = false;
+            }
         }
     }
 }
