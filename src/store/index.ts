@@ -192,8 +192,13 @@ export const store = createStore({
 
         async GET_API_VERSION(context: ActionContext<StoreI, StoreI>) {
             if (await apiAvailable()) {
-                const response = await getRequest<GetVersionResponse>("/version");
-                context.commit("setApiVersion", response);
+                try {
+                    const response = await getRequest<GetVersionResponse>("/version");
+                    context.commit("setApiVersion", response);
+                } catch (error) {
+                    throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
+                }
+
             }
         },
 
@@ -211,8 +216,13 @@ export const store = createStore({
             context.commit("incrementBusyCounter");
             let implementsPallet: boolean;
             if (await apiAvailable()) {
-                const chainStatusResponse = await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(wsAddress)}`);
-                implementsPallet = chainStatusResponse.chainStatus.implementsIdentityPallet;
+                try {
+                    const chainStatusResponse = await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(wsAddress)}`);
+                    implementsPallet = chainStatusResponse.chainStatus.implementsIdentityPallet;
+                } catch (error) {
+                    throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
+                }
+
             } else {
                 implementsPallet = await implementsIdentityPallet(wsAddress);
             }
