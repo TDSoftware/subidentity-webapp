@@ -77,14 +77,21 @@
                     </a>
                 </div>
             </div>
-            <div v-if="judgements">
+
+            <div v-if="judgements[0]">
                 <p class="mb-0 fw-bold">Judgements</p>
-                <p class="fw-light text-muted">
-                    Registrar determined this identity as
-                    <span class="text-success">
-                        {{ judgements }}
-                    </span>
-                </p>
+                <div v-for="(judgement, index) in judgements" :key="index">
+                    <p v-if="judgement ==='feepaid'" class="fw-light text-muted" >
+                      Account requested judgement
+                    </p>
+                    <p v-else class="fw-light text-muted">
+                        A Registrar determined this identity as
+                        <span class="text-success">
+                                  {{ judgement }}
+                              </span>
+                    </p>
+                </div>
+
             </div>
         </template>
     </Accordion>
@@ -108,11 +115,9 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class BasicInfoPlugin extends Vue {
     identity!: Identity;
-
+  
     get judgements() {
-        return this.identity.judgements
-            ?.map((judgement: string) => judgement.toLowerCase())
-            .join(", ");
+        return this.identity.judgements?.map((judgement: string) => judgement.toLowerCase());
     }
 
     get balance() {
