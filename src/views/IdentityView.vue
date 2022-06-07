@@ -52,7 +52,6 @@ import { Options, Vue } from "vue-class-component";
 import ProfileHeader from "@/components/partials/profile/ProfileHeader.vue";
 import BasicInfoPlugin from "@/components/partials/profile/plugins/BasicInfoPlugin.vue";
 import { useRoute} from "vue-router";
-//import router from "@/router";
 import { useStore } from "@/store";
 import { Identity } from "@npmjs_tdsoftware/subidentity";
 import Spinner from "@/components/common/Spinner.vue";

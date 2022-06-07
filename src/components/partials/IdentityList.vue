@@ -28,7 +28,7 @@
 
     <div
         class="bg-white p-0 fade-in"
-        v-if="searchResults.length > 0 && pagination.totalPageCount !== 0"
+        v-if="searchResults.length > 0 && pagination.totalPageCount !== 0 && !error"
     >
         <div class="row mx-0 p-2 text-muted fw-bold labels">
             <h6 class="col">NAME</h6>
@@ -53,7 +53,7 @@
 
     <div
         class="container-medium pt-5 fade-in"
-        v-if="searchResults.length >= 1 && pagination.totalPageCount > 1"
+        v-if="searchResults.length >= 1 && pagination.totalPageCount > 1 && !error"
     >
         <div class="d-flex justify-content-center pt-3 pb-2 text-white-50">
             <Pagination
