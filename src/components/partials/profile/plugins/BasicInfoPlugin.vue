@@ -5,6 +5,7 @@
             <div
                 v-if="identity.basicInfo.address"
                 @click="copy(identity.basicInfo.address)"
+                id="id"
             >
                 <p class="mb-0 fw-bold">Address</p>
                 <div class="d-flex flex-row">
@@ -124,6 +125,13 @@ export default class BasicInfoPlugin extends Vue {
     async copy(s: string) {
         if (!s) return;
         await navigator.clipboard.writeText(s);
+        let element  = document.getElementById("id") as HTMLDivElement;
+        if (element.classList.contains("flash")) return;
+        element.className += "flash";
+        setTimeout(function() {
+            element.classList.remove("flash");
+        }, 500);
+
         //this.$toastr.success("Copied!", true);
     }
 
@@ -139,3 +147,27 @@ export default class BasicInfoPlugin extends Vue {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+@import "../../../../styles/variables";
+.flash {
+  -webkit-animation-name: flash-animation;
+  -webkit-animation-duration: 0.6s;
+
+  animation-name: flash-animation;
+  animation-duration: 0.6s;
+  animation-duration: 0.6s;
+  animation-duration: 0.6s;
+}
+
+@-webkit-keyframes flash-animation {
+  from { background: $primary; }
+  to   { background: white; }
+}
+
+@keyframes flash-animation {
+  from { background: $primary; }
+  to   { background: white; }
+}
+
+</style>

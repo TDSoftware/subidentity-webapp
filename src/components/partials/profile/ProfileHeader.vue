@@ -10,20 +10,24 @@
             </div>
             <div class="mx-4 col">
                 <h4>{{ identity.basicInfo.display }}</h4>
-                <div
-                    class="d-flex flex-row"
-                    @click="copy(identity.basicInfo.address)"
-                >
-                    <p
-                        class="fw-light text-muted"
-                        style="overflow-wrap: anywhere"
+                <div>
+                    <div
+                        class="d-flex flex-row copy"
+                        @click="copy(identity.basicInfo.address, 'basic-copy')"
+                        id="basic-copy"
                     >
-                        Address: {{ identity.basicInfo.address }}
-                    </p>
-                    <span class="text-decoration-none link-primary mx-2">
-                        <ion-icon size="small" name="copy-outline"></ion-icon>
-                    </span>
+                        <p
+                            class="fw-light text-muted"
+                            style="overflow-wrap: anywhere"
+                        >
+                            Address: {{ identity.basicInfo.address }}
+                        </p>
+                        <span class="text-decoration-none link-primary mx-2">
+                            <ion-icon size="small" name="copy-outline"></ion-icon>
+                        </span>
+                    </div>
                 </div>
+
                 <div class="d-flex flex-row">
                     <div
                         class="
@@ -77,7 +81,8 @@
         </div>
         <div
             class="d-flex flex-row address"
-            @click="copy(identity.basicInfo.address)"
+            @click="copy(identity.basicInfo.address, 'mobile-copy')"
+            id="mobile-copy"
         >
             <p class="fw-light text-muted" style="overflow-wrap: anywhere">
                 Address: {{ identity.basicInfo.address }}
@@ -133,9 +138,18 @@ export default class ProfileHeader extends Vue {
     sendToken() {
         alert("Feature will come soon :)");
     }
-    async copy(s: string) {
+    async copy(s: string, id: string) {
         if (!s) return;
         await navigator.clipboard.writeText(s);
+        console.log("Copied from id: " + id);
+        let element  = document.getElementById(id) as HTMLElement;
+        console.log(element);
+        if (element.classList.contains("flash")) return;
+        element.className += " flash";
+        setTimeout(function() {
+            element.classList.remove("flash");
+        }, 500);
+
         //this.$toastr.success("Copied!", true);
     }
 }
@@ -174,6 +188,10 @@ p {
     display: none;
 }
 
+.copy{
+  max-width: fit-content;
+}
+
 @include media-breakpoint-down(lg) {
     .mobile-profile {
         display: block;
@@ -184,5 +202,24 @@ p {
     .profile {
         display: none;
     }
+}
+.flash {
+  -webkit-animation-name: flash-animation;
+  -webkit-animation-duration: 0.6s;
+
+  animation-name: flash-animation;
+  animation-duration: 0.6s;
+  animation-duration: 0.6s;
+  animation-duration: 0.6s;
+}
+
+@-webkit-keyframes flash-animation {
+  from { background: $primary; }
+  to   { background: white; }
+}
+
+@keyframes flash-animation {
+  from { background: $primary; }
+  to   { background: white; }
 }
 </style>
