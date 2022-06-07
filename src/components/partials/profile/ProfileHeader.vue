@@ -47,8 +47,6 @@
                         <div class="mx-1">{{ identity.chain }}</div>
                     </div>
 
-                    <!-- <p class="text-success m-0 mx-3">Verified by 9 registrars</p> -->
-                    <!-- TODO: add this info from getIdentity -->
                 </div>
             </div>
             <!-- <div class="ms-auto">
@@ -109,8 +107,6 @@
                 <div class="mx-1">{{ identity.chain }}</div>
             </div>
 
-            <!-- <p class="text-success m-0 mx-3">Verified by 9 registrars</p> -->
-            <!-- TODO: add this info from getIdentity -->
         </div>
     </div>
 </template>

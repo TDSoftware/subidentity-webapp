@@ -95,7 +95,6 @@ import Alert from "@/components/common/Alert.vue";
 })
 export default class IdentityList extends Vue {
     store = useStore();
-    //error1 = "";
 
     get searchResults() {
         return this.store.getters.lastSearchResults;
@@ -123,13 +122,6 @@ export default class IdentityList extends Vue {
     async onPageChange(page: number) {
         this.$emit("onPagechange", page);
     }
-
-    /*handleError(message: string){
-        this.error1 = message;
-    }
-    checkError(){
-        console.log("Checking Error: "+this.error1);
-    }*/
 }
 </script>
 
