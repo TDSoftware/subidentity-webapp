@@ -49,7 +49,7 @@
                     <div v-if="checkJudgements() > 1" class="verified">Verified by {{checkJudgements()}} registrars</div>
                     <div v-else-if="checkJudgements() === 1" class="verified">Verified by {{checkJudgements()}} registrar</div>
                     <div v-else-if="checkJudgements() === 0" class="not-verified text-muted"> <ion-icon name="information-circle-outline" class="info-pink" size="small"></ion-icon> Not verified</div>
-                    <div v-else-if="checkJudgements() < 0" class="pending text-muted">Judgement in progress</div>     
+                    <div v-else-if="checkJudgements() < 0" class="pending text-muted">Judgement in progress</div>
                 </div>
             </div>
             <!-- <div class="ms-auto">
@@ -110,8 +110,6 @@
                 <div class="mx-1">{{ identity.chain }}</div>
             </div>
 
-            <!-- <p class="text-success m-0 mx-3">Verified by 9 registrars</p> -->
-            <!-- TODO: add this info from getIdentity -->
         </div>
     </div>
 </template>
