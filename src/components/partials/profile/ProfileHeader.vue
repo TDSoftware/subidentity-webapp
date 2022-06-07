@@ -14,7 +14,7 @@
                     class="d-flex flex-row"
                     @click="copy(identity.basicInfo.address)"
                 >
-                    <p
+                <p
                         class="fw-light text-muted"
                         style="overflow-wrap: anywhere"
                     >
@@ -24,7 +24,7 @@
                         <ion-icon size="small" name="copy-outline"></ion-icon>
                     </span>
                 </div>
-                <div class="d-flex flex-row">
+                <div class="d-flex flex-row" style="align-items: center">
                     <div
                         class="
                             d-flex
@@ -46,9 +46,10 @@
 
                         <div class="mx-1">{{ identity.chain }}</div>
                     </div>
-
-                    <!-- <p class="text-success m-0 mx-3">Verified by 9 registrars</p> -->
-                    <!-- TODO: add this info from getIdentity -->
+                    <div v-if="checkJudgements() > 1" class="verified">Verified by {{checkJudgements()}} registrars</div>
+                    <div v-else-if="checkJudgements() === 1" class="verified">Verified by {{checkJudgements()}} registrar</div>
+                    <div v-else-if="checkJudgements() === 0" class="not-verified text-muted"> <ion-icon name="information-circle-outline" class="info-pink" size="small"></ion-icon> Not verified</div>
+                    <div v-else-if="checkJudgements() < 0" class="pending text-muted">Judgement in progress</div>     
                 </div>
             </div>
             <!-- <div class="ms-auto">
@@ -129,6 +130,35 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class ProfileHeader extends Vue {
     identity!: Identity;
+    checkJudgements(){
+        if(this.identity){
+            if(this.identity.judgements){
+                const keys = this.identity.judgements?.keys();
+                let count = 0;
+                let pending = 0;
+                for (let x of keys!){
+                    if (this.identity.judgements![x] !== undefined){
+                        if (this.identity.judgements![x] !== "FeePaid"){
+                            count ++;
+                        }
+                        else{
+                            pending ++;
+                        }
+                    }
+                }
+                if (count !== 0){
+                    return count;
+                }
+                else if(pending !== 0){
+                    return -pending;
+                }
+                else{
+                    return count;
+                }
+            }
+        }
+
+    }
 
     sendToken() {
         alert("Feature will come soon :)");
@@ -143,6 +173,23 @@ export default class ProfileHeader extends Vue {
 
 <style lang="scss" scoped>
 @import "../../../styles/variables";
+.info-pink{
+  color: $primary;
+  margin-right: 2px;
+}
+.verified{
+  margin-left: 15px;
+  color: #198754;
+}
+.not-verified{
+  margin-left: 15px;
+  display: flex;
+  align-items: center;
+  //color: $primary;
+}
+.pending{
+  margin-left: 15px;
+}
 .text-success {
     line-height: 40px;
 }
