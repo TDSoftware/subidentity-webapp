@@ -96,7 +96,7 @@ export const store = createStore({
         storeAsRecentSearch(state: StoreI, searchData: SearchData<Identity>) {
             const maxItemsInStorage = 12;
             const recentSearches = get<Array<SearchData<Identity>>>(StoreKey.RecentSearches) ?? [];
-            const foundSeachTermIndex = recentSearches.findIndex((element) => element.searchTerm === searchData.searchTerm);
+            const foundSeachTermIndex = recentSearches.findIndex((element) => element.searchTerm === searchData.searchTerm && element.selectedChainKey === searchData.selectedChainKey);
 
             // if search term found
             if (foundSeachTermIndex !== -1) {
@@ -158,8 +158,8 @@ export const store = createStore({
             context.commit("storeAsRecentSearch", searchData);
             context.commit("decrementBusyCounter");
         },
-        
-        async DECREMENT_BUSY(context:ActionContext<StoreI, StoreI>){
+
+        async DECREMENT_BUSY(context: ActionContext<StoreI, StoreI>) {
             context.commit("decrementBusyCounter");
         },
 
