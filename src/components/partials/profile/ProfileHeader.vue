@@ -65,14 +65,14 @@
     </div>
     <div class="mobile-profile mb-4 pt-3">
         <div class="row">
-            <div class="col-3">
+            <div class="col-2">
                 <polkadot-web-identicon
                     size="80"
                     :address="identity.basicInfo.address"
                     theme="polkadot"
                 />
             </div>
-            <div class="col pt-2">
+            <div class="col pt-2 mx-1">
                 <h4>{{ identity.basicInfo.display }}</h4>
             </div>
         </div>
