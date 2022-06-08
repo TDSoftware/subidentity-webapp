@@ -135,6 +135,7 @@ export const store = createStore({
         async SEARCH_IDENTITIES(context: ActionContext<StoreI, StoreI>, { searchData, currentPage }): Promise<void> {
             const wsAddress = getChainAddress(searchData.selectedChainKey);
             if (!wsAddress) {
+                throw new Error("[store/index] No address given for chain: " + searchData.selectedChainKey);
                 return console.error("[store/index] No address given for chain: ", searchData.selectedChainKey);
             }
             context.commit("incrementBusyCounter");
@@ -161,6 +162,10 @@ export const store = createStore({
             searchData.results = page.items;
             searchData.totalItemCount = page.totalItemsCount;
             context.commit("storeAsRecentSearch", searchData);
+            context.commit("decrementBusyCounter");
+        },
+        
+        async DECREMENT_BUSY(context:ActionContext<StoreI, StoreI>){
             context.commit("decrementBusyCounter");
         },
 
