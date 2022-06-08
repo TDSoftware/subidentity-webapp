@@ -26,10 +26,10 @@ export async function apiAvailable(): Promise<boolean> {
 export async function getRequest<ResponseType>(url: string): Promise<ResponseType> {
     if (!url.startsWith("/")) url = "/" + url;
     const rawResponse = await fetch(process.env.VUE_APP_API_URL + url);
+    const response = await rawResponse.json();
     if (!rawResponse.ok) {
-        throw new Error(rawResponse.statusText);
+        throw new Error(response.error);
     }
-    const response: ResponseType = await rawResponse.json();
     return response;
 }
 
