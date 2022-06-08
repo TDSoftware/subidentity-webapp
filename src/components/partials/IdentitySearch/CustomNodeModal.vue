@@ -4,13 +4,13 @@
             {{ customNode ? "Edit" : "Add" }} your custom node
         </template>
         <template #body>
-            <div class="row">
+            <div class="row inputs">
                 <div class="mb-3 col">
-                    <label class="form-label">Address</label>
+                    <label class="form-label fw-bold">Address</label>
                     <input
                         v-model="newCustomNodeAddress"
                         type="text"
-                        class="form-control"
+                        class="form-control input-address"
                         placeholder="e.g.: wss://127.0.0.1:9944"
                         @keypress.enter="saveCustomNode"
                     />
@@ -23,11 +23,11 @@
                         newCustomNodeAddress === customNode.address
                     "
                 >
-                    <label class="form-label">Name</label>
+                    <label class="form-label fw-bold">Name</label>
                     <input
                         v-model="customNode.name"
                         type="text"
-                        class="form-control"
+                        class="form-control input-name"
                         placeholder="Name..."
                         disabled
                         readonly
@@ -40,6 +40,7 @@
                         class="btn btn-primary text-white d-block"
                         :disabled="!newCustomNodeAddress || busy"
                         @click="saveCustomNode"
+                        ref="saveNode"
                     >
                         <Spinner v-if="busy" />
                         SAVE NODE
@@ -49,6 +50,7 @@
                     <button
                         class="btn btn-dark d-block"
                         :disabled="busy"
+                        ref="cancelButton"
                         @click="$emit('update:open', false)"
                     >
                         CANCEL
@@ -143,31 +145,45 @@ export default class CustomNodeModal extends Vue {
 <style lang="scss" scoped>
 @import "../../../styles/variables";
 
-input {
+.input-address {
     border: solid 1px #dee2e6 !important;
 }
 
+.input-name {
+    border-style: none;
+    background: none;
+    padding-left: 0;
+}
+
 .buttons {
-    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
     & > div {
-        &:first-child {
-            margin-bottom: 0.75rem;
-        }
-        button {
-            display: block;
-            width: 100%;
-        }
+        margin-right: 1rem;
     }
-    @include media-breakpoint-up(md) {
-        display: flex;
-        flex-direction: row;
+}
+
+@include media-breakpoint-down(lg) {
+    .buttons {
+        margin-top: 1rem;
         & > div {
-            margin-right: 1rem;
+            width: 100%;
+            &:first-child {
+                margin-bottom: 0.75rem;
+            }
             button {
-                padding-left: 1.5rem;
-                padding-right: 1.5rem;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
             }
         }
+    }
+}
+
+@include media-breakpoint-down(lg) {
+    .inputs {
+        display: flex;
+        flex-direction: column;
     }
 }
 </style>

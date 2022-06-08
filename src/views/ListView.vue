@@ -2,12 +2,15 @@
     <div class="sid-wrapper">
         <div class="search-container">
             <div class="search container-medium p-0 fade-in">
-                <IdentitySearch @search="onSearch" />
+                <IdentitySearch @search="onSearch" @error="error = $event" />
             </div>
         </div>
         <div class="subidentity-container">
             <div class="container-medium p-0" :class="busy ? 'is-blur' : ''">
-                <IdentityList @onPagechange="onPageChange" />
+                <IdentityList
+                    @onPagechange="onPageChange"
+                    :pageError="pageError"
+                    :error="error"/>
             </div>
         </div>
     </div>
@@ -37,12 +40,16 @@ export default class ListView extends Vue {
     store = useStore();
     searchTerm = "";
     selectedChainKey = "";
+    pageError ="";
+    error = "";
 
     async created() {
         this.dispatchSearchIdentities();
     }
 
     async dispatchSearchIdentities() {
+        this.pageError = "";
+        this.error = "";
         const searchParams = new URLSearchParams(window.location.search);
         this.searchTerm = searchParams.get("query") ?? "";
         this.selectedChainKey = searchParams.get("chain") ?? "";
@@ -55,11 +62,30 @@ export default class ListView extends Vue {
             totalItemCount: 0,
             timestamp: Date.now()
         };
+        try {
+            await this.store.dispatch("SEARCH_IDENTITIES", {
+                searchData,
+                currentPage: page
+            });
+        }
+        catch (e) {
+            this.store.dispatch("DECREMENT_BUSY");
+            this.error = e.message;
+            console.log(this.error);
+        }
 
-        await this.store.dispatch("SEARCH_IDENTITIES", {
-            searchData,
-            currentPage: page
-        });
+        if (page > this.pagination.totalPageCount) {
+            this.pageError =
+                "Sorry, there are no results on the selected page - Please try again";
+        }
+        if (this.pagination.totalPageCount === 0) {
+            this.pageError = "";
+        }
+
+    }
+
+    get pagination() {
+        return this.store.state.identitySearchPagination;
     }
 
     get busy() {
