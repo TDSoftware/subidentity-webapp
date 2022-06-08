@@ -1,5 +1,5 @@
 <template>
-    <div class="pb-5 desktop-header">
+    <div class="pb-5 desktop-header" v-if="!pageError && !error" @click="checkError">
         <p class="h4">
             {{ lastTotalItemCount }} Search
             <span v-if="lastTotalItemCount > 1">Results</span>
@@ -8,7 +8,7 @@
             }}"
         </p>
     </div>
-    <div class="pb-4 mobile-header">
+    <div v-if="!pageError && !error" class="pb-4 mobile-header">
         <p class="h4 mb-2 pt-3">
             {{ lastTotalItemCount }} Search
             <span v-if="lastTotalItemCount > 1">Results</span>
@@ -18,14 +18,17 @@
             for "{{ lastSearchTerm }}" in "{{ chainName }}"
         </p>
     </div>
-
+    <Alert v-if="error" class="list-alert" :message="error"></Alert>
+    <Alert v-else-if="pageError" class="list-alert" :message="pageError"></Alert>
     <Alert
-        v-if="!busy && searchResults.length === 0"
+        v-else-if="!busy && lastTotalItemCount === 0" class="list-alert"
         message="Sorry, there are no results for your search term - Please try again"
     />
+
+
     <div
         class="bg-white p-0 fade-in"
-        v-if="searchResults.length > 0 && pagination.totalPageCount !== 0"
+        v-if="searchResults.length > 0 && pagination.totalPageCount !== 0 && !error"
     >
         <div class="row mx-0 p-2 text-muted fw-bold labels">
             <h6 class="col">NAME</h6>
@@ -50,7 +53,7 @@
 
     <div
         class="container-medium pt-5 fade-in"
-        v-if="searchResults.length > 1 && pagination.totalPageCount > 1"
+        v-if="searchResults.length >= 1 && pagination.totalPageCount > 1 && !error"
     >
         <div class="d-flex justify-content-center pt-3 pb-2 text-white-50">
             <Pagination
@@ -80,7 +83,15 @@ import Alert from "@/components/common/Alert.vue";
         Spinner,
         Alert
     },
-    emits: ["onPagechange"]
+    emits: ["onPagechange"],
+    props: {
+        pageError: {
+            type: String
+        },
+        error:{
+            type: String
+        }
+    }
 })
 export default class IdentityList extends Vue {
     store = useStore();
@@ -116,6 +127,14 @@ export default class IdentityList extends Vue {
 
 <style lang="scss" scoped>
 @import "../../styles/variables";
+
+.list-alert{
+
+  @include media-breakpoint-down(lg)  {
+    margin-top: -27px;
+  }
+}
+
 h6 {
     font-size: 0.85rem;
 }
