@@ -7,10 +7,14 @@
         </div>
         <div class="subidentity-container">
             <div class="container-medium p-0" :class="busy ? 'is-blur' : ''">
+                <div class="spinner-wrapper fade-in" v-if="busy">
+                    <Spinner color="#EA268E" :size="40" :width="3" />
+                </div>
                 <IdentityList
                     @onPagechange="onPageChange"
                     :pageError="pageError"
-                    :error="error"/>
+                    :error="error"
+                />
             </div>
         </div>
     </div>
@@ -23,11 +27,13 @@ import IdentityList from "@/components/partials/IdentityList.vue";
 import router from "@/router";
 import { SearchData } from "@/interfaces/SearchData";
 import { useStore } from "../store";
+import Spinner from "@/components/common/Spinner.vue";
 
 @Options({
     components: {
         IdentitySearch,
-        IdentityList
+        IdentityList,
+        Spinner
     },
     watch: {
         $route() {
@@ -40,7 +46,7 @@ export default class ListView extends Vue {
     store = useStore();
     searchTerm = "";
     selectedChainKey = "";
-    pageError ="";
+    pageError = "";
     error = "";
 
     async created() {
@@ -67,8 +73,7 @@ export default class ListView extends Vue {
                 searchData,
                 currentPage: page
             });
-        }
-        catch (e) {
+        } catch (e) {
             this.store.dispatch("DECREMENT_BUSY");
             this.error = e.message;
             console.log(this.error);
@@ -81,7 +86,6 @@ export default class ListView extends Vue {
         if (this.pagination.totalPageCount === 0) {
             this.pageError = "";
         }
-
     }
 
     get pagination() {
@@ -147,5 +151,15 @@ export default class ListView extends Vue {
 .is-blur {
     background: white;
     opacity: 0.4;
+}
+
+.spinner-wrapper {
+    padding: 6rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    width: 70%;
+    height: 50%;
 }
 </style>
