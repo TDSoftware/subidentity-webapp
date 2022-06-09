@@ -75,6 +75,7 @@ import { ChainInfo, chains } from "../../../util/chains";
 import { UISelectOption } from "@/interfaces/UISelectOption";
 import { get, StoreKey } from "@/util/storage";
 import CustomNodeModal from "./CustomNodeModal.vue";
+import router from "@/router";
 
 @Options({
     components: {
@@ -152,14 +153,16 @@ export default class IdentitySearch extends Vue {
                 this.selectedChainKey
             );
             if (!this.implementsPallet) {
-                const message = "Sorry, the selected node is not available or does not implement the identity pallet";
-                this.$emit("error", message);
+                alert(
+                    "Sorry, the selected node is not available or does not implement the identity pallet"
+                );
+                router.push("/");
             }
-        }
-        catch (e) {
-            const message = "Sorry, the connection to the node could not be established";
+        } catch (e) {
+            const message =
+                "Sorry, the connection to the node could not be established";
             this.$emit("error", message);
-            this.implementsPallet=false;
+            this.implementsPallet = false;
             await this.store.dispatch("DECREMENT_BUSY");
         }
     }
@@ -176,7 +179,10 @@ export default class IdentitySearch extends Vue {
         try {
             this.$emit("search", searchData);
         } catch (e) {
-            this.$emit("error", "Sorry, but we have a problem processing your search");
+            this.$emit(
+                "error",
+                "Sorry, but we have a problem processing your search"
+            );
             this.store.dispatch("DECREMENT_BUSY");
         }
         (this.$refs.searchButton as HTMLButtonElement).blur();

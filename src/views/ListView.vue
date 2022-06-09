@@ -10,7 +10,8 @@
                 <IdentityList
                     @onPagechange="onPageChange"
                     :pageError="pageError"
-                    :error="error"/>
+                    :error="error"
+                />
             </div>
         </div>
     </div>
@@ -40,7 +41,7 @@ export default class ListView extends Vue {
     store = useStore();
     searchTerm = "";
     selectedChainKey = "";
-    pageError ="";
+    pageError = "";
     error = "";
 
     async created() {
@@ -67,11 +68,9 @@ export default class ListView extends Vue {
                 searchData,
                 currentPage: page
             });
-        }
-        catch (e) {
+        } catch (e) {
             this.store.dispatch("DECREMENT_BUSY");
             this.error = e.message;
-            console.log(this.error);
         }
 
         if (page > this.pagination.totalPageCount) {
@@ -81,7 +80,6 @@ export default class ListView extends Vue {
         if (this.pagination.totalPageCount === 0) {
             this.pageError = "";
         }
-
     }
 
     get pagination() {

@@ -133,12 +133,12 @@ export const store = createStore({
          *  --> all recentSearches are store in localStorage and allow client side caching.
          */
         async SEARCH_IDENTITIES(context: ActionContext<StoreI, StoreI>, { searchData, currentPage }): Promise<void> {
+            context.commit("incrementBusyCounter");
             const wsAddress = getChainAddress(searchData.selectedChainKey);
             if (!wsAddress) {
-                throw new Error("[store/index] No address given for chain: " + searchData.selectedChainKey);
-                return console.error("[store/index] No address given for chain: ", searchData.selectedChainKey);
+                throw new Error("No address given for chain: " + searchData.selectedChainKey);
             }
-            context.commit("incrementBusyCounter");
+
             let page: Page<Identity>;
             if (await apiAvailable()) {
                 const chainStatusResponse = await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(wsAddress)}`);
@@ -158,15 +158,15 @@ export const store = createStore({
             context.commit("storeAsRecentSearch", searchData);
             context.commit("decrementBusyCounter");
         },
-        
-        async DECREMENT_BUSY(context:ActionContext<StoreI, StoreI>){
+
+        async DECREMENT_BUSY(context: ActionContext<StoreI, StoreI>) {
             context.commit("decrementBusyCounter");
         },
 
         async LOAD_IDENTITY(context: ActionContext<StoreI, StoreI>, request: LoadIdentityRequest): Promise<Identity> {
             const wsAddress = getChainAddress(request.chain);
             if (!wsAddress) {
-                throw new Error("[store/index] No address given for chain: " + request.chain);
+                throw new Error("No address given for chain: " + request.chain);
             }
             let identity;
             if (await apiAvailable()) {
