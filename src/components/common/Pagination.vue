@@ -99,10 +99,21 @@ export default class Pagination extends Vue {
         if (this.currentPage === this.totalPages) {
             if (this.currentPage >= 5) {
                 return this.totalPages - 4;
+            } else if (this.currentPage === 4) {
+                return this.totalPages - 3;
+            } else if (this.currentPage === 3) {
+                return this.totalPages - 2;
+            } else {
+                return this.totalPages - 1;
             }
         }
 
-        if (this.currentPage < this.maxVisibleButtons) {
+        if (this.currentPage <= this.maxVisibleButtons) {
+            if (this.currentPage === 3) {
+                return this.currentPage - 2;
+            } else if (this.currentPage === 4) {
+                return this.currentPage - 3;
+            }
             return this.currentPage - 1;
         }
         // When inbetween

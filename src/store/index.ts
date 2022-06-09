@@ -96,7 +96,7 @@ export const store = createStore({
         storeAsRecentSearch(state: StoreI, searchData: SearchData<Identity>) {
             const maxItemsInStorage = 12;
             const recentSearches = get<Array<SearchData<Identity>>>(StoreKey.RecentSearches) ?? [];
-            const foundSeachTermIndex = recentSearches.findIndex((element) => element.searchTerm === searchData.searchTerm);
+            const foundSeachTermIndex = recentSearches.findIndex((element) => element.searchTerm === searchData.searchTerm && element.selectedChainKey === searchData.selectedChainKey);
 
             // if search term found
             if (foundSeachTermIndex !== -1) {
@@ -141,12 +141,17 @@ export const store = createStore({
 
             let page: Page<Identity>;
             if (await apiAvailable()) {
-                const chainStatusResponse = await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(wsAddress)}`);
-                if (chainStatusResponse.chainStatus.isIndexed) {
+                try {
                     const response = await getRequest<GetIdentitiesResponse>(`/identities/search?wsProvider=${encodeURIComponent(wsAddress)}&page=${currentPage}&limit=${this.state.identitySearchPagination.limit}&searchKey=${encodeURIComponent(searchData.searchTerm)}`);
                     page = response.identities;
-                } else {
-                    page = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
+                } catch (error) {
+                    if (["Provided node is not an archive node.", "Chain is not indexed yet.", "Could not connect to endpoint."].includes(error.message)) {
+                        page = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
+                    }
+                    else {
+                        throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
+                    }
+
                 }
             } else {
                 page = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
@@ -170,11 +175,15 @@ export const store = createStore({
             }
             let identity;
             if (await apiAvailable()) {
-                const chainStatusResponse = await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(wsAddress)}`);
-                if (chainStatusResponse.chainStatus.isIndexed) {
+                try {
                     identity = await getRequest<Identity>(`/identities/${request.address}?wsProvider=${encodeURIComponent(wsAddress)}`);
-                } else {
-                    identity = await getIdentity(wsAddress, request.address);
+                } catch (error) {
+                    if (["Provided node is not an archive node.", "Chain is not indexed yet.", "Unable to find an identity with the provided address.", "Could not connect to endpoint."].includes(error.message)) {
+                        identity = await getIdentity(wsAddress, request.address);
+                    }
+                    else {
+                        throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
+                    }
                 }
             } else {
                 identity = await getIdentity(wsAddress, request.address);
@@ -186,8 +195,13 @@ export const store = createStore({
 
         async GET_API_VERSION(context: ActionContext<StoreI, StoreI>) {
             if (await apiAvailable()) {
-                const response = await getRequest<GetVersionResponse>("/version");
-                context.commit("setApiVersion", response);
+                try {
+                    const response = await getRequest<GetVersionResponse>("/version");
+                    context.commit("setApiVersion", response);
+                } catch (error) {
+                    throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
+                }
+
             }
         },
 
@@ -205,8 +219,13 @@ export const store = createStore({
             context.commit("incrementBusyCounter");
             let implementsPallet: boolean;
             if (await apiAvailable()) {
-                const chainStatusResponse = await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(wsAddress)}`);
-                implementsPallet = chainStatusResponse.chainStatus.implementsIdentityPallet;
+                try {
+                    const chainStatusResponse = await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(wsAddress)}`);
+                    implementsPallet = chainStatusResponse.chainStatus.implementsIdentityPallet;
+                } catch (error) {
+                    throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
+                }
+
             } else {
                 implementsPallet = await implementsIdentityPallet(wsAddress);
             }

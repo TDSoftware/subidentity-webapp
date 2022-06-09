@@ -1,5 +1,9 @@
 <template>
-    <div class="pb-5 desktop-header" v-if="!pageError && !error" @click="checkError">
+    <div
+        class="pb-5 desktop-header"
+        v-if="!pageError && !error"
+        @click="checkError"
+    >
         <p class="h4">
             {{ lastTotalItemCount }} Search
             <span v-if="lastTotalItemCount > 1">Results</span>
@@ -19,16 +23,24 @@
         </p>
     </div>
     <Alert v-if="error" class="list-alert" :message="error"></Alert>
-    <Alert v-else-if="pageError" class="list-alert" :message="pageError"></Alert>
     <Alert
-        v-else-if="!busy && lastTotalItemCount === 0" class="list-alert"
+        v-else-if="pageError"
+        class="list-alert"
+        :message="pageError"
+    ></Alert>
+    <Alert
+        v-else-if="!busy && lastTotalItemCount === 0"
+        class="list-alert"
         message="Sorry, there are no results for your search term - Please try again"
     />
 
-
     <div
         class="bg-white p-0 fade-in"
-        v-if="searchResults.length > 0 && pagination.totalPageCount !== 0 && !error"
+        v-if="
+            searchResults.length > 0 &&
+            pagination.totalPageCount !== 0 &&
+            !error
+        "
     >
         <div class="row mx-0 p-2 text-muted fw-bold labels">
             <h6 class="col">NAME</h6>
@@ -36,9 +48,6 @@
             <h6 class="col address-col">ADDRESS</h6>
             <h6 class="col" style="flex: 0 0 150px">CHAIN</h6>
             <h6 class="col" style="flex: 0 0 100px">PROFILE</h6>
-        </div>
-        <div class="spinner-wrapper fade-in" v-if="busy">
-            <Spinner color="#EA268E" :size="40" :width="3" />
         </div>
         <div
             class="fade-in"
@@ -53,7 +62,9 @@
 
     <div
         class="container-medium pt-5 fade-in"
-        v-if="searchResults.length >= 1 && pagination.totalPageCount > 1 && !error"
+        v-if="
+            searchResults.length >= 1 && pagination.totalPageCount > 1 && !error
+        "
     >
         <div class="d-flex justify-content-center pt-3 pb-2 text-white-50">
             <Pagination
@@ -73,14 +84,12 @@ import IdentityListItem from "@/components/partials/IdentityListItem.vue";
 import { useStore } from "@/store";
 import { getChainName } from "@/util/chains";
 import Pagination from "@/components/common/Pagination.vue";
-import Spinner from "@/components/common/Spinner.vue";
 import Alert from "@/components/common/Alert.vue";
 
 @Options({
     components: {
         IdentityListItem,
         Pagination,
-        Spinner,
         Alert
     },
     emits: ["onPagechange"],
@@ -88,7 +97,7 @@ import Alert from "@/components/common/Alert.vue";
         pageError: {
             type: String
         },
-        error:{
+        error: {
             type: String
         }
     }
@@ -128,11 +137,10 @@ export default class IdentityList extends Vue {
 <style lang="scss" scoped>
 @import "../../styles/variables";
 
-.list-alert{
-
-  @include media-breakpoint-down(lg)  {
-    margin-top: -27px;
-  }
+.list-alert {
+    @include media-breakpoint-up(md) {
+        margin-top: -27px;
+    }
 }
 
 h6 {
@@ -150,14 +158,6 @@ h6 {
     @media screen and (min-width: 1600px) {
         flex: 0 0 455px;
     }
-}
-
-.spinner-wrapper {
-    padding: 6rem 0;
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    width: 70%;
 }
 
 .mobile-header {
