@@ -14,11 +14,11 @@
                     <div
                         class="d-flex flex-row copy"
                         @click="copy(identity.basicInfo.address, 'basic-copy')"
-                        id="basic-copy"
+
                     >
                         <p
                             class="fw-light text-muted"
-                            style="overflow-wrap: anywhere"
+                            style="overflow-wrap: anywhere" id="basic-copy"
                         >
                             Address: {{ identity.basicInfo.address }}
                         </p>
@@ -82,9 +82,9 @@
         <div
             class="d-flex flex-row address"
             @click="copy(identity.basicInfo.address, 'mobile-copy')"
-            id="mobile-copy"
+
         >
-            <p class="fw-light text-muted" style="overflow-wrap: anywhere">
+            <p class="fw-light text-muted" style="overflow-wrap: anywhere" id="mobile-copy">
                 Address: {{ identity.basicInfo.address }}
             </p>
             <span class="text-decoration-none link-primary mx-2">
@@ -141,9 +141,7 @@ export default class ProfileHeader extends Vue {
     async copy(s: string, id: string) {
         if (!s) return;
         await navigator.clipboard.writeText(s);
-        console.log("Copied from id: " + id);
         let element  = document.getElementById(id) as HTMLElement;
-        console.log(element);
         if (element.classList.contains("flash")) return;
         element.className += " flash";
         setTimeout(function() {
@@ -204,22 +202,6 @@ p {
     }
 }
 .flash {
-  -webkit-animation-name: flash-animation;
-  -webkit-animation-duration: 0.6s;
-
-  animation-name: flash-animation;
-  animation-duration: 0.6s;
-  animation-duration: 0.6s;
-  animation-duration: 0.6s;
-}
-
-@-webkit-keyframes flash-animation {
-  from { background: $primary; }
-  to   { background: white; }
-}
-
-@keyframes flash-animation {
-  from { background: $primary; }
-  to   { background: white; }
+  color: $primary !important;
 }
 </style>

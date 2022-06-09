@@ -5,13 +5,14 @@
             <div
                 v-if="identity.basicInfo.address"
                 @click="copy(identity.basicInfo.address)"
-                id="id"
+
             >
                 <p class="mb-0 fw-bold">Address</p>
                 <div class="d-flex flex-row">
                     <p
                         class="fw-light text-muted"
                         style="overflow-wrap: anywhere"
+                        id="id"
                     >
                         {{ identity.basicInfo.address }}
                     </p>
@@ -127,7 +128,7 @@ export default class BasicInfoPlugin extends Vue {
         await navigator.clipboard.writeText(s);
         let element  = document.getElementById("id") as HTMLDivElement;
         if (element.classList.contains("flash")) return;
-        element.className += "flash";
+        element.className += " flash";
         setTimeout(function() {
             element.classList.remove("flash");
         }, 500);
@@ -151,23 +152,7 @@ export default class BasicInfoPlugin extends Vue {
 <style lang="scss" scoped>
 @import "../../../../styles/variables";
 .flash {
-  -webkit-animation-name: flash-animation;
-  -webkit-animation-duration: 0.6s;
-
-  animation-name: flash-animation;
-  animation-duration: 0.6s;
-  animation-duration: 0.6s;
-  animation-duration: 0.6s;
-}
-
-@-webkit-keyframes flash-animation {
-  from { background: $primary; }
-  to   { background: white; }
-}
-
-@keyframes flash-animation {
-  from { background: $primary; }
-  to   { background: white; }
+color: $primary !important;
 }
 
 </style>
