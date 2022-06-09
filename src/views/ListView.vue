@@ -7,6 +7,9 @@
         </div>
         <div class="subidentity-container">
             <div class="container-medium p-0" :class="busy ? 'is-blur' : ''">
+                <div class="spinner-wrapper fade-in" v-if="busy">
+                    <Spinner color="#EA268E" :size="40" :width="3" />
+                </div>
                 <IdentityList
                     @onPagechange="onPageChange"
                     :pageError="pageError"
@@ -24,11 +27,13 @@ import IdentityList from "@/components/partials/IdentityList.vue";
 import router from "@/router";
 import { SearchData } from "@/interfaces/SearchData";
 import { useStore } from "../store";
+import Spinner from "@/components/common/Spinner.vue";
 
 @Options({
     components: {
         IdentitySearch,
-        IdentityList
+        IdentityList,
+        Spinner
     },
     watch: {
         $route() {
@@ -146,5 +151,15 @@ export default class ListView extends Vue {
 .is-blur {
     background: white;
     opacity: 0.4;
+}
+
+.spinner-wrapper {
+    padding: 6rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    width: 70%;
+    height: 50%;
 }
 </style>

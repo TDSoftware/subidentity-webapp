@@ -49,9 +49,6 @@
             <h6 class="col" style="flex: 0 0 150px">CHAIN</h6>
             <h6 class="col" style="flex: 0 0 100px">PROFILE</h6>
         </div>
-        <div class="spinner-wrapper fade-in" v-if="busy">
-            <Spinner color="#EA268E" :size="40" :width="3" />
-        </div>
         <div
             class="fade-in"
             ref="identityList"
@@ -87,14 +84,12 @@ import IdentityListItem from "@/components/partials/IdentityListItem.vue";
 import { useStore } from "@/store";
 import { getChainName } from "@/util/chains";
 import Pagination from "@/components/common/Pagination.vue";
-import Spinner from "@/components/common/Spinner.vue";
 import Alert from "@/components/common/Alert.vue";
 
 @Options({
     components: {
         IdentityListItem,
         Pagination,
-        Spinner,
         Alert
     },
     emits: ["onPagechange"],
@@ -163,14 +158,6 @@ h6 {
     @media screen and (min-width: 1600px) {
         flex: 0 0 455px;
     }
-}
-
-.spinner-wrapper {
-    padding: 6rem 0;
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    width: 70%;
 }
 
 .mobile-header {
