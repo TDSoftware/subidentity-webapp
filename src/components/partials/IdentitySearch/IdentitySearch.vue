@@ -75,7 +75,6 @@ import { ChainInfo, chains } from "../../../util/chains";
 import { UISelectOption } from "@/interfaces/UISelectOption";
 import { get, StoreKey } from "@/util/storage";
 import CustomNodeModal from "./CustomNodeModal.vue";
-import router from "@/router";
 
 @Options({
     components: {
@@ -86,6 +85,7 @@ import router from "@/router";
     watch: {
         selectedChainKey() {
             this.checkIdentityPalletExists();
+            this.$emit("error", "");
         }
     },
     emits: ["search", "error"]
