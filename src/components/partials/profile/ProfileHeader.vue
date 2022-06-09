@@ -147,8 +147,6 @@ export default class ProfileHeader extends Vue {
         setTimeout(function() {
             element.classList.remove("flash");
         }, 500);
-
-        //this.$toastr.success("Copied!", true);
     }
 }
 </script>
