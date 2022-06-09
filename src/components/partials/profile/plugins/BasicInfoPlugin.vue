@@ -5,12 +5,14 @@
             <div
                 v-if="identity.basicInfo.address"
                 @click="copy(identity.basicInfo.address)"
+
             >
                 <p class="mb-0 fw-bold">Address</p>
                 <div class="d-flex flex-row">
                     <p
                         class="fw-light text-muted"
                         style="overflow-wrap: anywhere"
+                        id="id"
                     >
                         {{ identity.basicInfo.address }}
                     </p>
@@ -129,7 +131,12 @@ export default class BasicInfoPlugin extends Vue {
     async copy(s: string) {
         if (!s) return;
         await navigator.clipboard.writeText(s);
-        //this.$toastr.success("Copied!", true);
+        let element  = document.getElementById("id") as HTMLDivElement;
+        if (element.classList.contains("flash")) return;
+        element.className += " flash";
+        setTimeout(function() {
+            element.classList.remove("flash");
+        }, 500);
     }
 
     getNumberFormatter(currency: string, total: string) {
@@ -144,3 +151,11 @@ export default class BasicInfoPlugin extends Vue {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+@import "../../../../styles/variables";
+.flash {
+color: $primary !important;
+}
+
+</style>
