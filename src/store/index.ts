@@ -147,7 +147,6 @@ export const store = createStore({
                 } catch (error) {
                     if (["Provided node is not an archive node.", "Chain is not indexed yet.", "Could not connect to endpoint."].includes(error.message)) {
                         page = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
-                        return;
                     }
                     else {
                         throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
@@ -164,8 +163,8 @@ export const store = createStore({
             context.commit("storeAsRecentSearch", searchData);
             context.commit("decrementBusyCounter");
         },
-        
-        async DECREMENT_BUSY(context:ActionContext<StoreI, StoreI>){
+
+        async DECREMENT_BUSY(context: ActionContext<StoreI, StoreI>) {
             context.commit("decrementBusyCounter");
         },
 
@@ -181,7 +180,6 @@ export const store = createStore({
                 } catch (error) {
                     if (["Provided node is not an archive node.", "Chain is not indexed yet.", "Unable to find an identity with the provided address.", "Could not connect to endpoint."].includes(error.message)) {
                         identity = await getIdentity(wsAddress, request.address);
-                        return identity;
                     }
                     else {
                         throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
