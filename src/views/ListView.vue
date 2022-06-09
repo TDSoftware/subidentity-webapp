@@ -76,7 +76,6 @@ export default class ListView extends Vue {
         } catch (e) {
             this.store.dispatch("DECREMENT_BUSY");
             this.error = e.message;
-            console.log(this.error);
         }
 
         if (page > this.pagination.totalPageCount) {

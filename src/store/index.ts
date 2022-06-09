@@ -136,9 +136,9 @@ export const store = createStore({
             context.commit("incrementBusyCounter");
             const wsAddress = getChainAddress(searchData.selectedChainKey);
             if (!wsAddress) {
-                throw new Error("[store/index] No address given for chain: " + searchData.selectedChainKey);
-                return console.error("[store/index] No address given for chain: ", searchData.selectedChainKey);
+                throw new Error("No address given for chain: " + searchData.selectedChainKey);
             }
+
             let page: Page<Identity>;
             if (await apiAvailable()) {
                 try {
@@ -171,7 +171,7 @@ export const store = createStore({
         async LOAD_IDENTITY(context: ActionContext<StoreI, StoreI>, request: LoadIdentityRequest): Promise<Identity> {
             const wsAddress = getChainAddress(request.chain);
             if (!wsAddress) {
-                throw new Error("[store/index] No address given for chain: " + request.chain);
+                throw new Error("No address given for chain: " + request.chain);
             }
             let identity;
             if (await apiAvailable()) {

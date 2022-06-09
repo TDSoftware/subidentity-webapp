@@ -85,6 +85,7 @@ import CustomNodeModal from "./CustomNodeModal.vue";
     watch: {
         selectedChainKey() {
             this.checkIdentityPalletExists();
+            this.$emit("error", "");
         }
     },
     emits: ["search", "error"]
