@@ -153,10 +153,9 @@ export default class IdentitySearch extends Vue {
                 this.selectedChainKey
             );
             if (!this.implementsPallet) {
-                alert(
-                    "Sorry, the selected node is not available or does not implement the identity pallet"
-                );
-                router.push("/");
+                const message =
+                    "Sorry, the selected node is not available or does not implement the identity pallet";
+                this.$emit("error", message);
             }
         } catch (e) {
             const message =
