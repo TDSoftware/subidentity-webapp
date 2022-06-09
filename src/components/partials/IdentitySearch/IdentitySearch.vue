@@ -87,7 +87,7 @@ import CustomNodeModal from "./CustomNodeModal.vue";
             this.checkIdentityPalletExists();
         }
     },
-    emits: ["search"]
+    emits: ["search", "error"]
 })
 export default class IdentitySearch extends Vue {
     store = useStore();
@@ -146,19 +146,27 @@ export default class IdentitySearch extends Vue {
      *  we cannot search for identities...
      */
     async checkIdentityPalletExists() {
-        this.implementsPallet = await this.store.dispatch(
-            "IDENTITY_PALLET_EXISTS",
-            this.selectedChainKey
-        );
-        if (!this.implementsPallet) {
-            // TODO: show nice error partial component instead of standard alert
-            alert(
-                "Sorry, the selected node is not available or does not implement the identity pallet"
+        try {
+            this.implementsPallet = await this.store.dispatch(
+                "IDENTITY_PALLET_EXISTS",
+                this.selectedChainKey
             );
+            if (!this.implementsPallet) {
+                const message =
+                    "Sorry, the selected node is not available or does not implement the identity pallet";
+                this.$emit("error", message);
+            }
+        } catch (e) {
+            const message =
+                "Sorry, the connection to the node could not be established";
+            this.$emit("error", message);
+            this.implementsPallet = false;
+            await this.store.dispatch("DECREMENT_BUSY");
         }
     }
 
     submitIdentitySearch() {
+        this.$emit("error", "");
         const searchData: SearchData<void> = {
             searchTerm: this.searchTerm,
             selectedChainKey: this.selectedChainKey,
@@ -166,7 +174,15 @@ export default class IdentitySearch extends Vue {
             totalItemCount: 0,
             timestamp: Date.now()
         };
-        this.$emit("search", searchData);
+        try {
+            this.$emit("search", searchData);
+        } catch (e) {
+            this.$emit(
+                "error",
+                "Sorry, but we have a problem processing your search"
+            );
+            this.store.dispatch("DECREMENT_BUSY");
+        }
         (this.$refs.searchButton as HTMLButtonElement).blur();
     }
 
