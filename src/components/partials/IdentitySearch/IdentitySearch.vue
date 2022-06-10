@@ -62,7 +62,7 @@
         v-model:open="editCustomNodeModalOpen"
         :custom-node="customNode"
         @save="onCustomNodeSaved"
-        @delete="onCustomNodeDeletion"
+        @delete="onCustomNodeSaved"
     />
 </template>
 
@@ -179,10 +179,6 @@ export default class IdentitySearch extends Vue {
         this.loadCustomNodeFromStorage();
         this.setChainOptions();
         this.editCustomNodeModalOpen = false;
-    }
-    onCustomNodeDeletion(){
-        this.editCustomNodeModalOpen = false;
-        location.reload();
     }
 }
 </script>
