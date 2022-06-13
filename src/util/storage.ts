@@ -29,3 +29,7 @@ export function push<T>(key: string, value: T, maxLength: number) {
     }
     set(key, items);
 }
+
+export function remove(key: string){
+    window.localStorage.removeItem(key);
+}

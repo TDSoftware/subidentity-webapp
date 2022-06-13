@@ -62,6 +62,7 @@
         v-model:open="editCustomNodeModalOpen"
         :custom-node="customNode"
         @save="onCustomNodeSaved"
+        @delete="onCustomNodeSaved"
     />
 </template>
 
