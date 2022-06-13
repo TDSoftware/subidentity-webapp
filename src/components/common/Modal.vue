@@ -7,11 +7,8 @@
                     class="col btn btn-link text-muted"
                     :style="{ flex: '0 0 50px' }"
                     @click="close"
-                >
-                    <ion-icon
-                        name="close-circle-outline"
-                        size="large"
-                    ></ion-icon>
+                >   
+                    <img src="../../assets/icons/close-circle-outline.svg" style="width: 32px">
                 </button>
             </div>
             <div class="body">

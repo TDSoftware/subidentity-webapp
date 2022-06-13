@@ -22,7 +22,7 @@
                             Address: {{ identity.basicInfo.address }}
                         </p>
                         <span class="text-decoration-none link-primary mx-2">
-                            <ion-icon size="small" name="copy-outline"></ion-icon>
+                            <img src="../../../assets/icons/copy-outline-primary.svg" style="width: 18px">
                         </span>
                     </div>
                 </div>
@@ -40,17 +40,13 @@
                             text-muted
                         "
                     >
-                        <ion-icon
-                            size="small"
-                            class="fw-light text-muted pt-1"
-                            name="git-network-outline"
-                        ></ion-icon>
+                        <img src="../../../assets/icons/git-network-outline-muted.svg" style="width: 16px">
 
                         <div class="mx-1">{{ identity.chain }}</div>
                     </div>
                     <div v-if="checkJudgements() > 1" class="verified">Verified by {{checkJudgements()}} registrars</div>
                     <div v-else-if="checkJudgements() === 1" class="verified">Verified by {{checkJudgements()}} registrar</div>
-                    <div v-else-if="checkJudgements() === 0" class="not-verified text-muted"> <ion-icon name="information-circle-outline" class="info-pink" size="small"></ion-icon> Not verified</div>
+                    <div v-else-if="checkJudgements() === 0" class="not-verified text-muted"> <img src="../../../assets/icons/information-circle-outline-primary.svg" style="width: 18px; margin-right: 4px"> Not verified</div>
                     <div v-else-if="checkJudgements() < 0" class="pending text-muted">Judgement in progress</div>
                 </div>
             </div>
@@ -87,7 +83,7 @@
                 Address: {{ identity.basicInfo.address }}
             </p>
             <span class="text-decoration-none link-primary mx-2">
-                <ion-icon size="small" name="copy-outline"></ion-icon>
+                <img src="../../../assets/icons/copy-outline-primary.svg" style="width: 18px">
             </span>
         </div>
         <div class="d-flex flex-row">
@@ -104,18 +100,14 @@
                     text-muted
                 "
             >
-                <ion-icon
-                    size="small"
-                    class="fw-light text-muted pt-1"
-                    name="git-network-outline"
-                ></ion-icon>
+                <img src="../../../assets/icons/git-network-outline-muted.svg" style="width: 16px">
 
                 <div class="mx-1">{{ identity.chain }}</div>
             </div>
           <div style="display: flex; align-items: center">
             <div v-if="checkJudgements() > 1" class="verified">Verified by {{checkJudgements()}} registrars</div>
             <div v-else-if="checkJudgements() === 1" class="verified">Verified by {{checkJudgements()}} registrar</div>
-            <div v-else-if="checkJudgements() === 0" class="not-verified text-muted"> <ion-icon name="information-circle-outline" class="info-pink" size="small"></ion-icon> Not verified</div>
+            <div v-else-if="checkJudgements() === 0" class="not-verified text-muted"> <img src="../../../assets/icons/information-circle-outline-primary.svg" style="width: 18px; margin-right: 4px"> Not verified</div>
             <div v-else-if="checkJudgements() < 0" class="pending text-muted">Judgement in progress</div>
           </div>
         </div>
@@ -184,10 +176,6 @@ export default class ProfileHeader extends Vue {
 
 <style lang="scss" scoped>
 @import "../../../styles/variables";
-.info-pink{
-  color: $primary;
-  margin-right: 2px;
-}
 .verified{
   margin-left: 15px;
   color: #198754;
