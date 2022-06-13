@@ -6,10 +6,33 @@ SubIdentity is a web application that can be used to search for identities on al
 ## Chain Selection
 ![Search Bar](./assets/searchBar.png)
 
-As seen in the picture above, by default you can choose between Polkadot, Kusama and Westend to search for identities. Select the chain you want to search identities on from the dropdown.
+As seen in the picture above, by default you can choose between Polkadot, Kusama and Westend to search for identities. Alternatively you can add a custom node, as described in [in the next chapter](#customNode) Select the chain you want to search identities on from the dropdown menu.
+
+ℹ️ If a chain doesn't implement the identity pallet an error will be displayed when the chain is chosen from the dropdown.
+
+## <a id="customNode"></a> Custom node
+
+To add a custom node you need to click on the "+ Custom Node" button in the search bar, as seen in the screenshot above. The following modal will open:
+
+![add custom node](./assets/addCustomNode.png)
+
+Please enter the address for your custom node in the input field and click "SAVE NODE". If the node is available, it will be added to the dropdown menu as shown in following screenshot and identities can be searched on it.
+
+![custom node](./assets/customNode.png)
+
+To edit the node address or connect to a different node, click on the "Edit Custom Node" button. In the modal that opens, adjust the address as desired and click the "SAVE NODE" button.
+
+To delete a custom node, clear the content of the input field and click the "SAVE NODE" button.
 
 ## <a id="searchIdentities"></a> Search Identities
+
 After selecting a chain to search on, identities can be searched by address or any identity field. The search term must be entered in the search box seen in the screenshot above. Click the "SEARCH" button to start your search.
+
+### Recent searches
+
+Recent searches can be found on the Search View under the search bar as shown in screenshot below. Clicking on any of the recent search cards will redirect you to the relevant search results. To clear recent searches click on "Clear Recent Searches" Button.
+
+![Recent searches](./assets/recentSearches.png)
 
 ## View Results
 
