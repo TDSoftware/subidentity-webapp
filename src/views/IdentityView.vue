@@ -2,7 +2,7 @@
     <div class="sid-wrapper">
         <div class="subidentity-container pb-5">
             <div class="container-medium">
-                <div v-if="error"
+                <div v-if="error || backToHome"
                     class="d-flex flex-row pt-4 link-primary"
                     @click="$router.push('/')"
                 >
@@ -74,9 +74,13 @@ export default class IdentityView extends Vue {
     loaded = false;
     identity?: Identity;
     error = "";
+    backToHome = false;
 
     created() {
         this.loadIdentity();
+        if (window.history.state.back ==="/"){
+            this.backToHome = true;
+        }
     }
 
     async loadIdentity() {
