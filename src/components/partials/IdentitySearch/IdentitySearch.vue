@@ -120,7 +120,7 @@ export default class IdentitySearch extends Vue {
     }
 
     get submitButtonDisabled() {
-        return !this.searchTerm || this.busy || !this.implementsPallet;
+        return !this.searchTerm || !this.implementsPallet;
     }
 
     setChainOptions() {
