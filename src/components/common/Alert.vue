@@ -1,6 +1,6 @@
 <template>
     <div class="alert alert-danger d-flex align-items-center p-2" role="alert">
-        <ion-icon class="icon mx-2 text-body" name="warning-outline"></ion-icon>
+        <img src="../../assets/icons/warning-outline.svg" class="mx-2 icon">
         <div class="text-body fw-light" v-html="message"></div>
     </div>
 </template>
@@ -20,7 +20,7 @@ export default class Alert extends Vue {}
 </script>
 <style lang="scss" scoped>
 .icon {
-    font-size: 20px;
+    width: 20px
 }
 .alert {
     background-color: #ffeaf5;

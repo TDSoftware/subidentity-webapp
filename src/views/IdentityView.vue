@@ -2,15 +2,21 @@
     <div class="sid-wrapper">
         <div class="subidentity-container pb-5">
             <div class="container-medium">
-                <div
+                <div v-if="error || backToHome"
+                    class="d-flex flex-row pt-4 link-primary"
+                    @click="$router.push('/')"
+                >
+                    <img src="../assets/icons/arrow-back-outline-primary.svg" class="back-arrow">
+                    <p class="mx-2">Back to home</p>
+
+                </div>
+                <div v-else
                     class="d-flex flex-row pt-4 link-primary"
                     @click="$router.go(-1)"
                 >
-                    <ion-icon
-                        class="icon back-arrow"
-                        name="arrow-back-outline"
-                    />
-                    <p class="mx-2">Back to results</p>
+                    <img src="../assets/icons/arrow-back-outline-primary.svg" class="back-arrow">
+
+                  <p class="mx-2">Back to results</p>
                 </div>
                 <span v-if="loaded && error">
                     <Alert :message="error" />
@@ -19,11 +25,11 @@
                     <Spinner color="#D0D0D0" :size="40" :width="3" />
                 </div>
                 <ProfileHeader
-                    v-if="loaded"
+                    v-if="loaded && !error"
                     class="mb-5"
                     :identity="identity"
                 />
-                <div v-if="loaded" class="plugins fade-in">
+                <div v-if="loaded && !error" class="plugins fade-in">
                     <BasicInfoPlugin :identity="identity" />
                     <!--
 
@@ -40,7 +46,7 @@
 import { Options, Vue } from "vue-class-component";
 import ProfileHeader from "@/components/partials/profile/ProfileHeader.vue";
 import BasicInfoPlugin from "@/components/partials/profile/plugins/BasicInfoPlugin.vue";
-import { useRoute } from "vue-router";
+import { useRoute} from "vue-router";
 import { useStore } from "@/store";
 import { Identity } from "@npmjs_tdsoftware/subidentity";
 import Spinner from "@/components/common/Spinner.vue";
@@ -59,13 +65,17 @@ export default class IdentityView extends Vue {
     store = useStore();
 
     address = this.route.params.address as string;
-    chain = (this.route.params.chain as string).toLowerCase();
+    chain = this.route.params.chain as string;
     loaded = false;
     identity?: Identity;
     error = "";
+    backToHome = false;
 
     created() {
         this.loadIdentity();
+        if (window.history.state.back ==="/"){
+            this.backToHome = true;
+        }
     }
 
     async loadIdentity() {
@@ -81,6 +91,9 @@ export default class IdentityView extends Vue {
                 "Sorry, could not find identity with the given address";
         }
     }
+    handleError(message: string){
+        this.error = message;
+    }
 }
 </script>
 
@@ -90,8 +103,9 @@ export default class IdentityView extends Vue {
     cursor: pointer;
 }
 .back-arrow {
-    padding-top: 5px;
-    padding-right: 4px;
+    width: 16px;
+    height: 16px;
+    margin-top: 5px;
 }
 .sid-wrapper {
     padding-top: $headerHeightMobile;

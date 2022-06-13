@@ -5,10 +5,7 @@
                 <div class="col-lg col-12">
                     <div class="input-group">
                         <span class="input-group-text fw-light text-muted">
-                            <ion-icon
-                                class="fw-light text-muted"
-                                name="search-outline"
-                            ></ion-icon>
+                            <img src="../../../assets/icons/search-outline-muted.svg" class="fw-light text-muted">
                         </span>
                         <input
                             :disabled="busy"
@@ -36,12 +33,8 @@
                     @click="onEditCustomNodeClick"
                     :class="{ disabled: busy }"
                 >
-                    <ion-icon
-                        class="fw-normal"
-                        :name="
-                            customNode ? 'create-outline' : 'add-circle-outline'
-                        "
-                    />
+                  <img v-if="customNode" src="../../../assets/icons/create-outline-primary.svg" class="custom-icon">
+                  <img v-else src="../../../assets/icons/add-circle-outline-sub.svg" class="custom-icon">
                     <span> {{ customNode ? "Edit" : "" }} Custom Node </span>
                 </div>
                 <div class="col d-grid mx-auto search-button-col">
@@ -62,6 +55,7 @@
         v-model:open="editCustomNodeModalOpen"
         :custom-node="customNode"
         @save="onCustomNodeSaved"
+        @delete="onCustomNodeSaved"
     />
 </template>
 
@@ -85,9 +79,10 @@ import CustomNodeModal from "./CustomNodeModal.vue";
     watch: {
         selectedChainKey() {
             this.checkIdentityPalletExists();
+            this.$emit("error", "");
         }
     },
-    emits: ["search"]
+    emits: ["search", "error"]
 })
 export default class IdentitySearch extends Vue {
     store = useStore();
@@ -108,7 +103,7 @@ export default class IdentitySearch extends Vue {
 
     onInputKeyUp(event: Event) {
         const target = event.target as HTMLTextAreaElement;
-        this.searchTerm = target.value;
+        this.searchTerm = target.value.trim();
     }
 
     loadCustomNodeFromStorage() {
@@ -146,19 +141,27 @@ export default class IdentitySearch extends Vue {
      *  we cannot search for identities...
      */
     async checkIdentityPalletExists() {
-        this.implementsPallet = await this.store.dispatch(
-            "IDENTITY_PALLET_EXISTS",
-            this.selectedChainKey
-        );
-        if (!this.implementsPallet) {
-            // TODO: show nice error partial component instead of standard alert
-            alert(
-                "Sorry, the selected node is not available or does not implement the identity pallet"
+        try {
+            this.implementsPallet = await this.store.dispatch(
+                "IDENTITY_PALLET_EXISTS",
+                this.selectedChainKey
             );
+            if (!this.implementsPallet) {
+                const message =
+                    "Sorry, the selected node is not available or does not implement the identity pallet";
+                this.$emit("error", message);
+            }
+        } catch (e) {
+            const message =
+                "Sorry, the connection to the node could not be established";
+            this.$emit("error", message);
+            this.implementsPallet = false;
+            await this.store.dispatch("DECREMENT_BUSY");
         }
     }
 
     submitIdentitySearch() {
+        this.$emit("error", "");
         const searchData: SearchData<void> = {
             searchTerm: this.searchTerm,
             selectedChainKey: this.selectedChainKey,
@@ -166,7 +169,15 @@ export default class IdentitySearch extends Vue {
             totalItemCount: 0,
             timestamp: Date.now()
         };
-        this.$emit("search", searchData);
+        try {
+            this.$emit("search", searchData);
+        } catch (e) {
+            this.$emit(
+                "error",
+                "Sorry, but we have a problem processing your search"
+            );
+            this.store.dispatch("DECREMENT_BUSY");
+        }
         (this.$refs.searchButton as HTMLButtonElement).blur();
     }
 
@@ -185,8 +196,13 @@ export default class IdentitySearch extends Vue {
 <style lang="scss" scoped>
 @import "../../../styles/variables";
 
-ion-icon {
-    font-size: 20px;
+.custom-icon{
+  margin-top: -12px !important;
+}
+
+img {
+  //font-size: 20px;
+  width: 22px;
 }
 
 input {
@@ -247,8 +263,8 @@ input:disabled.search-input.form-control {
         opacity: 0.5;
     }
 
-    ion-icon {
-        margin: 0 24px 0 13px;
+    img{
+        margin: -12px 24px 0 13px;
         transform: translateY(4px);
     }
 
@@ -257,7 +273,7 @@ input:disabled.search-input.form-control {
         border-right: 1px solid #dee2e6;
         padding: 0 1.25rem;
 
-        ion-icon {
+        img{
             margin: 0 8px 0 0;
         }
     }

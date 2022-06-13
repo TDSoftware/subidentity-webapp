@@ -17,6 +17,11 @@ describe("CustomNodeModal.vue", () => {
             open: true,
             customNode: { key: "customNode", name: "custom node name", address: "wss://fake.io", modifiedAt: 1653917024783 }
         },
+        global: {
+            stubs: {
+                IonIcon: true
+            }
+        },
         attachTo: document.body
     });
 
@@ -97,6 +102,11 @@ describe("CustomNodeModal.vue", () => {
                 props: {
                     open: true,
                     customNode: { key: "customNode", name: "custom node name", address: "wss://fake.io", modifiedAt: 1653917024783 }
+                },
+                global: {
+                    stubs: {
+                        IonIcon: true
+                    }
                 },
                 attachTo: document.body
             });

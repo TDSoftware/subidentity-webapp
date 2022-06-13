@@ -5,7 +5,7 @@
                 <button
                     type="button"
                     :disabled="previous === undefined"
-                    class="page-link"
+                    class="btn page-link"
                     @click="onClickPreviousPage"
                     ref="previous-button"
                 >
@@ -14,8 +14,9 @@
             </li>
             <li
                 v-if="startPage > 1"
-                class="page-item disabled"
+                class="page-item"
                 ref="first-page-dots"
+                @click="onClickFirstPage"
             >
                 <span class="page-link">...</span>
             </li>
@@ -35,9 +36,10 @@
                 </button>
             </li>
             <li
-                v-if="totalPages > 3 && startPage < totalPages - 2"
-                class="page-item disabled"
+                v-if="totalPages > 5 && startPage < totalPages - 4"
+                class="page-item"
                 ref="last-page-dots"
+                @click="onClickLastPage"
             >
                 <span class="page-link">...</span>
             </li>
@@ -78,7 +80,7 @@ import { Options, Vue } from "vue-class-component";
         maxVisibleButtons: {
             type: Number,
             required: false,
-            default: 3
+            default: 5
         }
     }
 })
@@ -95,13 +97,27 @@ export default class Pagination extends Vue {
 
         // When on the last page
         if (this.currentPage === this.totalPages) {
-            if (this.currentPage >= 3) {
+            if (this.currentPage >= 5) {
+                return this.totalPages - 4;
+            } else if (this.currentPage === 4) {
+                return this.totalPages - 3;
+            } else if (this.currentPage === 3) {
                 return this.totalPages - 2;
+            } else {
+                return this.totalPages - 1;
             }
         }
 
+        if (this.currentPage <= this.maxVisibleButtons) {
+            if (this.currentPage === 3) {
+                return this.currentPage - 2;
+            } else if (this.currentPage === 4) {
+                return this.currentPage - 3;
+            }
+            return this.currentPage - 1;
+        }
         // When inbetween
-        return this.currentPage - 1;
+        return this.currentPage - 3;
     }
 
     get pages() {
@@ -129,6 +145,12 @@ export default class Pagination extends Vue {
     }
     onClickPreviousPage() {
         this.$emit("onPagechange", this.currentPage - 1);
+    }
+    onClickLastPage() {
+        this.$emit("onPagechange", this.totalPages);
+    }
+    onClickFirstPage() {
+        this.$emit("onPagechange", 1);
     }
     onClickPage(page: number) {
         this.$emit("onPagechange", page);

@@ -2,17 +2,22 @@
     <Accordion>
         <template #title>BASIC INFO</template>
         <template #body>
-            <div v-if="identity.basicInfo.address" @click="copy(identity.basicInfo.address)">
+            <div
+                v-if="identity.basicInfo.address"
+                @click="copy(identity.basicInfo.address)"
+
+            >
                 <p class="mb-0 fw-bold">Address</p>
                 <div class="d-flex flex-row">
                     <p
                         class="fw-light text-muted"
                         style="overflow-wrap: anywhere"
+                        id="id"
                     >
                         {{ identity.basicInfo.address }}
                     </p>
                     <span class="text-decoration-none link-primary mx-2">
-                        <ion-icon size="small" name="copy-outline"></ion-icon>
+                        <img src="../../../../assets/icons/copy-outline-primary.svg" style="width: 18px">
                     </span>
                 </div>
             </div>
@@ -47,11 +52,7 @@
                             'https://twitter.com/' + identity.basicInfo.twitter
                         "
                     >
-                        <ion-icon
-                            size="small"
-                            name="link-outline"
-                            class="pt-1"
-                        ></ion-icon>
+                        <img src="../../../../assets/icons/link-outline-primary.svg" style="width: 16px">
                     </a>
                 </div>
             </div>
@@ -66,22 +67,25 @@
                         :href="identity.basicInfo.web"
                         target="_blank"
                     >
-                        <ion-icon
-                            size="small"
-                            class="pt-1"
-                            name="link-outline"
-                        ></ion-icon>
+                        <img src="../../../../assets/icons/link-outline-primary.svg" style="width: 16px">
                     </a>
                 </div>
             </div>
-            <div v-if="judgements">
+
+            <div v-if="judgements[0]">
                 <p class="mb-0 fw-bold">Judgements</p>
-                <p class="fw-light text-muted">
-                    Registrar determined this identity as
-                    <span class="text-success">
-                        {{ judgements }}
-                    </span>
-                </p>
+                <div v-for="(judgement, index) in judgements" :key="index">
+                    <p v-if="judgement ==='feepaid'" class="fw-light text-muted" >
+                      Account requested judgement
+                    </p>
+                    <p v-else class="fw-light text-muted">
+                        A Registrar determined this identity as
+                        <span class="text-success">
+                                  {{ judgement }}
+                              </span>
+                    </p>
+                </div>
+
             </div>
         </template>
     </Accordion>
@@ -105,26 +109,45 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class BasicInfoPlugin extends Vue {
     identity!: Identity;
-
+  
     get judgements() {
-        return this.identity.judgements
-            ?.map((judgement: string) => judgement.toLowerCase())
-            .join(", ");
+        return this.identity.judgements?.map((judgement: string) => judgement.toLowerCase());
     }
 
     get balance() {
         const { total, symbol } = this.identity.balance ?? {};
         if (!total || !symbol) return "";
-        return `${this.getNumberFormatter(symbol).format(Number(total))}`;
+        return this.getNumberFormatter(symbol, total);
     }
 
-    getNumberFormatter(currency: string) {
-        return new Intl.NumberFormat("en-US", { style: "currency", currency });
-    }
     async copy(s: string) {
-        if(!s) return;
+        if (!s) return;
         await navigator.clipboard.writeText(s);
-        //this.$toastr.success("Copied!", true);
+        let element  = document.getElementById("id") as HTMLDivElement;
+        if (element.classList.contains("flash")) return;
+        element.className += " flash";
+        setTimeout(function() {
+            element.classList.remove("flash");
+        }, 500);
+    }
+
+    getNumberFormatter(currency: string, total: string) {
+        try {
+            return new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency
+            }).format(Number(total));
+        } catch (error) {
+            return `${currency} ${total}`;
+        }
     }
 }
 </script>
+
+<style lang="scss" scoped>
+@import "../../../../styles/variables";
+.flash {
+color: $primary !important;
+}
+
+</style>

@@ -36,7 +36,10 @@ export function getChainAddress(chainKey: string): string | undefined {
             console.error("[store/index] No custom node available!!!");
             return;
         }
-        return customNode.address;
+        if (chainKey === customNode.key) {
+            return customNode.address;
+        }
+
     }
     return chains.find(({ key }) => chainKey === key)?.address;
 }

@@ -42,11 +42,7 @@
                 "
             >
                 <div class="text-muted">
-                    <ion-icon
-                        size="small"
-                        class="fw-light text-muted"
-                        name="git-network-outline"
-                    ></ion-icon>
+                    <img src="../../assets/icons/git-network-outline-muted.svg" style="width: 16px; margin-top: -4px">
                 </div>
                 <div class="mx-2">{{ identity.chain }}</div>
             </div>
@@ -58,10 +54,7 @@
             <span class="text-decoration-none link-primary">
                 <div class="d-flex flex-row">
                     <span>Details</span>
-                    <ion-icon
-                        class="mx-1 icon"
-                        name="arrow-forward-outline"
-                    ></ion-icon>
+                    <img src="../../assets/icons/arrow-forward-outline-primary.svg" style="width: 16px; height: 16px; margin-top: 4px; margin-left: 10px">
                 </div>
             </span>
         </div>
@@ -88,11 +81,17 @@ import { Identity } from "@npmjs_tdsoftware/subidentity";
 export default class IdentityListItem extends Vue {
     identity!: Identity;
     showPolkadotIcon = true;
+    chain = "";
+
+    created() {
+        const searchParams = new URLSearchParams(window.location.search);
+        this.chain = searchParams.get("chain") ?? "";
+    }
 
     get profileAddress() {
         return (
             "/chain/" +
-            this.identity.chain.toLowerCase() +
+            this.chain +
             "/identity/" +
             this.identity.basicInfo.address
         );

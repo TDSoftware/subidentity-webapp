@@ -1,10 +1,7 @@
 <template>
     <div :tabindex="tabindex" class="custom-select" @blur="open = false">
         <span class="icon fw-light text-muted">
-            <ion-icon
-                class="fw-light text-muted"
-                name="git-network-outline"
-            ></ion-icon>
+            <img src="../../assets/icons/git-network-outline-muted.svg" class="fw-light text-muted" style="width: 16px">
         </span>
         <div
             :class="{ open: open }"
@@ -24,7 +21,7 @@
                 {{ option.displayValue }}
                 <p
                     v-if="option.subText"
-                    class="fw-light text-muted subtext mb-0"
+                    class="fw-light text-muted subtext mb-0 pb-2"
                 >
                     {{ option.subText }}
                 </p>
@@ -103,6 +100,11 @@ export default class CustomSelect extends Vue {
 
 <style lang="scss" scoped>
 @import "../../styles/variables.scss";
+img{
+  margin-top: -4px;
+  height: 16px;
+  width: auto !important;
+}
 
 .custom-select {
     position: relative;
@@ -115,7 +117,6 @@ export default class CustomSelect extends Vue {
     .selected {
         background-color: #fff;
         border-radius: 6px;
-        // border: 1px solid #fff;
         border: none;
         color: #000;
         padding-left: 3.7rem;
@@ -156,6 +157,7 @@ export default class CustomSelect extends Vue {
         content: "";
         top: 5%;
         left: 15px;
+        vertical-align: middle;
     }
 
     .items {
@@ -178,7 +180,8 @@ export default class CustomSelect extends Vue {
             user-select: none;
 
             .subtext {
-                margin-top: -20px;
+                margin-top: -8px;
+                line-height: 20px;
             }
 
             &:hover {
