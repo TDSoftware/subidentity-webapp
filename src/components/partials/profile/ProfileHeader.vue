@@ -112,7 +112,12 @@
 
                 <div class="mx-1">{{ identity.chain }}</div>
             </div>
-
+          <div style="display: flex; align-items: center">
+            <div v-if="checkJudgements() > 1" class="verified">Verified by {{checkJudgements()}} registrars</div>
+            <div v-else-if="checkJudgements() === 1" class="verified">Verified by {{checkJudgements()}} registrar</div>
+            <div v-else-if="checkJudgements() === 0" class="not-verified text-muted"> <ion-icon name="information-circle-outline" class="info-pink" size="small"></ion-icon> Not verified</div>
+            <div v-else-if="checkJudgements() < 0" class="pending text-muted">Judgement in progress</div>
+          </div>
         </div>
     </div>
 </template>
