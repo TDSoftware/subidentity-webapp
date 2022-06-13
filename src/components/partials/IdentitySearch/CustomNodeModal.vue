@@ -51,7 +51,7 @@
                         class="btn btn-dark d-block"
                         :disabled="busy"
                         ref="cancelButton"
-                        @click="close"
+                        @click="closeCustomNode"
                     >
                         CANCEL
                     </button>
@@ -111,7 +111,7 @@ export default class CustomNodeModal extends Vue {
         );
     }
 
-    close(){
+    closeCustomNode(){
         this.newCustomNodeAddress = this.customNode?.address ?? "";
         this.$emit("update:open", false);
     }
