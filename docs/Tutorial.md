@@ -24,6 +24,8 @@ To edit the node address or connect to a different node, click on the "Edit Cust
 
 To delete a custom node, clear the content of the input field and click the "SAVE NODE" button.
 
+ℹ️ Only one custom node can be used at a time.
+
 ## <a id="searchIdentities"></a> Search Identities
 
 After selecting a chain to search on, identities can be searched by address or any identity field. The search term must be entered in the search box seen in the screenshot above. Click the "SEARCH" button to start your search.
