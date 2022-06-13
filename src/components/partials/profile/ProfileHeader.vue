@@ -10,19 +10,21 @@
             </div>
             <div class="mx-4 col">
                 <h4>{{ identity.basicInfo.display }}</h4>
-                <div
-                    class="d-flex flex-row"
-                    @click="copy(identity.basicInfo.address)"
-                >
-                <p
-                        class="fw-light text-muted"
-                        style="overflow-wrap: anywhere"
+                <div>
+                    <div
+                        class="d-flex flex-row copy"
+                        @click="copy(identity.basicInfo.address, 'basic-copy')"
                     >
-                        Address: {{ identity.basicInfo.address }}
-                    </p>
-                    <span class="text-decoration-none link-primary mx-2">
-                        <ion-icon size="small" name="copy-outline"></ion-icon>
-                    </span>
+                        <p
+                            class="fw-light text-muted"
+                            style="overflow-wrap: anywhere" id="basic-copy"
+                        >
+                            Address: {{ identity.basicInfo.address }}
+                        </p>
+                        <span class="text-decoration-none link-primary mx-2">
+                            <ion-icon size="small" name="copy-outline"></ion-icon>
+                        </span>
+                    </div>
                 </div>
                 <div class="d-flex flex-row" style="align-items: center">
                     <div
@@ -65,22 +67,23 @@
     </div>
     <div class="mobile-profile mb-4 pt-3">
         <div class="row">
-            <div class="col-3">
+            <div class="col-2">
                 <polkadot-web-identicon
                     size="80"
                     :address="identity.basicInfo.address"
                     theme="polkadot"
                 />
             </div>
-            <div class="col pt-2">
+            <div class="col pt-2 mx-1">
                 <h4>{{ identity.basicInfo.display }}</h4>
             </div>
         </div>
         <div
             class="d-flex flex-row address"
-            @click="copy(identity.basicInfo.address)"
+            @click="copy(identity.basicInfo.address, 'mobile-copy')"
+
         >
-            <p class="fw-light text-muted" style="overflow-wrap: anywhere">
+            <p class="fw-light text-muted" style="overflow-wrap: anywhere" id="mobile-copy">
                 Address: {{ identity.basicInfo.address }}
             </p>
             <span class="text-decoration-none link-primary mx-2">
@@ -109,7 +112,12 @@
 
                 <div class="mx-1">{{ identity.chain }}</div>
             </div>
-
+          <div style="display: flex; align-items: center">
+            <div v-if="checkJudgements() > 1" class="verified">Verified by {{checkJudgements()}} registrars</div>
+            <div v-else-if="checkJudgements() === 1" class="verified">Verified by {{checkJudgements()}} registrar</div>
+            <div v-else-if="checkJudgements() === 0" class="not-verified text-muted"> <ion-icon name="information-circle-outline" class="info-pink" size="small"></ion-icon> Not verified</div>
+            <div v-else-if="checkJudgements() < 0" class="pending text-muted">Judgement in progress</div>
+          </div>
         </div>
     </div>
 </template>
@@ -161,10 +169,15 @@ export default class ProfileHeader extends Vue {
     sendToken() {
         alert("Feature will come soon :)");
     }
-    async copy(s: string) {
+    async copy(s: string, id: string) {
         if (!s) return;
         await navigator.clipboard.writeText(s);
-        //this.$toastr.success("Copied!", true);
+        let element  = document.getElementById(id) as HTMLElement;
+        if (element.classList.contains("flash")) return;
+        element.className += " flash";
+        setTimeout(function() {
+            element.classList.remove("flash");
+        }, 500);
     }
 }
 </script>
@@ -219,6 +232,10 @@ p {
     display: none;
 }
 
+.copy{
+  max-width: fit-content;
+}
+
 @include media-breakpoint-down(lg) {
     .mobile-profile {
         display: block;
@@ -230,4 +247,8 @@ p {
         display: none;
     }
 }
+.flash {
+  color: $primary !important;
+}
 </style>
+
