@@ -13,10 +13,7 @@
                     <div class="card-body">
                         <div class="d-flex mb-3">
                             <span class="fw-light text-muted pt-1">
-                                <ion-icon
-                                    class="text-muted"
-                                    name="search-outline"
-                                ></ion-icon>
+                                <img src="../../assets/icons/search-outline-muted.svg" style="width: 19px">
                             </span>
                             <div
                                 class="
@@ -30,11 +27,7 @@
                                 "
                             >
                                 <div class="fw-light text-muted">
-                                    <ion-icon
-                                        size="small"
-                                        class="fw-light text-muted"
-                                        name="git-network-outline"
-                                    ></ion-icon>
+                                    <img src="../../assets/icons/git-network-outline-muted.svg" style="width: 16px; margin-top: -4px">
                                 </div>
                                 <div class="mx-2">
                                     {{ recentSearch.selectedChainKey }}
@@ -73,7 +66,7 @@
                 class="btn btn-light"
                 @click="clearRecentSearches"
             >
-                <ion-icon name="trash"></ion-icon>
+                <img src="../../assets/icons/trash.svg" style="width: 18px; margin-top: -5px">
                 Clear Recent Searches
             </button>
         </div>

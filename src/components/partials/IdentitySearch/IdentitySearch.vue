@@ -5,10 +5,7 @@
                 <div class="col-lg col-12">
                     <div class="input-group">
                         <span class="input-group-text fw-light text-muted">
-                            <ion-icon
-                                class="fw-light text-muted"
-                                name="search-outline"
-                            ></ion-icon>
+                            <img src="../../../assets/icons/search-outline-muted.svg" class="fw-light text-muted">
                         </span>
                         <input
                             :disabled="busy"
@@ -36,12 +33,8 @@
                     @click="onEditCustomNodeClick"
                     :class="{ disabled: busy }"
                 >
-                    <ion-icon
-                        class="fw-normal"
-                        :name="
-                            customNode ? 'create-outline' : 'add-circle-outline'
-                        "
-                    />
+                  <img v-if="customNode" src="../../../assets/icons/create-outline-primary.svg" class="custom-icon">
+                  <img v-else src="../../../assets/icons/add-circle-outline-sub.svg" class="custom-icon">
                     <span> {{ customNode ? "Edit" : "" }} Custom Node </span>
                 </div>
                 <div class="col d-grid mx-auto search-button-col">
@@ -203,8 +196,13 @@ export default class IdentitySearch extends Vue {
 <style lang="scss" scoped>
 @import "../../../styles/variables";
 
-ion-icon {
-    font-size: 20px;
+.custom-icon{
+  margin-top: -12px !important;
+}
+
+img {
+  //font-size: 20px;
+  width: 22px;
 }
 
 input {
@@ -265,8 +263,8 @@ input:disabled.search-input.form-control {
         opacity: 0.5;
     }
 
-    ion-icon {
-        margin: 0 24px 0 13px;
+    img{
+        margin: -12px 24px 0 13px;
         transform: translateY(4px);
     }
 
@@ -275,7 +273,7 @@ input:disabled.search-input.form-control {
         border-right: 1px solid #dee2e6;
         padding: 0 1.25rem;
 
-        ion-icon {
+        img{
             margin: 0 8px 0 0;
         }
     }

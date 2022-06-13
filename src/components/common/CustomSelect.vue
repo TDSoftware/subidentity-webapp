@@ -1,10 +1,7 @@
 <template>
     <div :tabindex="tabindex" class="custom-select" @blur="open = false">
         <span class="icon fw-light text-muted">
-            <ion-icon
-                class="fw-light text-muted"
-                name="git-network-outline"
-            ></ion-icon>
+            <img src="../../assets/icons/git-network-outline-muted.svg" class="fw-light text-muted" style="width: 16px">
         </span>
         <div
             :class="{ open: open }"
@@ -103,6 +100,11 @@ export default class CustomSelect extends Vue {
 
 <style lang="scss" scoped>
 @import "../../styles/variables.scss";
+img{
+  margin-top: -4px;
+  height: 16px;
+  width: auto !important;
+}
 
 .custom-select {
     position: relative;
@@ -155,6 +157,7 @@ export default class CustomSelect extends Vue {
         content: "";
         top: 5%;
         left: 15px;
+        vertical-align: middle;
     }
 
     .items {
