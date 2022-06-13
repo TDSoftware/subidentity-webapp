@@ -17,7 +17,7 @@
                         {{ identity.basicInfo.address }}
                     </p>
                     <span class="text-decoration-none link-primary mx-2">
-                        <ion-icon size="small" name="copy-outline"></ion-icon>
+                        <img src="../../../../assets/icons/copy-outline-primary.svg" style="width: 18px">
                     </span>
                 </div>
             </div>
@@ -52,11 +52,7 @@
                             'https://twitter.com/' + identity.basicInfo.twitter
                         "
                     >
-                        <ion-icon
-                            size="small"
-                            name="link-outline"
-                            class="pt-1"
-                        ></ion-icon>
+                        <img src="../../../../assets/icons/link-outline-primary.svg" style="width: 16px">
                     </a>
                 </div>
             </div>
@@ -71,11 +67,7 @@
                         :href="identity.basicInfo.web"
                         target="_blank"
                     >
-                        <ion-icon
-                            size="small"
-                            class="pt-1"
-                            name="link-outline"
-                        ></ion-icon>
+                        <img src="../../../../assets/icons/link-outline-primary.svg" style="width: 16px">
                     </a>
                 </div>
             </div>

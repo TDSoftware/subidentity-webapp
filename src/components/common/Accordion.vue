@@ -8,11 +8,7 @@
                     type="button"
                     @click="onCollapseClick"
                 >
-                    <ion-icon
-                        size=""
-                        class="icon"
-                        name="information-circle-outline"
-                    ></ion-icon>
+                    <img src="../../assets/icons/information-circle-outline.svg" class="icon">
                     <span class="fw-bold mx-2">
                         <slot name="title" />
                     </span>
@@ -43,7 +39,7 @@ export default class Accordion extends Vue {
 <style lang="scss" scoped>
 @import "../../styles/variables.scss";
 .icon {
-    font-size: 26px;
+    width: 26px;
 }
 .accordion-button:not(.collapsed) {
     color: #212529;

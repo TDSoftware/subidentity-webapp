@@ -6,10 +6,7 @@
                     class="d-flex flex-row pt-4 link-primary"
                     @click="$router.push('/')"
                 >
-                    <ion-icon
-                        class="icon back-arrow"
-                        name="arrow-back-outline"
-                    />
+                    <img src="../assets/icons/arrow-back-outline-primary.svg" class="back-arrow">
                     <p class="mx-2">Back to home</p>
 
                 </div>
@@ -17,11 +14,9 @@
                     class="d-flex flex-row pt-4 link-primary"
                     @click="$router.go(-1)"
                 >
-                    <ion-icon
-                        class="icon back-arrow"
-                        name="arrow-back-outline"
-                    />
-                    <p class="mx-2">Back to results</p>
+                    <img src="../assets/icons/arrow-back-outline-primary.svg" class="back-arrow">
+
+                  <p class="mx-2">Back to results</p>
                 </div>
                 <span v-if="loaded && error">
                     <Alert :message="error" />
@@ -108,8 +103,9 @@ export default class IdentityView extends Vue {
     cursor: pointer;
 }
 .back-arrow {
-    padding-top: 5px;
-    padding-right: 4px;
+    width: 16px;
+    height: 16px;
+    margin-top: 5px;
 }
 .sid-wrapper {
     padding-top: $headerHeightMobile;
