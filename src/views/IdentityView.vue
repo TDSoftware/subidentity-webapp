@@ -87,9 +87,15 @@ export default class IdentityView extends Vue {
             this.loaded = true;
         } catch (error) {
             this.loaded = true;
-            this.error =
-                "Sorry, could not find identity with the given address";
+            if ( error instanceof Error){
+                this.error =
+                    error.message;
+            }
+            else {
+                this.error = "An unexpected error occurred";
+            }
         }
+
     }
     handleError(message: string){
         this.error = message;
