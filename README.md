@@ -47,7 +47,7 @@ If the backend is running, and you want to use the backend to fetch identities, 
     1. Duplicate the [.env.template](./.env.template) file and name it `.env`.
     2. Edit the value for `VUE_APP_API_URL` to match your backend URL. If you are running the backend locally, it might look like this: `VUE_APP_API_URL=http://localhost:5001`
 
-Now if you run the web application now, it tries to reach the SubIdentity backend to get identities from there. If it is reachable at the specified URL, the selected chain implements the identity palette, and the node is an archive node, the backend indexes the chain. For more information read the [project's readme](https://github.com/TDSoftware/subidentity-backend/blob/main/readme.md).
+Now if you run the web application now, it tries to reach the SubIdentity backend to get identities from there. If it is reachable at the specified URL, the selected chain implements the identity pallet, and the node is an archive node, the backend indexes the chain. For more information read the [project's readme](https://github.com/TDSoftware/subidentity-backend/blob/main/readme.md).
 After a chain is indexed, the web application retrieves identities from there instead of using the npm package. If a chain is not indexed yet or the node is not an archive node, the npm package is used as a fallback to request identity information.
 
 ℹ️ If a connection to the SubIdentity backend was established successfully, you can see the server version and git commit hash next to the client version and git commit hash in the footer of the application, as seen in the screenshot below.
