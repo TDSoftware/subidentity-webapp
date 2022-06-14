@@ -2,21 +2,28 @@
     <div class="sid-wrapper">
         <div class="subidentity-container pb-5">
             <div class="container-medium">
-                <div v-if="error || backToHome"
+                <div
+                    v-if="error || backToHome"
                     class="d-flex flex-row pt-4 link-primary"
                     @click="$router.push('/')"
                 >
-                    <img src="../assets/icons/arrow-back-outline-primary.svg" class="back-arrow">
+                    <img
+                        src="../assets/icons/arrow-back-outline-primary.svg"
+                        class="back-arrow"
+                    />
                     <p class="mx-2">Back to home</p>
-
                 </div>
-                <div v-else
+                <div
+                    v-else
                     class="d-flex flex-row pt-4 link-primary"
                     @click="$router.go(-1)"
                 >
-                    <img src="../assets/icons/arrow-back-outline-primary.svg" class="back-arrow">
+                    <img
+                        src="../assets/icons/arrow-back-outline-primary.svg"
+                        class="back-arrow"
+                    />
 
-                  <p class="mx-2">Back to results</p>
+                    <p class="mx-2">Back to results</p>
                 </div>
                 <span v-if="loaded && error">
                     <Alert :message="error" />
@@ -46,7 +53,7 @@
 import { Options, Vue } from "vue-class-component";
 import ProfileHeader from "@/components/partials/profile/ProfileHeader.vue";
 import BasicInfoPlugin from "@/components/partials/profile/plugins/BasicInfoPlugin.vue";
-import { useRoute} from "vue-router";
+import { useRoute } from "vue-router";
 import { useStore } from "@/store";
 import { Identity } from "@npmjs_tdsoftware/subidentity";
 import Spinner from "@/components/common/Spinner.vue";
@@ -73,7 +80,7 @@ export default class IdentityView extends Vue {
 
     created() {
         this.loadIdentity();
-        if (window.history.state.back ==="/"){
+        if (window.history.state.back === "/") {
             this.backToHome = true;
         }
     }
@@ -87,11 +94,17 @@ export default class IdentityView extends Vue {
             this.loaded = true;
         } catch (error) {
             this.loaded = true;
-            this.error =
-                "Sorry, could not find identity with the given address";
+            if ( error instanceof Error){
+                this.error =
+                    error.message;
+            }
+            else {
+                this.error = "An unexpected error occurred";
+            }
         }
+
     }
-    handleError(message: string){
+    handleError(message: string) {
         this.error = message;
     }
 }
