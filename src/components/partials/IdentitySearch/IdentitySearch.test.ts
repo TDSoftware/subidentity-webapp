@@ -4,7 +4,6 @@ import { key, store } from "@/store";
 import { get } from "@/util/storage";
 
 
-
 import { mocked } from "jest-mock";
 jest.mock("@/util/storage");
 
@@ -23,6 +22,32 @@ describe("IdentitySearch.vue", () => {
             attachTo: document.body
         });
 
+        it("should set searchTerm and selectedChainKey from the urlSearchParams", async () => {
+            const location = {
+                ...window.location,
+                search: "?query=test&chain=kusama&page=1"
+            };
+            Object.defineProperty(window, "location", {
+                writable: true,
+                value: location
+            });
+
+            const wrapper = mount(IdentitySearch, {
+                global: {
+                    plugins: [[store, key]],
+                    stubs: {
+                        IonIcon: true
+                    }
+                },
+                attachTo: document.body
+            });
+
+            expect(wrapper.vm.searchTerm).toBe("test");
+            expect(wrapper.vm.selectedChainKey).toBe("kusama");
+
+        });
+
+
         it("should load customNode from local storage", async () => {
             mockedGet.mockReturnValue({
                 address: "chain-address",
@@ -30,7 +55,6 @@ describe("IdentitySearch.vue", () => {
                 modifiedAt: 1654785496261,
                 name: "customNode"
             });
-
 
             const wrapper = mount(IdentitySearch, {
                 global: {
@@ -59,6 +83,8 @@ describe("IdentitySearch.vue", () => {
                 wrapper.vm.implementsPallet = false;
                 const submitIdentitySearchMock = jest.spyOn(wrapper.vm, "submitIdentitySearch");
 
+                expect(wrapper.vm.store.getters.isBusy).toBeTruthy();
+
                 const searchButton = wrapper.find({
                     ref: "searchButton"
                 });
@@ -71,7 +97,6 @@ describe("IdentitySearch.vue", () => {
         });
 
         describe("When search button is not disabled", () => {
-            // This works only if "attachTo: document.body" is passed in mount() as option.
             beforeEach(() => {
                 jest
                     .useFakeTimers()
@@ -83,6 +108,14 @@ describe("IdentitySearch.vue", () => {
             });
 
             it("should call submitIdentitySearch function and emit search event with correct search data", async () => {
+
+                const isBusyValue = store.getters.isBusy;
+                wrapper.vm.store = {
+                    getters: {
+                        isBusy: !isBusyValue
+                    }
+                };
+
                 wrapper.vm.searchTerm = "test";
                 wrapper.vm.selectedChainKey = "polkadot";
                 wrapper.vm.implementsPallet = true;
@@ -90,9 +123,6 @@ describe("IdentitySearch.vue", () => {
 
                 await wrapper.vm.$nextTick();
                 await searchButton.trigger("click");
-                // console.log(wrapper.vm.store.getters.isBusy);
-                // expect(wrapper.vm.store.getters.isBusy).toBeFalsy();
-
 
                 expect((searchButton.element as HTMLInputElement).disabled).toBeFalsy();
                 expect(submitIdentitySearchMock).toBeCalled();
