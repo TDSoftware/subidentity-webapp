@@ -1,6 +1,7 @@
 import { mount } from "@vue/test-utils";
 import IdentitySearch from "@/components/partials/IdentitySearch/IdentitySearch.vue";
 import { key, store } from "@/store";
+import Vuex from "vuex";
 import { get } from "@/util/storage";
 
 
@@ -94,6 +95,48 @@ describe("IdentitySearch.vue", () => {
                 expect(submitIdentitySearchMock).toHaveBeenCalledTimes(0);
             });
 
+        });
+
+        describe("When search button is not disabled", () => {
+            beforeEach(() => {
+                jest
+                    .useFakeTimers()
+                    .setSystemTime(new Date("2020-01-01"));
+            });
+
+            const searchButton = wrapper.find({
+                ref: "searchButton"
+            });
+
+            it("should call submitIdentitySearch function and emit search event with correct search data", async () => {
+
+                const busyMock = jest.fn();
+                busyMock.mockReturnValue(false);
+                wrapper.vm.store = new Vuex.Store({
+                    getters: {
+                        isBusy: busyMock
+                    }
+                });
+                wrapper.vm.searchTerm = "test";
+                wrapper.vm.selectedChainKey = "polkadot";
+                wrapper.vm.implementsPallet = true;
+                const submitIdentitySearchMock = jest.spyOn(wrapper.vm, "submitIdentitySearch");
+
+                await wrapper.vm.$nextTick();
+                await searchButton.trigger("click");
+
+                expect((searchButton.element as HTMLInputElement).disabled).toBeFalsy();
+                expect(submitIdentitySearchMock).toBeCalled();
+                expect(wrapper.emitted()["search"]).toBeTruthy();
+                const eventArgs = (wrapper.emitted()["search"][0] as string[]);
+                expect(eventArgs).toStrictEqual([{
+                    searchTerm: "test",
+                    selectedChainKey: "polkadot",
+                    results: [],
+                    totalItemCount: 0,
+                    timestamp: 1577836800000
+                }]);
+            });
         });
     });
 }); 
