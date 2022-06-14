@@ -78,7 +78,7 @@ describe("IdentitySearch.vue", () => {
         });
 
         describe("when search button is disabled", () => {
-            it("should not call submitIdntitySearch function", async () => {
+            it("should not call submitIdentitySearch function", async () => {
                 wrapper.vm.searchTerm = "";
                 wrapper.vm.implementsPallet = false;
                 const submitIdentitySearchMock = jest.spyOn(wrapper.vm, "submitIdentitySearch");
