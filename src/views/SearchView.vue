@@ -4,9 +4,13 @@
             <Logo />
         </div>
         <div class="pt-5 p-0 container-medium fade-in">
-            <IdentitySearch @search="onSearch" @error="handleError"/>
+            <IdentitySearch @search="onSearch" @error="handleError" />
         </div>
-      <Alert v-if="error" class="p-0 container-medium fade-in mt-4" :message="error"></Alert>
+        <Alert
+            v-if="error"
+            class="p-0 container-medium fade-in mt-4"
+            :message="error"
+        ></Alert>
     </div>
     <div
         v-if="showRecentSearch"
@@ -61,19 +65,16 @@ export default class SearchView extends Vue {
                 searchData,
                 currentPage: 1
             });
-        }
-        catch (e: unknown) {
+        } catch (e: unknown) {
             this.error = "An error occurred, please try again later: ";
-            if (e instanceof Error){
+            if (e instanceof Error) {
                 this.error = this.error + e.message;
             }
         }
-        
+
         if (this.searchResults.length === 1) {
             this.searchResults.forEach((identity: Identity) => {
-                const url = `/chain/${identity.chain.toLowerCase()}/identity/${
-                    identity.basicInfo.address
-                }`;
+                const url = `/chain/${searchData.selectedChainKey}/identity/${identity.basicInfo.address}`;
                 return router.push(url);
             });
         } else {
@@ -91,9 +92,7 @@ export default class SearchView extends Vue {
     recallSearch(searchData: SearchData<Identity>) {
         if (searchData?.results?.length === 1) {
             const identity = searchData.results[0];
-            const url = `/chain/${identity.chain.toLowerCase()}/identity/${
-                identity.basicInfo.address
-            }`;
+            const url = `/chain/${searchData.selectedChainKey}/identity/${identity.basicInfo.address}`;
             return router.push(url);
         }
 
@@ -106,7 +105,7 @@ export default class SearchView extends Vue {
             }
         });
     }
-    handleError(message: string){
+    handleError(message: string) {
         this.error = message;
     }
 }

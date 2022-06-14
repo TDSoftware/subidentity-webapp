@@ -42,7 +42,10 @@
                 "
             >
                 <div class="text-muted">
-                    <img src="../../assets/icons/git-network-outline-muted.svg" style="width: 16px; margin-top: -4px">
+                    <img
+                        src="../../assets/icons/git-network-outline-muted.svg"
+                        style="width: 16px; margin-top: -4px"
+                    />
                 </div>
                 <div class="mx-2">{{ identity.chain }}</div>
             </div>
@@ -54,7 +57,15 @@
             <span class="text-decoration-none link-primary">
                 <div class="d-flex flex-row">
                     <span>Details</span>
-                    <img src="../../assets/icons/arrow-forward-outline-primary.svg" style="width: 16px; height: 16px; margin-top: 4px; margin-left: 10px">
+                    <img
+                        src="../../assets/icons/arrow-forward-outline-primary.svg"
+                        style="
+                            width: 16px;
+                            height: 16px;
+                            margin-top: 4px;
+                            margin-left: 10px;
+                        "
+                    />
                 </div>
             </span>
         </div>
@@ -75,6 +86,10 @@ import { Identity } from "@npmjs_tdsoftware/subidentity";
     watch: {
         identity() {
             this.triggerPolkadotIconUpdate();
+        },
+        $route() {
+            const searchParams = new URLSearchParams(window.location.search);
+            this.chain = searchParams.get("chain") ?? "";
         }
     }
 })
