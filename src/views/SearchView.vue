@@ -90,7 +90,6 @@ export default class SearchView extends Vue {
     }
 
     recallSearch(searchData: SearchData<Identity>) {
-        console.log(searchData);
         if (searchData?.results?.length === 1) {
             const identity = searchData.results[0];
             const url = `/chain/${searchData.selectedChainKey}/identity/${identity.basicInfo.address}`;
