@@ -25,6 +25,7 @@ To edit the node address or connect to a different node, click on the "Edit Cust
 To delete a custom node, clear the content of the input field and click the "SAVE NODE" button.
 
 ℹ️ Only one custom node can be used at a time.
+ℹ️ If the web application was loaded over HTTPS the provided endpoint must be a secure WebSocket endpoint (available over WSS).
 
 ## <a id="searchIdentities"></a> Search Identities
 

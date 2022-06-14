@@ -119,6 +119,8 @@ Now you can use it like the basic info plugin in your identity view:
         <YourPluginName />
     </div>
 ```
+## Design
+A high-fidelity, pixel perfect, responsive design can be found [here](https://www.figma.com/file/Rn8xSxi3flRBJ0Nf0GKWeK/SubIdentity-Public).
 
 ## License
 Apache License 2.0
