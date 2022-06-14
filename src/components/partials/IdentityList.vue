@@ -1,7 +1,12 @@
 <template>
     <div
         class="pb-5 desktop-header"
-        v-if="!pageError && !error"
+        v-if="
+            !pageError &&
+            !error &&
+            searchResults.length > 0 &&
+            pagination.totalPageCount > 0
+        "
         @click="checkError"
     >
         <p class="h4">
@@ -12,7 +17,15 @@
             }}"
         </p>
     </div>
-    <div v-if="!pageError && !error" class="pb-4 mobile-header">
+    <div
+        v-if="
+            !pageError &&
+            !error &&
+            searchResults.length > 0 &&
+            pagination.totalPageCount > 0
+        "
+        class="pb-4 mobile-header"
+    >
         <p class="h4 mb-2 pt-3">
             {{ lastTotalItemCount }} Search
             <span v-if="lastTotalItemCount > 1">Results</span>
