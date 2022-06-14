@@ -6,7 +6,7 @@ SubIdentity is a web application that can be used to search for identities on al
 ## Chain Selection
 ![Search Bar](./assets/searchBar.png)
 
-As seen in the picture above, by default you can choose between Polkadot, Kusama and Westend to search for identities. Alternatively, you can add a custom node, as described in [in the next chapter](#customNode) Select the chain you want to search identities on from the dropdown menu.
+As seen in the picture above, by default you can choose between Polkadot, Kusama and Westend to search for identities. Alternatively, you can add a custom node, as described in [the next chapter](#customNode). Select the chain you want to search identities on from the dropdown menu.
 
 ℹ️ If a chain doesn't implement the identity pallet an error will be displayed when the chain is chosen from the dropdown.
 
