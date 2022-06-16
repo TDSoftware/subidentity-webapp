@@ -36,8 +36,23 @@ npm run lint
 ```
 
 ## Data
-SubIdentity Webapp uses the [SubIdentity npm package](https://www.npmjs.com/package/@npmjs_tdsoftware/subidentity) to search for identities on a given node. The easiest way is to download that package from npm `@npmjs_tdsoftware/subidentity`.
+
+### Npm package
+SubIdentity Webapp by default uses the [SubIdentity npm package](https://www.npmjs.com/package/@npmjs_tdsoftware/subidentity) to search for identities on a given node. The easiest way is to download that package from npm `@npmjs_tdsoftware/subidentity`.
 But if you want to extend the functionality you can download [the package source code](https://github.com/TDSoftware/subidentity-package), adjust it to your needs and use it with `npm link` locally.
+
+### Backend
+In order to improve the performance of the web application, it can be connected to the [SubIdentity backend](https://github.com/TDSoftware/subidentity-backend). For more information on how to run the backend, or it's features, read the [project's readme](https://github.com/TDSoftware/subidentity-backend/blob/main/readme.md) as only the connection to the web application is explained here.
+If the backend is running, and you want to use the backend to fetch identities, follow these steps before running or building the web application:
+    1. Duplicate the [.env.template](./.env.template) file and name it `.env`.
+    2. Edit the value for `VUE_APP_API_URL` to match your backend URL. If you are running the backend locally, it might look like this: `VUE_APP_API_URL=http://localhost:5001`
+
+Now if you run the web application now, it tries to reach the SubIdentity backend to get identities from there. If it is reachable at the specified URL, the selected chain implements the identity pallet, and the node is an archive node, the backend indexes the chain. For more information read the [project's readme](https://github.com/TDSoftware/subidentity-backend/blob/main/readme.md).
+After a chain is indexed, the web application retrieves identities from there instead of using the npm package. If a chain is not indexed yet or the node is not an archive node, the npm package is used as a fallback to request identity information.
+
+ℹ️ If a connection to the SubIdentity backend was established successfully, you can see the server version and git commit hash next to the client version and git commit hash in the footer of the application, as seen in the screenshot below.
+
+![footer](./docs/assets/footer.png)
 
 ## Views
 
@@ -104,6 +119,8 @@ Now you can use it like the basic info plugin in your identity view:
         <YourPluginName />
     </div>
 ```
+## Design
+A high-fidelity, pixel perfect, responsive design can be found [here](https://www.figma.com/file/Rn8xSxi3flRBJ0Nf0GKWeK/SubIdentity-Public).
 
 ## License
 Apache License 2.0

@@ -1,17 +1,18 @@
 import { mount } from "@vue/test-utils";
 import IdentitySearch from "@/components/partials/IdentitySearch/IdentitySearch.vue";
+import CustomNodeModal from "@/components/partials/IdentitySearch/CustomNodeModal.vue";
+import CustomSelect from "@/components/common/CustomSelect.vue";
 import { key, store } from "@/store";
+import Vuex from "vuex";
 import { get } from "@/util/storage";
-
-
 import { mocked } from "jest-mock";
-jest.mock("@/util/storage");
+import { ChainInfo, chains } from "@/util/chains";
 
+jest.mock("@/util/storage");
 const mockedGet = mocked(get);
 
 describe("IdentitySearch.vue", () => {
     describe("when component is mounted", () => {
-
         const wrapper = mount(IdentitySearch, {
             global: {
                 plugins: [[store, key]],
@@ -19,7 +20,8 @@ describe("IdentitySearch.vue", () => {
                     IonIcon: true
                 }
             },
-            attachTo: document.body
+            attachTo: document.body,
+            shallow: true
         });
 
         it("should set searchTerm and selectedChainKey from the urlSearchParams", async () => {
@@ -46,7 +48,6 @@ describe("IdentitySearch.vue", () => {
             expect(wrapper.vm.selectedChainKey).toBe("kusama");
 
         });
-
 
         it("should load customNode from local storage", async () => {
             mockedGet.mockReturnValue({
@@ -75,6 +76,35 @@ describe("IdentitySearch.vue", () => {
             };
             expect(wrapper.vm.customNode).toEqual(expectedResult);
             expect(mockedGet).toHaveReturnedWith(expectedResult);
+        });
+
+        it("should set chainOptions", async () => {
+
+            expect(wrapper.vm.chainOptions).toEqual(chains.map((chainInfo: ChainInfo) => {
+                return {
+                    key: chainInfo.key,
+                    displayValue: chainInfo.name,
+                    subText: ""
+                };
+            }));
+
+        });
+
+        describe("when typing in search input", () => {
+            it("should set searchTerm on keyup event", async () => {
+
+                const onInputKeyUpMock = jest.spyOn(wrapper.vm, "onInputKeyUp");
+                const searchInput = wrapper.find(".search-input");
+
+                expect(searchInput.exists()).toBeTruthy();
+                await searchInput.setValue("a");
+
+                const myEvent = new KeyboardEvent("keyup");
+                await searchInput.element.dispatchEvent(myEvent);
+
+                expect(onInputKeyUpMock).toBeCalled();
+                expect(wrapper.vm.searchTerm).toBe("a");
+            });
         });
 
         describe("when search button is disabled", () => {
@@ -108,14 +138,13 @@ describe("IdentitySearch.vue", () => {
             });
 
             it("should call submitIdentitySearch function and emit search event with correct search data", async () => {
-
-                const isBusyValue = store.getters.isBusy;
-                wrapper.vm.store = {
+                const busyMock = jest.fn();
+                busyMock.mockReturnValue(false);
+                wrapper.vm.store = new Vuex.Store({
                     getters: {
-                        isBusy: !isBusyValue
+                        isBusy: busyMock
                     }
-                };
-
+                });
                 wrapper.vm.searchTerm = "test";
                 wrapper.vm.selectedChainKey = "polkadot";
                 wrapper.vm.implementsPallet = true;
@@ -137,5 +166,51 @@ describe("IdentitySearch.vue", () => {
                 }]);
             });
         });
+        describe("when 'update:selectedKey' event is emitted and selectedChainKey value is changed ", () => {
+            it("should dispatch 'IDENTITY_PALLET_EXISTS' action ", async () => {
+                wrapper.vm.store.dispatch = jest.fn();
+                const checkIdentityPalletExistsMock = jest.spyOn(wrapper.vm, "checkIdentityPalletExists");
+
+                const customSelect = wrapper.findComponent(CustomSelect);
+
+                await wrapper.vm.$nextTick();
+                await customSelect.vm.$emit("update:selectedKey");
+
+                expect(checkIdentityPalletExistsMock).toBeCalled();
+                expect(wrapper.vm.store.dispatch).toBeCalledWith(
+                    "IDENTITY_PALLET_EXISTS",
+                    wrapper.vm.selectedChainKey
+                );
+            });
+        });
+        describe("when clicking edit or add custom node ", () => {
+            it("should open custom node modal", async () => {
+                wrapper.vm.editCustomNodeModalOpen = false;
+                const customNode = wrapper.find({
+                    ref: "customNode"
+                });
+
+                const onEditCustomNodeClickMock = jest.spyOn(wrapper.vm, "onEditCustomNodeClick");
+
+                await wrapper.vm.$nextTick();
+                await customNode.trigger("click");
+
+                expect(onEditCustomNodeClickMock).toBeCalled();
+                expect(wrapper.vm.editCustomNodeModalOpen).toBe(true);
+
+            });
+        });
+
+        describe("when save event is emitted", () => {
+            it("should close custom node modal", async () => {
+                wrapper.vm.editCustomNodeModalOpen = true;
+                const customNodeModal = wrapper.findComponent(CustomNodeModal);
+
+                await wrapper.vm.$nextTick();
+                await customNodeModal.vm.$emit("save");
+
+                expect(wrapper.vm.editCustomNodeModalOpen).toBe(false);
+            });
+        });
     });
-}); 
+});
