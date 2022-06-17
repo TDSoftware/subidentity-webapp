@@ -35,6 +35,7 @@
                     class="col-lg col-12 edit-node-button-col"
                     @click="onEditCustomNodeClick"
                     :class="{ disabled: busy }"
+                    ref="customNode"
                 >
                     <img
                         v-if="customNode"

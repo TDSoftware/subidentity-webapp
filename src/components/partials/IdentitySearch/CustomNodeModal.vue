@@ -84,7 +84,7 @@ import Alert from "@/components/common/Alert.vue";
         },
         customNode: {
             type: Object,
-            required: true
+            required: false
         }
     },
     watch: {
@@ -111,26 +111,24 @@ export default class CustomNodeModal extends Vue {
         );
     }
 
-    closeCustomNode(){
+    closeCustomNode() {
         this.newCustomNodeAddress = this.customNode?.address ?? "";
         this.$emit("update:open", false);
     }
 
     async saveCustomNode() {
         this.busy = true;
-        if (!this.newCustomNodeAddress){
+        if (!this.newCustomNodeAddress) {
             try {
                 remove(StoreKey.CustomNode);
                 this.$emit("delete");
-            }
-            catch (e) {
-                this.error = "We had a problem deleting the custom node, please try again.";
-            }
-            finally {
+            } catch (e) {
+                this.error =
+                    "We had a problem deleting the custom node, please try again.";
+            } finally {
                 this.busy = false;
             }
-        }
-        else{
+        } else {
             try {
                 if (!this.validateCustomNodeAddress()) {
                     throw new Error("InvalidAddressError");
