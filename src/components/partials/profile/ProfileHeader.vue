@@ -174,7 +174,6 @@ export default class ProfileHeader extends Vue {
     }
 
     sendToken() {
-        console.log(this.identity);
         this.sendTokenModalOpen = true;
     }
     async copy(s: string, id: string) {

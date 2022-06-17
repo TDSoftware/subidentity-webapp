@@ -9,7 +9,7 @@
                     <label class="form-label fw-bold">Amount in {{identity.balance.symbol}}</label>
                     <input
                             v-model="tokenAmount"
-                            type="number"
+                            type="text"
                             class="form-control input-address"
                             placeholder="0.00"
                             @keypress.enter="sendToken"
@@ -91,11 +91,13 @@ export default class TokenModal extends Vue{
         }
     }
     closeSendToken(){
+        this.tokenAmount = "";
+        this.error = "";
         this.$emit("update:open", false);
     }
     validateInput(){
         //eslint-disable-next-line
-        const positiveFloat = new RegExp("^(?=.+)(?:[1-9]\d*|0)?(?:\.\d+)?$");
+        const positiveFloat = new RegExp("^(?=.+)(?:[1-9]\\d*)?(?:(\\.\\d+)|(0\\.\\d*[1-9]+\\d*))?$");
         return positiveFloat.test(this.tokenAmount);
     }
 }
