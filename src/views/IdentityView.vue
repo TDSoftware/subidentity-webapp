@@ -35,6 +35,7 @@
                     v-if="loaded && !error"
                     class="mb-5"
                     :identity="identity"
+                    :web3Accounts="web3Accounts"
                 />
                 <div v-if="loaded && !error" class="plugins fade-in">
                     <BasicInfoPlugin :identity="identity" />
@@ -56,6 +57,7 @@ import BasicInfoPlugin from "@/components/partials/profile/plugins/BasicInfoPlug
 import { useRoute } from "vue-router";
 import { useStore } from "@/store";
 import { Identity } from "@npmjs_tdsoftware/subidentity";
+import type { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import Spinner from "@/components/common/Spinner.vue";
 import Alert from "@/components/common/Alert.vue";
 
@@ -77,9 +79,11 @@ export default class IdentityView extends Vue {
     identity?: Identity;
     error = "";
     backToHome = false;
+    web3Accounts?: InjectedAccountWithMeta;
 
     created() {
         this.loadIdentity();
+        this.loadWeb3Accounts();
         if (window.history.state.back === "/") {
             this.backToHome = true;
         }
@@ -94,16 +98,29 @@ export default class IdentityView extends Vue {
             this.loaded = true;
         } catch (error) {
             this.loaded = true;
-            if ( error instanceof Error){
-                this.error =
-                    error.message;
-            }
-            else {
+            if (error instanceof Error) {
+                this.error = error.message;
+            } else {
                 this.error = "An unexpected error occurred";
             }
         }
-
     }
+
+    async loadWeb3Accounts() {
+        try {
+            this.web3Accounts = await this.store.dispatch(
+                "LOAD_WEB3_ACCOUNTS",
+                this.chain
+            );
+        } catch (error) {
+            if (error instanceof Error) {
+                this.error = error.message;
+            } else {
+                this.error = "An unexpected error occurred";
+            }
+        }
+    }
+
     handleError(message: string) {
         this.error = message;
     }

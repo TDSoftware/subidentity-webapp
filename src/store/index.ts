@@ -12,6 +12,12 @@ import { apiAvailable, getRequest } from "@/util/http";
 import { GetIdentitiesResponse } from "@/interfaces/http/GetIdentitiesResponse";
 import { GetChainStatusResponse } from "@/interfaces/http/GetChainStatusResponse";
 import { GetVersionResponse } from "@/interfaces/http/GetVersionResponse";
+import { ApiPromise } from "@polkadot/api";
+import {
+    web3Accounts,
+    web3Enable
+} from "@polkadot/extension-dapp";
+import type { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 
 
 export interface StoreI {
@@ -236,6 +242,20 @@ export const store = createStore({
             });
             context.commit("decrementBusyCounter");
             return implementsPallet;
+        },
+
+        async LOAD_WEB3_ACCOUNTS(context: ActionContext<StoreI, StoreI>, chainKey: string): Promise<InjectedAccountWithMeta[]> {
+            const wsAddress = getChainAddress(chainKey);
+            if (!wsAddress) {
+                throw new Error("No address given for chain: " + chainKey);
+            }
+
+            await web3Enable("SubIdentity");
+
+            // returns an array of { address, meta: { name, source } }
+            // meta.source contains the name of the extension that provides this account
+            const allAccounts = await web3Accounts();
+            return allAccounts;
         }
     },
     modules: {}

@@ -17,12 +17,16 @@
                     >
                         <p
                             class="fw-light text-muted"
-                            style="overflow-wrap: anywhere" id="basic-copy"
+                            style="overflow-wrap: anywhere"
+                            id="basic-copy"
                         >
                             Address: {{ identity.basicInfo.address }}
                         </p>
                         <span class="text-decoration-none link-primary mx-2">
-                            <img src="../../../assets/icons/copy-outline-primary.svg" style="width: 18px">
+                            <img
+                                src="../../../assets/icons/copy-outline-primary.svg"
+                                style="width: 18px"
+                            />
                         </span>
                     </div>
                 </div>
@@ -40,20 +44,42 @@
                             text-muted
                         "
                     >
-                        <img src="../../../assets/icons/git-network-outline-muted.svg" style="width: 16px">
+                        <img
+                            src="../../../assets/icons/git-network-outline-muted.svg"
+                            style="width: 16px"
+                        />
 
                         <div class="mx-1">{{ identity.chain }}</div>
                     </div>
-                    <div v-if="checkJudgements() > 1" class="verified">Verified by {{checkJudgements()}} registrars</div>
-                    <div v-else-if="checkJudgements() === 1" class="verified">Verified by {{checkJudgements()}} registrar</div>
-                    <div v-else-if="checkJudgements() === 0" class="not-verified text-muted"> <img src="../../../assets/icons/information-circle-outline-primary.svg" style="width: 18px; margin-right: 4px"> Not verified</div>
-                    <div v-else-if="checkJudgements() < 0" class="pending text-muted">Judgement in progress</div>
+                    <div v-if="checkJudgements() > 1" class="verified">
+                        Verified by {{ checkJudgements() }} registrars
+                    </div>
+                    <div v-else-if="checkJudgements() === 1" class="verified">
+                        Verified by {{ checkJudgements() }} registrar
+                    </div>
+                    <div
+                        v-else-if="checkJudgements() === 0"
+                        class="not-verified text-muted"
+                    >
+                        <img
+                            src="../../../assets/icons/information-circle-outline-primary.svg"
+                            style="width: 18px; margin-right: 4px"
+                        />
+                        Not verified
+                    </div>
+                    <div
+                        v-else-if="checkJudgements() < 0"
+                        class="pending text-muted"
+                    >
+                        Judgement in progress
+                    </div>
                 </div>
             </div>
             <div class="ms-auto" style="width: 181px; padding-top: 24px">
                 <button
                     class="btn btn-primary fw-bold w-100 text-white"
                     type="submit"
+                    :disabled="web3Accounts.length === 0"
                     @click="sendToken"
                 >
                     SEND TOKEN
@@ -77,13 +103,19 @@
         <div
             class="d-flex flex-row address"
             @click="copy(identity.basicInfo.address, 'mobile-copy')"
-
         >
-            <p class="fw-light text-muted" style="overflow-wrap: anywhere" id="mobile-copy">
+            <p
+                class="fw-light text-muted"
+                style="overflow-wrap: anywhere"
+                id="mobile-copy"
+            >
                 Address: {{ identity.basicInfo.address }}
             </p>
             <span class="text-decoration-none link-primary mx-2">
-                <img src="../../../assets/icons/copy-outline-primary.svg" style="width: 18px">
+                <img
+                    src="../../../assets/icons/copy-outline-primary.svg"
+                    style="width: 18px"
+                />
             </span>
         </div>
         <div class="d-flex flex-row">
@@ -100,16 +132,37 @@
                     text-muted
                 "
             >
-                <img src="../../../assets/icons/git-network-outline-muted.svg" style="width: 16px">
+                <img
+                    src="../../../assets/icons/git-network-outline-muted.svg"
+                    style="width: 16px"
+                />
 
                 <div class="mx-1">{{ identity.chain }}</div>
             </div>
-          <div style="display: flex; align-items: center">
-            <div v-if="checkJudgements() > 1" class="verified">Verified by {{checkJudgements()}} registrars</div>
-            <div v-else-if="checkJudgements() === 1" class="verified">Verified by {{checkJudgements()}} registrar</div>
-            <div v-else-if="checkJudgements() === 0" class="not-verified text-muted"> <img src="../../../assets/icons/information-circle-outline-primary.svg" style="width: 18px; margin-right: 4px"> Not verified</div>
-            <div v-else-if="checkJudgements() < 0" class="pending text-muted">Judgement in progress</div>
-          </div>
+            <div style="display: flex; align-items: center">
+                <div v-if="checkJudgements() > 1" class="verified">
+                    Verified by {{ checkJudgements() }} registrars
+                </div>
+                <div v-else-if="checkJudgements() === 1" class="verified">
+                    Verified by {{ checkJudgements() }} registrar
+                </div>
+                <div
+                    v-else-if="checkJudgements() === 0"
+                    class="not-verified text-muted"
+                >
+                    <img
+                        src="../../../assets/icons/information-circle-outline-primary.svg"
+                        style="width: 18px; margin-right: 4px"
+                    />
+                    Not verified
+                </div>
+                <div
+                    v-else-if="checkJudgements() < 0"
+                    class="pending text-muted"
+                >
+                    Judgement in progress
+                </div>
+            </div>
         </div>
         <!--div class="ms-auto" style="padding-top: 24px">
             <button
@@ -132,39 +185,40 @@ import { Options, Vue } from "vue-class-component";
         identity: {
             type: Object,
             required: true
+        },
+        web3Accounts: {
+            type: Array,
+            required: true
         }
     }
 })
 export default class ProfileHeader extends Vue {
     identity!: Identity;
-    checkJudgements(){
-        if(this.identity){
-            if(this.identity.judgements){
+
+    checkJudgements() {
+        if (this.identity) {
+            if (this.identity.judgements) {
                 const keys = this.identity.judgements?.keys();
                 let count = 0;
                 let pending = 0;
-                for (let x of keys!){
-                    if (this.identity.judgements![x] !== undefined){
-                        if (this.identity.judgements![x] !== "FeePaid"){
-                            count ++;
-                        }
-                        else{
-                            pending ++;
+                for (let x of keys!) {
+                    if (this.identity.judgements![x] !== undefined) {
+                        if (this.identity.judgements![x] !== "FeePaid") {
+                            count++;
+                        } else {
+                            pending++;
                         }
                     }
                 }
-                if (count !== 0){
+                if (count !== 0) {
                     return count;
-                }
-                else if(pending !== 0){
+                } else if (pending !== 0) {
                     return -pending;
-                }
-                else{
+                } else {
                     return count;
                 }
             }
         }
-
     }
 
     sendToken() {
@@ -173,10 +227,10 @@ export default class ProfileHeader extends Vue {
     async copy(s: string, id: string) {
         if (!s) return;
         await navigator.clipboard.writeText(s);
-        let element  = document.getElementById(id) as HTMLElement;
+        let element = document.getElementById(id) as HTMLElement;
         if (element.classList.contains("flash")) return;
         element.className += " flash";
-        setTimeout(function() {
+        setTimeout(function () {
             element.classList.remove("flash");
         }, 500);
     }
@@ -185,18 +239,18 @@ export default class ProfileHeader extends Vue {
 
 <style lang="scss" scoped>
 @import "../../../styles/variables";
-.verified{
-  margin-left: 15px;
-  color: #198754;
+.verified {
+    margin-left: 15px;
+    color: #198754;
 }
-.not-verified{
-  margin-left: 15px;
-  display: flex;
-  align-items: center;
-  //color: $primary;
+.not-verified {
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+    //color: $primary;
 }
-.pending{
-  margin-left: 15px;
+.pending {
+    margin-left: 15px;
 }
 .text-success {
     line-height: 40px;
@@ -229,8 +283,8 @@ p {
     display: none;
 }
 
-.copy{
-  max-width: fit-content;
+.copy {
+    max-width: fit-content;
 }
 
 @include media-breakpoint-down(lg) {
@@ -245,7 +299,7 @@ p {
     }
 }
 .flash {
-  color: $primary !important;
+    color: $primary !important;
 }
 </style>
 
