@@ -50,15 +50,15 @@
                     <div v-else-if="checkJudgements() < 0" class="pending text-muted">Judgement in progress</div>
                 </div>
             </div>
-            <!-- <div class="ms-auto">
-            <button
-                class="btn btn-primary fw-bold w-100 text-white"
-                type="submit"
-                @click="sendToken"
-            >
-                SEND TOKEN
-            </button>
-        </div> -->
+            <div class="ms-auto" style="width: 181px; padding-top: 24px">
+                <button
+                    class="btn btn-primary fw-bold w-100 text-white"
+                    type="submit"
+                    @click="sendToken"
+                >
+                    SEND TOKEN
+                </button>
+            </div>
         </div>
     </div>
     <div class="mobile-profile mb-4 pt-3">
@@ -111,6 +111,15 @@
             <div v-else-if="checkJudgements() < 0" class="pending text-muted">Judgement in progress</div>
           </div>
         </div>
+        <!--div class="ms-auto" style="padding-top: 24px">
+            <button
+                class="btn btn-primary fw-bold w-100 text-white"
+                type="submit"
+                @click="sendToken"
+            >
+                SEND TOKEN
+            </button>
+        </div-->
     </div>
 </template>
 
