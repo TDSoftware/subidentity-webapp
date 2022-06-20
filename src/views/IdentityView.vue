@@ -36,6 +36,7 @@
                     class="mb-5"
                     :identity="identity"
                     :web3Accounts="web3Accounts"
+                    :isSendTokenButtonDisabled="isSendTokenButtonDisabled"
                 />
                 <div v-if="loaded && !error" class="plugins fade-in">
                     <BasicInfoPlugin :identity="identity" />
@@ -79,11 +80,12 @@ export default class IdentityView extends Vue {
     identity?: Identity;
     error = "";
     backToHome = false;
-    web3Accounts?: InjectedAccountWithMeta;
+    web3Accounts?: InjectedAccountWithMeta[];
+    isSendTokenButtonDisabled?: boolean = true;
 
-    created() {
-        this.loadIdentity();
-        this.loadWeb3Accounts();
+    async created() {
+        await this.loadWeb3Accounts();
+        await this.loadIdentity();
         if (window.history.state.back === "/") {
             this.backToHome = true;
         }
@@ -112,6 +114,17 @@ export default class IdentityView extends Vue {
                 "LOAD_WEB3_ACCOUNTS",
                 this.chain
             );
+            const chainGenesisHash = await this.store.dispatch(
+                "GET_CHAIN_GENESISHASH",
+                this.chain
+            );
+
+            this.web3Accounts?.forEach((account) => {
+                const genesisHash = account.meta.genesisHash;
+                if (genesisHash === "" || genesisHash === chainGenesisHash) {
+                    this.isSendTokenButtonDisabled = false;
+                }
+            });
         } catch (error) {
             if (error instanceof Error) {
                 this.error = error.message;

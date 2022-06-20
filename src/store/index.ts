@@ -2,7 +2,7 @@ import { SearchData } from "@/interfaces/SearchData";
 import { get, push, set, StoreKey } from "@/util/storage";
 import { InjectionKey } from "vue";
 import { createStore, useStore as baseUseStore, Store, ActionContext } from "vuex";
-import { getIdentity, Identity, implementsIdentityPallet, Page, searchIdentities } from "@npmjs_tdsoftware/subidentity";
+import { getIdentity, Identity, implementsIdentityPallet, Page, searchIdentities, connectToWsProvider } from "@npmjs_tdsoftware/subidentity";
 import { getChainAddress } from "@/util/chains";
 import { LoadIdentityRequest } from "@/interfaces/LoadIdentityRequest";
 import { Pagination } from "@/interfaces/Pagination";
@@ -27,7 +27,6 @@ export interface StoreI {
     currentSearch?: SearchData<Identity>;
     identitySearchPagination: Pagination;
     apiVersion: string
-
 }
 
 export const key: InjectionKey<Store<StoreI>> = Symbol();
@@ -244,14 +243,22 @@ export const store = createStore({
             return implementsPallet;
         },
 
+        async GET_CHAIN_GENESISHASH(context: ActionContext<StoreI, StoreI>, chainKey: string) {
+            const wsAddress = getChainAddress(chainKey);
+            if (!wsAddress) {
+                throw new Error("No address given for chain: " + chainKey);
+            }
+            const apiPromise: ApiPromise = await connectToWsProvider(wsAddress);
+            return (await apiPromise.genesisHash).toHuman();
+        },
+
+
         async LOAD_WEB3_ACCOUNTS(context: ActionContext<StoreI, StoreI>, chainKey: string): Promise<InjectedAccountWithMeta[]> {
             const wsAddress = getChainAddress(chainKey);
             if (!wsAddress) {
                 throw new Error("No address given for chain: " + chainKey);
             }
-
             await web3Enable("SubIdentity");
-
             // returns an array of { address, meta: { name, source } }
             // meta.source contains the name of the extension that provides this account
             const allAccounts = await web3Accounts();

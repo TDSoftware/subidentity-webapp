@@ -79,7 +79,7 @@
                 <button
                     class="btn btn-primary fw-bold w-100 text-white"
                     type="submit"
-                    :disabled="web3Accounts.length === 0"
+                    :disabled="isSendTokenButtonDisabled"
                     @click="sendToken"
                 >
                     SEND TOKEN
@@ -189,6 +189,9 @@ import { Options, Vue } from "vue-class-component";
         web3Accounts: {
             type: Array,
             required: true
+        },
+        isSendTokenButtonDisabled: {
+            type: Boolean
         }
     }
 })
