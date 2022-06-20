@@ -223,7 +223,7 @@ export const store = createStore({
                     const chainStatusResponse = await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(wsAddress)}`);
                     implementsPallet = chainStatusResponse.chainStatus.implementsIdentityPallet;
                 } catch (error) {
-                    throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
+                    implementsPallet = await implementsIdentityPallet(wsAddress);
                 }
 
             } else {
