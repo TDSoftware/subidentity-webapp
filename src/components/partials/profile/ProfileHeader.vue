@@ -127,7 +127,7 @@
 <script lang="ts">
 import { Identity } from "@npmjs_tdsoftware/subidentity";
 import { Options, Vue } from "vue-class-component";
-import TokenModal from "./TokenModal.vue";
+import TokenModal from "./SendTokenModal.vue";
 
 @Options({
     components: {
