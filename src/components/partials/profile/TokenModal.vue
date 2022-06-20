@@ -96,14 +96,12 @@ export default class TokenModal extends Vue{
         this.$emit("update:open", false);
     }
     validateInput(){
-        //eslint-disable-next-line
         const positiveFloat = new RegExp("^(?=.+)(?:[1-9]\\d*)?(?:(\\.\\d+)|(0\\.\\d*[1-9]+\\d*))?$");
         return positiveFloat.test(this.tokenAmount);
     }
 }
 
 </script>
-
 <style lang="scss" scoped>
 @import "../../../styles/variables";
 .input-address {
