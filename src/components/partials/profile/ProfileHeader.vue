@@ -174,13 +174,18 @@
             </button>
         </div-->
     </div>
+    <TokenModal v-model:open="sendTokenModalOpen" :identity="identity" />
 </template>
 
 <script lang="ts">
 import { Identity } from "@npmjs_tdsoftware/subidentity";
 import { Options, Vue } from "vue-class-component";
+import TokenModal from "./SendTokenModal.vue";
 
 @Options({
+    components: {
+        TokenModal
+    },
     props: {
         identity: {
             type: Object,
@@ -197,10 +202,11 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class ProfileHeader extends Vue {
     identity!: Identity;
-
-    checkJudgements() {
-        if (this.identity) {
-            if (this.identity.judgements) {
+    sendTokenModalOpen = false;
+    
+    checkJudgements(){
+        if(this.identity){
+            if(this.identity.judgements){
                 const keys = this.identity.judgements?.keys();
                 let count = 0;
                 let pending = 0;
@@ -225,7 +231,7 @@ export default class ProfileHeader extends Vue {
     }
 
     sendToken() {
-        alert("Feature will come soon :)");
+        this.sendTokenModalOpen = true;
     }
     async copy(s: string, id: string) {
         if (!s) return;
