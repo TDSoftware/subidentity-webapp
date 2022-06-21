@@ -16,15 +16,11 @@
                             <input
                                 class="form-check-input"
                                 type="radio"
-                                name="flexRadioDefault"
                                 :id="account.address"
                                 :value="account.address"
                                 @change="onSelectAccount"
                             />
-                            <label
-                                class="form-check-label"
-                                for="flexRadioDefault1"
-                            >
+                            <label class="form-check-label">
                                 {{ account.meta.name }}
                             </label>
                         </div>
@@ -125,9 +121,7 @@ export default class SendTokenModal extends Vue {
 
     created() {
         if (this.web3Accounts.length === 1) {
-            this.web3Accounts.map((account) => {
-                this.selectedAccount = account.address;
-            });
+            this.selectedAccount = this.web3Accounts[0].address;
         }
     }
 
