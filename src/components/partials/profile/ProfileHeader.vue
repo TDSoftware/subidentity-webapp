@@ -204,6 +204,7 @@ import SendTokenModal from "./SendTokenModal.vue";
 export default class ProfileHeader extends Vue {
     identity!: Identity;
     sendTokenModalOpen = false;
+    web3Accounts!: [];
 
     checkJudgements() {
         if (this.identity) {
