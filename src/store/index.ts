@@ -2,7 +2,7 @@ import { SearchData } from "@/interfaces/SearchData";
 import { get, push, set, StoreKey } from "@/util/storage";
 import { InjectionKey } from "vue";
 import { createStore, useStore as baseUseStore, Store, ActionContext } from "vuex";
-import { getIdentity, Identity, implementsIdentityPallet, Page, searchIdentities } from "@npmjs_tdsoftware/subidentity";
+import { getIdentity, Identity, implementsIdentityPallet, Page, searchIdentities, connectToWsProvider } from "@npmjs_tdsoftware/subidentity";
 import { getChainAddress } from "@/util/chains";
 import { LoadIdentityRequest } from "@/interfaces/LoadIdentityRequest";
 import { Pagination } from "@/interfaces/Pagination";
@@ -12,6 +12,12 @@ import { apiAvailable, getRequest } from "@/util/http";
 import { GetIdentitiesResponse } from "@/interfaces/http/GetIdentitiesResponse";
 import { GetChainStatusResponse } from "@/interfaces/http/GetChainStatusResponse";
 import { GetVersionResponse } from "@/interfaces/http/GetVersionResponse";
+import { ApiPromise } from "@polkadot/api";
+import {
+    web3Accounts,
+    web3Enable
+} from "@polkadot/extension-dapp";
+import type { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 
 
 export interface StoreI {
@@ -21,7 +27,6 @@ export interface StoreI {
     currentSearch?: SearchData<Identity>;
     identitySearchPagination: Pagination;
     apiVersion: string
-
 }
 
 export const key: InjectionKey<Store<StoreI>> = Symbol();
@@ -236,6 +241,32 @@ export const store = createStore({
             });
             context.commit("decrementBusyCounter");
             return implementsPallet;
+        },
+
+        async LOAD_WEB3_ACCOUNTS(context: ActionContext<StoreI, StoreI>, chainKey: string): Promise<InjectedAccountWithMeta[]> {
+            const wsAddress = getChainAddress(chainKey);
+            if (!wsAddress) {
+                throw new Error("No address given for chain: " + chainKey);
+            }
+
+            const apiPromise: ApiPromise = await connectToWsProvider(wsAddress);
+            const chainGenesisHash = apiPromise.genesisHash.toHuman();
+
+            await web3Enable("SubIdentity");
+
+            const accounts: Array<InjectedAccountWithMeta> = [];
+
+            // returns an array of { address, meta: { name, source } }
+            // meta.source contains the name of the extension that provides this account
+            const allWeb3Accounts = await web3Accounts();
+
+            allWeb3Accounts.forEach((account: InjectedAccountWithMeta) => {
+                if (!account.meta.genesisHash || account.meta.genesisHash === chainGenesisHash) {
+                    accounts.push(account);
+                }
+            });
+
+            return accounts;
         }
     },
     modules: {}
