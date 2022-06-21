@@ -174,7 +174,11 @@
             </button>
         </div-->
     </div>
-    <SendTokenModal v-model:open="sendTokenModalOpen" :identity="identity" />
+    <SendTokenModal
+        v-model:open="sendTokenModalOpen"
+        :identity="identity"
+        :web3Accounts="web3Accounts"
+    />
 </template>
 
 <script lang="ts">
@@ -200,6 +204,7 @@ import SendTokenModal from "./SendTokenModal.vue";
 export default class ProfileHeader extends Vue {
     identity!: Identity;
     sendTokenModalOpen = false;
+    web3Accounts!: [];
 
     checkJudgements() {
         if (this.identity) {

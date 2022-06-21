@@ -33,10 +33,10 @@
                 </div>
                 <ProfileHeader
                     v-if="loaded && !error"
-                    class="mb-5"
                     :identity="identity"
                     :web3Accounts="web3Accounts"
                 />
+
                 <div v-if="loaded && !error" class="plugins fade-in">
                     <BasicInfoPlugin :identity="identity" />
                     <!--
