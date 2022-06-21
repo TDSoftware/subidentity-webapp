@@ -174,17 +174,17 @@
             </button>
         </div-->
     </div>
-    <TokenModal v-model:open="sendTokenModalOpen" :identity="identity" />
+    <SendTokenModal v-model:open="sendTokenModalOpen" :identity="identity" />
 </template>
 
 <script lang="ts">
 import { Identity } from "@npmjs_tdsoftware/subidentity";
 import { Options, Vue } from "vue-class-component";
-import TokenModal from "./SendTokenModal.vue";
+import SendTokenModal from "./SendTokenModal.vue";
 
 @Options({
     components: {
-        TokenModal
+        SendTokenModal
     },
     props: {
         identity: {
@@ -203,10 +203,10 @@ import TokenModal from "./SendTokenModal.vue";
 export default class ProfileHeader extends Vue {
     identity!: Identity;
     sendTokenModalOpen = false;
-    
-    checkJudgements(){
-        if(this.identity){
-            if(this.identity.judgements){
+
+    checkJudgements() {
+        if (this.identity) {
+            if (this.identity.judgements) {
                 const keys = this.identity.judgements?.keys();
                 let count = 0;
                 let pending = 0;
