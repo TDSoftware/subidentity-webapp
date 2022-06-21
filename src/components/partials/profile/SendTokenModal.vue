@@ -4,6 +4,42 @@
         <template #body>
             <div class="row inputs">
                 <div class="mb-3 col">
+                    <span v-if="web3Accounts.length > 1">
+                        <label class="form-label fw-bold"
+                            >Choose your account</label
+                        >
+                        <div
+                            v-for="(account, i) of web3Accounts"
+                            :key="i"
+                            class="form-check"
+                        >
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                name="flexRadioDefault"
+                                :id="account.address"
+                                :value="account.address"
+                                @change="onSelectAccount"
+                            />
+                            <label
+                                class="form-check-label"
+                                for="flexRadioDefault1"
+                            >
+                                {{ account.meta.name }}
+                            </label>
+                        </div>
+                    </span>
+
+                    <div class="mb-3 col" v-else>
+                        <label class="form-label fw-bold">Your account</label>
+                        <div v-for="(account, i) of web3Accounts" :key="i">
+                            {{ account.meta.name }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row inputs">
+                <div class="mb-3 col">
                     <label class="form-label fw-bold"
                         >Amount in {{ identity.balance.symbol }}</label
                     >
@@ -55,6 +91,7 @@ import Modal from "../../common/Modal.vue";
 import Spinner from "@/components/common/Spinner.vue";
 import Alert from "@/components/common/Alert.vue";
 import { Identity } from "@npmjs_tdsoftware/subidentity";
+import type { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 
 @Options({
     components: {
@@ -70,6 +107,10 @@ import { Identity } from "@npmjs_tdsoftware/subidentity";
         identity: {
             type: Object,
             required: true
+        },
+        web3Accounts: {
+            type: Array,
+            required: true
         }
     }
 })
@@ -79,6 +120,21 @@ export default class SendTokenModal extends Vue {
     tokenAmount = "";
     busy = false;
     error = "";
+    selectedAccount: string | undefined = "";
+    web3Accounts!: InjectedAccountWithMeta[];
+
+    created() {
+        if (this.web3Accounts.length === 1) {
+            this.web3Accounts.map((account) => {
+                this.selectedAccount = account.address;
+            });
+        }
+    }
+
+    onSelectAccount(event: Event) {
+        const target = event.target as HTMLTextAreaElement;
+        this.selectedAccount = target.value;
+    }
 
     sendToken() {
         this.error = "";

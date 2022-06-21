@@ -174,7 +174,11 @@
             </button>
         </div-->
     </div>
-    <SendTokenModal v-model:open="sendTokenModalOpen" :identity="identity" />
+    <SendTokenModal
+        v-model:open="sendTokenModalOpen"
+        :identity="identity"
+        :web3Accounts="web3Accounts"
+    />
 </template>
 
 <script lang="ts">
