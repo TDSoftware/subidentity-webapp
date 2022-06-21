@@ -57,7 +57,6 @@ import BasicInfoPlugin from "@/components/partials/profile/plugins/BasicInfoPlug
 import { useRoute } from "vue-router";
 import { useStore } from "@/store";
 import { Identity } from "@npmjs_tdsoftware/subidentity";
-import type { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import Spinner from "@/components/common/Spinner.vue";
 import Alert from "@/components/common/Alert.vue";
 
@@ -79,11 +78,11 @@ export default class IdentityView extends Vue {
     identity?: Identity;
     error = "";
     backToHome = false;
-    web3Accounts?: InjectedAccountWithMeta[];
+    web3Accounts? = [];
 
     async created() {
-        await this.loadWeb3Accounts();
-        await this.loadIdentity();
+        this.loadWeb3Accounts();
+        this.loadIdentity();
         if (window.history.state.back === "/") {
             this.backToHome = true;
         }

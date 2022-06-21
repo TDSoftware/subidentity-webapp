@@ -250,7 +250,7 @@ export const store = createStore({
             }
 
             const apiPromise: ApiPromise = await connectToWsProvider(wsAddress);
-            const chainGenesisHash = (await apiPromise.genesisHash).toHuman();
+            const chainGenesisHash = apiPromise.genesisHash.toHuman();
 
             await web3Enable("SubIdentity");
 
@@ -261,8 +261,7 @@ export const store = createStore({
             const allWeb3Accounts = await web3Accounts();
 
             allWeb3Accounts.forEach((account: InjectedAccountWithMeta) => {
-                const genesisHash = account.meta.genesisHash;
-                if (genesisHash === "" || genesisHash === chainGenesisHash) {
+                if (!account.meta.genesisHash || account.meta.genesisHash === chainGenesisHash) {
                     accounts.push(account);
                 }
             });
