@@ -80,7 +80,7 @@ export default class IdentityView extends Vue {
     backToHome = false;
     web3Accounts? = [];
 
-    async created() {
+    created() {
         this.loadWeb3Accounts();
         this.loadIdentity();
         if (window.history.state.back === "/") {
