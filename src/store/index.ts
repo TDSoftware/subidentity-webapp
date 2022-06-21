@@ -243,26 +243,31 @@ export const store = createStore({
             return implementsPallet;
         },
 
-        async GET_CHAIN_GENESISHASH(context: ActionContext<StoreI, StoreI>, chainKey: string) {
-            const wsAddress = getChainAddress(chainKey);
-            if (!wsAddress) {
-                throw new Error("No address given for chain: " + chainKey);
-            }
-            const apiPromise: ApiPromise = await connectToWsProvider(wsAddress);
-            return (await apiPromise.genesisHash).toHuman();
-        },
-
-
         async LOAD_WEB3_ACCOUNTS(context: ActionContext<StoreI, StoreI>, chainKey: string): Promise<InjectedAccountWithMeta[]> {
             const wsAddress = getChainAddress(chainKey);
             if (!wsAddress) {
                 throw new Error("No address given for chain: " + chainKey);
             }
+
+            const apiPromise: ApiPromise = await connectToWsProvider(wsAddress);
+            const chainGenesisHash = (await apiPromise.genesisHash).toHuman();
+
             await web3Enable("SubIdentity");
+
+            const accounts: Array<InjectedAccountWithMeta> = [];
+
             // returns an array of { address, meta: { name, source } }
             // meta.source contains the name of the extension that provides this account
-            const allAccounts = await web3Accounts();
-            return allAccounts;
+            const allWeb3Accounts = await web3Accounts();
+
+            allWeb3Accounts.forEach((account: InjectedAccountWithMeta) => {
+                const genesisHash = account.meta.genesisHash;
+                if (genesisHash === "" || genesisHash === chainGenesisHash) {
+                    accounts.push(account);
+                }
+            });
+
+            return accounts;
         }
     },
     modules: {}
