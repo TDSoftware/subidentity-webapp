@@ -16,6 +16,7 @@
                             <input
                                 class="form-check-input"
                                 type="radio"
+                                name="flexRadio"
                                 :id="account.address"
                                 :value="account.address"
                                 @change="onSelectAccount"
@@ -88,6 +89,7 @@ import Spinner from "@/components/common/Spinner.vue";
 import Alert from "@/components/common/Alert.vue";
 import { Identity } from "@npmjs_tdsoftware/subidentity";
 import type { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import { useStore } from "../../../store";
 
 @Options({
     components: {
@@ -118,6 +120,7 @@ export default class SendTokenModal extends Vue {
     error = "";
     selectedAccount: string | undefined = "";
     web3Accounts!: InjectedAccountWithMeta[];
+    store = useStore();
 
     created() {
         if (this.web3Accounts.length === 1) {
@@ -128,14 +131,25 @@ export default class SendTokenModal extends Vue {
     onSelectAccount(event: Event) {
         const target = event.target as HTMLTextAreaElement;
         this.selectedAccount = target.value;
+        console.log(this.selectedAccount);
     }
 
-    sendToken() {
+    async sendToken() {
         this.error = "";
         if (!this.validateInput()) {
             this.error = "Please insert a positive float as token amount.";
         } else {
-            alert("This Feature will be added soon :)");
+            try {
+                await this.store.dispatch("SEND_TOKEN", {
+                    chain: this.identity.chain?.toLowerCase(),
+                    senderAddress: this.selectedAccount,
+                    receiverAdress:
+                        "5HKQ1gdWEzGUchWtGT6KYkyQ8NRt6nqq24aUrHHUjX4eg6UU",
+                    amount: this.tokenAmount
+                });
+            } catch (error) {
+                console.log(error.message);
+            }
         }
     }
     closeSendToken() {

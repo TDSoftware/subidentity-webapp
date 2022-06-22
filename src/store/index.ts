@@ -15,9 +15,11 @@ import { GetVersionResponse } from "@/interfaces/http/GetVersionResponse";
 import { ApiPromise } from "@polkadot/api";
 import {
     web3Accounts,
-    web3Enable
+    web3Enable,
+    web3FromAddress
 } from "@polkadot/extension-dapp";
 import type { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import { LoadSendTokenRequest } from "@/interfaces/LoadSendTokenRequest";
 
 
 export interface StoreI {
@@ -267,6 +269,37 @@ export const store = createStore({
             });
 
             return accounts;
+        },
+        async SEND_TOKEN(context: ActionContext<StoreI, StoreI>, request: LoadSendTokenRequest): Promise<void> {
+            const wsAddress = getChainAddress(request.chain);
+            if (!wsAddress) {
+                throw new Error("No address given for chain: " + request.chain);
+            }
+
+            // (this needs to be called first, before other requests)
+            await web3Enable("SubIdentity");
+
+
+            // finds an injector for an address
+            const injector = await web3FromAddress(request.senderAddress);
+
+            const apiPromise: ApiPromise = await connectToWsProvider(wsAddress);
+
+            // sign and send our transaction - notice here that the address of the account
+            // (as retrieved injected) is passed through as the param to the `signAndSend`,
+            // the API then calls the extension to present to the user and get it signed.
+            // Once complete, the api sends the tx + signature via the normal process
+
+            await apiPromise.tx.balances
+                .transfer(request.receiverAddress, request.amount)
+                .signAndSend(request.senderAddress, { signer: injector.signer }, (response) => {
+                    console.log(`Current status: ${response.status.type}`);
+                    console.log(`IsCompleted: ${response.isCompleted}`);
+
+                }).catch((error: any) => {
+                    console.log(":( transaction failed", error);
+                });
+
         }
     },
     modules: {}
