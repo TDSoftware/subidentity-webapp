@@ -275,15 +275,13 @@ export const store = createStore({
             if (!wsAddress) {
                 throw new Error("No address given for chain: " + request.chain);
             }
+            const apiPromise: ApiPromise = await connectToWsProvider(wsAddress);
 
             // (this needs to be called first, before other requests)
             await web3Enable("SubIdentity");
 
-
             // finds an injector for an address
             const injector = await web3FromAddress(request.senderAddress);
-
-            const apiPromise: ApiPromise = await connectToWsProvider(wsAddress);
 
             // sign and send our transaction - notice here that the address of the account
             // (as retrieved injected) is passed through as the param to the `signAndSend`,
@@ -294,12 +292,9 @@ export const store = createStore({
                 .transfer(request.receiverAddress, request.amount)
                 .signAndSend(request.senderAddress, { signer: injector.signer }, (response) => {
                     console.log(`Current status: ${response.status.type}`);
-                    console.log(`IsCompleted: ${response.isCompleted}`);
-
-                }).catch((error: any) => {
-                    console.log(":( transaction failed", error);
+                }).catch((error) => {
+                    throw new Error(error);
                 });
-
         }
     },
     modules: {}

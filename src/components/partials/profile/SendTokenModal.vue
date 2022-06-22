@@ -110,6 +110,13 @@ import { useStore } from "../../../store";
             type: Array,
             required: true
         }
+    },
+    watch: {
+        web3Accounts() {
+            if (this.web3Accounts.length === 1) {
+                this.selectedAccount = this.web3Accounts[0].address;
+            }
+        }
     }
 })
 export default class SendTokenModal extends Vue {
@@ -118,33 +125,23 @@ export default class SendTokenModal extends Vue {
     tokenAmount = "";
     busy = false;
     error = "";
-    selectedAccount: string | undefined = "";
+    selectedAccount = "";
     web3Accounts!: InjectedAccountWithMeta[];
     store = useStore();
-
-    created() {
-        if (this.web3Accounts.length === 1) {
-            this.selectedAccount = this.web3Accounts[0].address;
-        }
-    }
 
     onSelectAccount(event: Event) {
         const target = event.target as HTMLTextAreaElement;
         this.selectedAccount = target.value;
-        console.log(this.selectedAccount);
     }
 
     async sendToken() {
         this.error = "";
-        if (!this.validateInput()) {
-            this.error = "Please insert a positive float as token amount.";
-        } else {
+        if (this.validate()) {
             try {
                 await this.store.dispatch("SEND_TOKEN", {
                     chain: this.identity.chain?.toLowerCase(),
                     senderAddress: this.selectedAccount,
-                    receiverAdress:
-                        "5HKQ1gdWEzGUchWtGT6KYkyQ8NRt6nqq24aUrHHUjX4eg6UU",
+                    receiverAdress: this.identity.basicInfo.address,
                     amount: this.tokenAmount
                 });
             } catch (error) {
@@ -152,16 +149,26 @@ export default class SendTokenModal extends Vue {
             }
         }
     }
+
     closeSendToken() {
         this.tokenAmount = "";
         this.error = "";
         this.$emit("update:open", false);
     }
-    validateInput() {
+    validate() {
+        console.log(this.selectedAccount);
         const positiveFloat = new RegExp(
             "^(?=.+)(?:[1-9]\\d*)?(?:(\\.\\d+)|(0\\.\\d*[1-9]+\\d*))?$"
         );
-        return positiveFloat.test(this.tokenAmount);
+        if (!positiveFloat.test(this.tokenAmount)) {
+            this.error = "Please insert a positive float as token amount.";
+            return false;
+        }
+        if (this.selectedAccount === "") {
+            this.error = "Please choose an account to transfer token from";
+            return false;
+        }
+        return true;
     }
 }
 </script>
