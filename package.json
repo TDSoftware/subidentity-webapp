@@ -9,7 +9,7 @@
     "test": "jest --verbose"
   },
   "dependencies": {
-    "@npmjs_tdsoftware/subidentity": "^0.0.9",
+    "@npmjs_tdsoftware/subidentity": "^0.0.10",
     "@polkadot/api": "^8.9.1",
     "@polkadot/extension-dapp": "^0.44.1",
     "async": "^2.6.4",
