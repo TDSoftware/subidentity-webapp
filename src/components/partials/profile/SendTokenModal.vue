@@ -156,7 +156,6 @@ export default class SendTokenModal extends Vue {
         this.$emit("update:open", false);
     }
     validate() {
-        console.log(this.selectedAccount);
         const positiveFloat = new RegExp(
             "^(?=.+)(?:[1-9]\\d*)?(?:(\\.\\d+)|(0\\.\\d*[1-9]+\\d*))?$"
         );
