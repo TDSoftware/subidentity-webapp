@@ -26,7 +26,7 @@
                     <p class="mx-2">Back to results</p>
                 </div>
                 <span v-if="loaded && error">
-                    <Alert :message="error" />
+                    <Alert :message="error" :isError="true" />
                 </span>
                 <div v-if="!loaded" class="spinner-wrapper">
                     <Spinner color="#D0D0D0" :size="40" :width="3" />
