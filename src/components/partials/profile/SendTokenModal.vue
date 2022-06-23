@@ -170,8 +170,7 @@ export default class SendTokenModal extends Vue {
                 await this.store.dispatch("SEND_TOKEN", {
                     chain: this.identity.chain?.toLowerCase(),
                     senderAddress: this.selectedAccount,
-                    receiverAddress:
-                        "5F1rtNqDZWpo34RFpmPeYw746d9KS9XqPCZDgT7iuUtKPk2o",
+                    receiverAddress: this.identity.basicInfo.address,
                     //--TODO -- calculate correct amount based on chain decimals
                     amount: this.tokenAmount
                 });
