@@ -1,5 +1,5 @@
 <template>
-    <Modal :open="open" @update:open="$emit('update:open', $event)">
+    <Modal :open="open" @update:open="closeSendToken()">
         <template #title> Transfer Token </template>
         <template #body>
             <div class="row inputs">
@@ -113,9 +113,7 @@ import { useStore } from "../../../store";
     },
     watch: {
         web3Accounts() {
-            if (this.web3Accounts.length === 1) {
-                this.selectedAccount = this.web3Accounts[0].address;
-            }
+            this.setWeb3Account();
         }
     }
 })
@@ -129,6 +127,16 @@ export default class SendTokenModal extends Vue {
     web3Accounts!: InjectedAccountWithMeta[];
     store = useStore();
 
+    created() {
+        this.setWeb3Account();
+    }
+
+    setWeb3Account() {
+        if (this.web3Accounts.length === 1) {
+            this.selectedAccount = this.web3Accounts[0].address;
+        } else this.selectedAccount = "";
+    }
+
     onSelectAccount(event: Event) {
         const target = event.target as HTMLTextAreaElement;
         this.selectedAccount = target.value;
@@ -141,7 +149,7 @@ export default class SendTokenModal extends Vue {
                 await this.store.dispatch("SEND_TOKEN", {
                     chain: this.identity.chain?.toLowerCase(),
                     senderAddress: this.selectedAccount,
-                    receiverAdress: this.identity.basicInfo.address,
+                    receiverAddress: this.identity.basicInfo.address,
                     amount: this.tokenAmount
                 });
             } catch (error) {
