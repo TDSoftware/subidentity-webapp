@@ -181,16 +181,16 @@ export default class SendTokenModal extends Vue {
                 });
             } catch (error) {
                 if (error.message === "Error: Cancelled") {
-                    return (this.error = "The transaction was cancelled");
+                    this.error = "The transaction was cancelled";
                 } else if (
                     error.message ===
                     "RpcError: 1010: Invalid Transaction: Inability to pay some fees , e.g. account balance too low"
                 ) {
-                    return (this.error =
-                        "The transaction was unsuccessful, your balance is insufficient");
+                    this.error =
+                        "The transaction was unsuccessful: Inability to pay some fees";
                 } else {
-                    return (this.error =
-                        "The transaction was unsuccessful, please try again");
+                    this.error =
+                        "The transaction was unsuccessful, please try again";
                 }
             }
         }
@@ -217,6 +217,7 @@ export default class SendTokenModal extends Vue {
     }
 
     validate() {
+        //TODO-- check the balance of the sender account.
         const positiveFloat = new RegExp(
             "^(?=.+)(?:[1-9]\\d*)?(?:(\\.\\d+)|(0\\.\\d*[1-9]+\\d*))?$"
         );
