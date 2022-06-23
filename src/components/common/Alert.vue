@@ -28,10 +28,6 @@ import { Options, Vue } from "vue-class-component";
         isError: {
             type: Boolean,
             default: false
-        },
-        isSuccess: {
-            type: Boolean,
-            default: false
         }
     }
 })

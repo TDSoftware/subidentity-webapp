@@ -4,13 +4,13 @@
         <template v-if="isTransferSuccessful || isTransferFail" #body>
             <div v-if="isTransferSuccessful" class="mb-4">
                 <Alert
-                    :isSuccess="true"
+                    :isError="false"
                     :message="`${identity.balance.symbol} ${tokenAmount} were send
                 successfully to ${identity.basicInfo.display}`"
                 />
             </div>
             <div v-if="isTransferFail" class="mb-4">
-                <Alert :isSuccess="true" :message="error" :isError="true" />
+                <Alert :message="error" :isError="true" />
             </div>
             <div class="buttons">
                 <button
@@ -177,16 +177,16 @@ export default class SendTokenModal extends Vue {
             } catch (error) {
                 if (error.message === "Error: Cancelled") {
                     return (this.error = "The transaction was cancelled");
-                }
-                if (
+                } else if (
                     error.message ===
                     "RpcError: 1010: Invalid Transaction: Inability to pay some fees , e.g. account balance too low"
                 ) {
                     return (this.error =
                         "The transaction was unsuccessful, your balance is insufficient");
+                } else {
+                    return (this.error =
+                        "The transaction was unsuccessful, please try again");
                 }
-                return (this.error =
-                    "The transaction was unsuccessful, please try again");
             }
         }
     }
