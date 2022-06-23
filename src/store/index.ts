@@ -283,11 +283,7 @@ export const store = createStore({
             // finds an injector for an address
             const injector = await web3FromAddress(request.senderAddress);
 
-            // sign and send our transaction - notice here that the address of the account
-            // (as retrieved injected) is passed through as the param to the `signAndSend`,
-            // the API then calls the extension to present to the user and get it signed.
-            // Once complete, the api sends the tx + signature via the normal process
-
+            // sign and send the transaction 
             await apiPromise.tx.balances
                 .transfer(request.receiverAddress, request.amount)
                 .signAndSend(request.senderAddress, { signer: injector.signer }, (response) => {
