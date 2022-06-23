@@ -23,12 +23,13 @@ import { LoadSendTokenRequest } from "@/interfaces/LoadSendTokenRequest";
 
 
 export interface StoreI {
-    isAuthenticated: boolean;
     busyCounter: 0;
     recentSearches: SearchData<Identity>[];
     currentSearch?: SearchData<Identity>;
     identitySearchPagination: Pagination;
-    apiVersion: string
+    apiVersion: string,
+    isTransferTokenSuccess: boolean,
+    isTransferTokenError: boolean
 }
 
 export const key: InjectionKey<Store<StoreI>> = Symbol();
@@ -40,7 +41,6 @@ export const useStore = () => {
 export const store = createStore({
     state: {
         busyCounter: 0,
-        isAuthenticated: false,
         recentSearches: get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [],
         identitySearchPagination: {
             totalPageCount: 0,
@@ -49,7 +49,9 @@ export const store = createStore({
             currentPage: 1,
             limit: 5
         },
-        apiVersion: ""
+        apiVersion: "",
+        isTransferTokenSuccess: false,
+        isTransferTokenError: false
 
     },
     getters: {
@@ -92,14 +94,6 @@ export const store = createStore({
             state.busyCounter--;
         },
 
-        login(state: StoreI) {
-            state.isAuthenticated = true;
-        },
-
-        logout(state: StoreI) {
-            state.isAuthenticated = false;
-        },
-
         storeAsRecentSearch(state: StoreI, searchData: SearchData<Identity>) {
             const maxItemsInStorage = 12;
             const recentSearches = get<Array<SearchData<Identity>>>(StoreKey.RecentSearches) ?? [];
@@ -128,6 +122,13 @@ export const store = createStore({
         },
         setApiVersion(state: StoreI, versionData) {
             state.apiVersion = `${versionData.version} (${versionData.commitHash})`;
+        },
+
+        setTransferTokenSuccessStatus(state: StoreI, status) {
+            state.isTransferTokenSuccess = status;
+        },
+        setTransferTokenErrorStatus(state: StoreI, status) {
+            state.isTransferTokenError = status;
         }
 
     },
@@ -271,6 +272,10 @@ export const store = createStore({
             return accounts;
         },
         async SEND_TOKEN(context: ActionContext<StoreI, StoreI>, request: LoadSendTokenRequest): Promise<void> {
+            context.commit("incrementBusyCounter");
+            context.commit("setTransferTokenSuccessStatus", false);
+            context.commit("setTransferTokenErrorStatus", false);
+
             const wsAddress = getChainAddress(request.chain);
             if (!wsAddress) {
                 throw new Error("No address given for chain: " + request.chain);
@@ -287,8 +292,13 @@ export const store = createStore({
             await apiPromise.tx.balances
                 .transfer(request.receiverAddress, request.amount)
                 .signAndSend(request.senderAddress, { signer: injector.signer }, (response) => {
-                    console.log(`Current status: ${response.status.type}`);
+                    if (response.isFinalized) {
+                        context.commit("decrementBusyCounter");
+                        context.commit("setTransferTokenSuccessStatus", true);
+                    }
                 }).catch((error) => {
+                    context.commit("decrementBusyCounter");
+                    context.commit("setTransferTokenErrorStatus", true);
                     throw new Error(error);
                 });
         }
