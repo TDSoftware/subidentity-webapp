@@ -1,5 +1,5 @@
 <template>
-    <Modal :open="open" @update:open="$emit('update:open', $event)">
+    <Modal :open="open" @update:open="closeSendToken()">
         <template #title> Transfer Token </template>
         <template #body>
             <div class="row inputs">
@@ -16,6 +16,7 @@
                             <input
                                 class="form-check-input"
                                 type="radio"
+                                name="flexRadio"
                                 :id="account.address"
                                 :value="account.address"
                                 @change="onSelectAccount"
@@ -88,6 +89,7 @@ import Spinner from "@/components/common/Spinner.vue";
 import Alert from "@/components/common/Alert.vue";
 import { Identity } from "@npmjs_tdsoftware/subidentity";
 import type { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import { useStore } from "../../../store";
 
 @Options({
     components: {
@@ -108,6 +110,11 @@ import type { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
             type: Array,
             required: true
         }
+    },
+    watch: {
+        web3Accounts() {
+            this.setWeb3Account();
+        }
     }
 })
 export default class SendTokenModal extends Vue {
@@ -116,13 +123,18 @@ export default class SendTokenModal extends Vue {
     tokenAmount = "";
     busy = false;
     error = "";
-    selectedAccount: string | undefined = "";
+    selectedAccount = "";
     web3Accounts!: InjectedAccountWithMeta[];
+    store = useStore();
 
     created() {
+        this.setWeb3Account();
+    }
+
+    setWeb3Account() {
         if (this.web3Accounts.length === 1) {
             this.selectedAccount = this.web3Accounts[0].address;
-        }
+        } else this.selectedAccount = "";
     }
 
     onSelectAccount(event: Event) {
@@ -130,24 +142,41 @@ export default class SendTokenModal extends Vue {
         this.selectedAccount = target.value;
     }
 
-    sendToken() {
+    async sendToken() {
         this.error = "";
-        if (!this.validateInput()) {
-            this.error = "Please insert a positive float as token amount.";
-        } else {
-            alert("This Feature will be added soon :)");
+        if (this.validate()) {
+            try {
+                await this.store.dispatch("SEND_TOKEN", {
+                    chain: this.identity.chain?.toLowerCase(),
+                    senderAddress: this.selectedAccount,
+                    receiverAddress: this.identity.basicInfo.address,
+                    //--TODO -- calculate correct amount based on chain decimals
+                    amount: this.tokenAmount
+                });
+            } catch (error) {
+                console.log(error.message);
+            }
         }
     }
+
     closeSendToken() {
         this.tokenAmount = "";
         this.error = "";
         this.$emit("update:open", false);
     }
-    validateInput() {
+    validate() {
         const positiveFloat = new RegExp(
             "^(?=.+)(?:[1-9]\\d*)?(?:(\\.\\d+)|(0\\.\\d*[1-9]+\\d*))?$"
         );
-        return positiveFloat.test(this.tokenAmount);
+        if (!positiveFloat.test(this.tokenAmount)) {
+            this.error = "Please insert a positive float as token amount.";
+            return false;
+        }
+        if (this.selectedAccount === "") {
+            this.error = "Please choose an account to transfer token from";
+            return false;
+        }
+        return true;
     }
 }
 </script>
