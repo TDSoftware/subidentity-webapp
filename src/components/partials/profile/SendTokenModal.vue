@@ -77,7 +77,12 @@
                     </div>
                 </div>
             </div>
-            <Alert class="mt-3" v-if="error" :message="error" :isError="true" />
+            <Alert
+                class="mt-3 mb-3"
+                v-if="error"
+                :message="error"
+                :isError="true"
+            />
 
             <div class="buttons">
                 <div>
