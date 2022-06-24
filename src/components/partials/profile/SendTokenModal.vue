@@ -10,7 +10,7 @@
                 />
             </div>
             <div v-if="isTransferFail" class="mb-4">
-                <Alert :message="error" :isError="true" />
+                <Alert :message="isTransferFail" :isError="true" />
             </div>
             <div class="buttons">
                 <button
@@ -171,28 +171,13 @@ export default class SendTokenModal extends Vue {
     async sendToken() {
         this.error = "";
         if (this.validate()) {
-            try {
-                await this.store.dispatch("SEND_TOKEN", {
-                    chain: this.identity.chain?.toLowerCase(),
-                    senderAddress: this.selectedAccount,
-                    receiverAddress: this.identity.basicInfo.address,
-                    //--TODO -- calculate correct amount based on chain decimals
-                    amount: this.tokenAmount
-                });
-            } catch (error) {
-                if (error.message === "Error: Cancelled") {
-                    this.error = "The transaction was cancelled";
-                } else if (
-                    error.message ===
-                    "RpcError: 1010: Invalid Transaction: Inability to pay some fees , e.g. account balance too low"
-                ) {
-                    this.error =
-                        "The transaction was unsuccessful: Inability to pay some fees";
-                } else {
-                    this.error =
-                        "The transaction was unsuccessful, please try again";
-                }
-            }
+            await this.store.dispatch("SEND_TOKEN", {
+                chain: this.identity.chain?.toLowerCase(),
+                senderAddress: this.selectedAccount,
+                receiverAddress: this.identity.basicInfo.address,
+                //--TODO -- calculate correct amount based on chain decimals
+                amount: this.tokenAmount
+            });
         }
     }
 
@@ -201,7 +186,7 @@ export default class SendTokenModal extends Vue {
         this.error = "";
         this.$emit("update:open", false);
         this.store.commit("setTransferTokenSuccessStatus", false);
-        this.store.commit("setTransferTokenErrorStatus", false);
+        this.store.commit("setTransferTokenError", "");
     }
 
     get busy() {
@@ -213,11 +198,10 @@ export default class SendTokenModal extends Vue {
     }
 
     get isTransferFail() {
-        return this.store.state.isTransferTokenError;
+        return this.store.state.transferTokenError;
     }
 
     validate() {
-        //TODO-- check the balance of the sender account.
         const positiveFloat = new RegExp(
             "^(?=.+)(?:[1-9]\\d*)?(?:(\\.\\d+)|(0\\.\\d*[1-9]+\\d*))?$"
         );

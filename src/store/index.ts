@@ -29,7 +29,7 @@ export interface StoreI {
     identitySearchPagination: Pagination;
     apiVersion: string,
     isTransferTokenSuccess: boolean,
-    isTransferTokenError: boolean
+    transferTokenError: string
 }
 
 export const key: InjectionKey<Store<StoreI>> = Symbol();
@@ -51,7 +51,7 @@ export const store = createStore({
         },
         apiVersion: "",
         isTransferTokenSuccess: false,
-        isTransferTokenError: false
+        transferTokenError: ""
 
     },
     getters: {
@@ -127,10 +127,9 @@ export const store = createStore({
         setTransferTokenSuccessStatus(state: StoreI, status) {
             state.isTransferTokenSuccess = status;
         },
-        setTransferTokenErrorStatus(state: StoreI, status) {
-            state.isTransferTokenError = status;
+        setTransferTokenError(state: StoreI, error) {
+            state.transferTokenError = error;
         }
-
     },
     actions: {
 
@@ -274,7 +273,7 @@ export const store = createStore({
         async SEND_TOKEN(context: ActionContext<StoreI, StoreI>, request: LoadSendTokenRequest): Promise<void> {
             context.commit("incrementBusyCounter");
             context.commit("setTransferTokenSuccessStatus", false);
-            context.commit("setTransferTokenErrorStatus", false);
+            context.commit("setTransferTokenError", "");
 
             const wsAddress = getChainAddress(request.chain);
             if (!wsAddress) {
@@ -288,18 +287,46 @@ export const store = createStore({
             // finds an injector for an address
             const injector = await web3FromAddress(request.senderAddress);
 
-            // sign and send the transaction 
-            await apiPromise.tx.balances
-                .transfer(request.receiverAddress, request.amount)
-                .signAndSend(request.senderAddress, { signer: injector.signer }, (response) => {
-                    if (response.isFinalized) {
-                        context.commit("decrementBusyCounter");
-                        context.commit("setTransferTokenSuccessStatus", true);
+            apiPromise
+                .tx
+                .balances
+                .transfer(request.receiverAddress, request.amount).signAndSend(request.senderAddress, { signer: injector.signer }, ({ dispatchError, isFinalized }) => {
+                    if (dispatchError) {
+                        if (dispatchError.isModule) {
+                            const decoded = apiPromise.registry.findMetaError(dispatchError.asModule);
+                            const { docs, name, section } = decoded;
+
+                            if (`${section}.${name}: ${docs.join(" ")}` === "balances.InsufficientBalance: Balance too low to send value") {
+                                context.commit("decrementBusyCounter");
+                                context.commit("setTransferTokenError", "The transaction was unsuccessful: Inability to pay some fees");
+                            }
+                        } else {
+                            context.commit("setTransferTokenError", "The transaction was unsuccessful, please try again");
+                        }
+                    } else {
+                        if (isFinalized) {
+                            context.commit("decrementBusyCounter");
+                            context.commit("setTransferTokenSuccessStatus", true);
+                        }
                     }
                 }).catch((error) => {
                     context.commit("decrementBusyCounter");
-                    context.commit("setTransferTokenErrorStatus", true);
-                    throw new Error(error);
+                    let errorMessage;
+                    if (error.message === "1010: Invalid Transaction: Inability to pay some fees , e.g. account balance too low") {
+                        errorMessage = "The transaction was unsuccessful: Inability to pay some fees";
+                        context.commit("setTransferTokenError", errorMessage);
+                    } else if (
+                        error.message ===
+                        "Cancelled"
+                    ) {
+                        errorMessage =
+                            "The transaction was cancelled";
+                        context.commit("setTransferTokenError", errorMessage);
+                    } else {
+                        errorMessage =
+                            "The transaction was unsuccessful, please try again";
+                        context.commit("setTransferTokenError", errorMessage);
+                    }
                 });
         }
     },
