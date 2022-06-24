@@ -301,6 +301,7 @@ export const store = createStore({
                                 context.commit("setTransferTokenError", "The transaction was unsuccessful: Inability to pay some fees");
                             }
                         } else {
+                            context.commit("decrementBusyCounter");
                             context.commit("setTransferTokenError", "The transaction was unsuccessful, please try again");
                         }
                     } else {
