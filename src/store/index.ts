@@ -275,60 +275,71 @@ export const store = createStore({
             context.commit("setTransferTokenSuccessStatus", false);
             context.commit("setTransferTokenError", "");
 
-            const wsAddress = getChainAddress(request.chain);
-            if (!wsAddress) {
-                throw new Error("No address given for chain: " + request.chain);
-            }
-            const apiPromise: ApiPromise = await connectToWsProvider(wsAddress);
+            let wsAddress;
+            let apiPromise: ApiPromise;
+            let injector;
 
-            // (this needs to be called first, before other requests)
-            await web3Enable("SubIdentity");
+            try {
+                wsAddress = getChainAddress(request.chain);
+                if (!wsAddress) {
+                    throw new Error("No address given for chain: " + request.chain);
+                }
+                apiPromise = await connectToWsProvider(wsAddress);
 
-            // finds an injector for an address
-            const injector = await web3FromAddress(request.senderAddress);
+                // (this needs to be called first, before other requests)
+                await web3Enable("SubIdentity");
 
-            apiPromise
-                .tx
-                .balances
-                .transfer(request.receiverAddress, request.amount).signAndSend(request.senderAddress, { signer: injector.signer }, ({ dispatchError, isFinalized }) => {
-                    if (dispatchError) {
-                        if (dispatchError.isModule) {
-                            const decoded = apiPromise.registry.findMetaError(dispatchError.asModule);
-                            const { docs, name, section } = decoded;
+                // finds an injector for an address
+                injector = await web3FromAddress(request.senderAddress);
 
-                            if (`${section}.${name}: ${docs.join(" ")}` === "balances.InsufficientBalance: Balance too low to send value") {
-                                context.commit("decrementBusyCounter");
-                                context.commit("setTransferTokenError", "The transaction was unsuccessful: Inability to pay some fees");
+                apiPromise
+                    .tx
+                    .balances
+                    .transfer(request.receiverAddress, request.amount)
+                    .signAndSend(request.senderAddress, { signer: injector?.signer }, ({ dispatchError, isFinalized }) => {
+                        if (dispatchError) {
+                            if (dispatchError.isModule) {
+                                const decoded = apiPromise.registry.findMetaError(dispatchError.asModule);
+                                const { docs, name, section } = decoded;
+
+                                if (`${section}.${name}: ${docs.join(" ")}` === "balances.InsufficientBalance: Balance too low to send value") {
+                                    context.commit("decrementBusyCounter");
+                                    context.commit("setTransferTokenError", "The transaction was unsuccessful: Inability to pay some fees");
+                                } else {
+                                    context.commit("decrementBusyCounter");
+                                    context.commit("setTransferTokenError", "The transaction was unsuccessful, please try again");
+                                }
                             }
                         } else {
-                            context.commit("decrementBusyCounter");
-                            context.commit("setTransferTokenError", "The transaction was unsuccessful, please try again");
+                            if (isFinalized) {
+                                context.commit("decrementBusyCounter");
+                                context.commit("setTransferTokenSuccessStatus", true);
+                            }
                         }
-                    } else {
-                        if (isFinalized) {
-                            context.commit("decrementBusyCounter");
-                            context.commit("setTransferTokenSuccessStatus", true);
+                    }).catch((error) => {
+                        context.commit("decrementBusyCounter");
+                        let errorMessage;
+                        if (error.message === "1010: Invalid Transaction: Inability to pay some fees , e.g. account balance too low") {
+                            errorMessage = "The transaction was unsuccessful: Inability to pay some fees";
+                            context.commit("setTransferTokenError", errorMessage);
+                        } else if (
+                            error.message ===
+                            "Cancelled"
+                        ) {
+                            errorMessage =
+                                "The transaction was cancelled";
+                            context.commit("setTransferTokenError", errorMessage);
+                        } else {
+                            errorMessage =
+                                "The transaction was unsuccessful, please try again";
+                            context.commit("setTransferTokenError", errorMessage);
                         }
-                    }
-                }).catch((error) => {
-                    context.commit("decrementBusyCounter");
-                    let errorMessage;
-                    if (error.message === "1010: Invalid Transaction: Inability to pay some fees , e.g. account balance too low") {
-                        errorMessage = "The transaction was unsuccessful: Inability to pay some fees";
-                        context.commit("setTransferTokenError", errorMessage);
-                    } else if (
-                        error.message ===
-                        "Cancelled"
-                    ) {
-                        errorMessage =
-                            "The transaction was cancelled";
-                        context.commit("setTransferTokenError", errorMessage);
-                    } else {
-                        errorMessage =
-                            "The transaction was unsuccessful, please try again";
-                        context.commit("setTransferTokenError", errorMessage);
-                    }
-                });
+                    });
+
+            } catch (error) {
+                context.commit("decrementBusyCounter");
+                context.commit("setTransferTokenError", "Something went wrong, please try again");
+            }
         }
     },
     modules: {}
