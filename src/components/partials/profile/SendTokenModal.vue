@@ -1,7 +1,28 @@
 <template>
     <Modal :open="open" @update:open="closeSendToken()">
         <template #title> Transfer Token </template>
-        <template #body>
+        <template v-if="isTransferSuccessful || isTransferFail" #body>
+            <div v-if="isTransferSuccessful" class="mb-4">
+                <Alert
+                    :isError="false"
+                    :message="`${identity.balance.symbol} ${tokenAmount} were send
+                successfully to ${identity.basicInfo.display}`"
+                />
+            </div>
+            <div v-if="isTransferFail" class="mb-4">
+                <Alert :message="isTransferFail" :isError="true" />
+            </div>
+            <div class="buttons">
+                <button
+                    class="btn btn-dark d-block"
+                    :disabled="busy"
+                    @click="closeSendToken"
+                >
+                    Close
+                </button>
+            </div>
+        </template>
+        <template v-else #body>
             <div class="row inputs">
                 <div class="mb-3 col">
                     <span v-if="web3Accounts.length > 1">
@@ -56,7 +77,13 @@
                     </div>
                 </div>
             </div>
-            <Alert class="mt-3" v-if="error" :message="error" />
+            <Alert
+                class="mt-3 mb-3"
+                v-if="error"
+                :message="error"
+                :isError="true"
+            />
+
             <div class="buttons">
                 <div>
                     <button
@@ -121,7 +148,6 @@ export default class SendTokenModal extends Vue {
     identity!: Identity;
     open!: boolean;
     tokenAmount = "";
-    busy = false;
     error = "";
     selectedAccount = "";
     web3Accounts!: InjectedAccountWithMeta[];
@@ -145,17 +171,13 @@ export default class SendTokenModal extends Vue {
     async sendToken() {
         this.error = "";
         if (this.validate()) {
-            try {
-                await this.store.dispatch("SEND_TOKEN", {
-                    chain: this.identity.chain?.toLowerCase(),
-                    senderAddress: this.selectedAccount,
-                    receiverAddress: this.identity.basicInfo.address,
-                    //--TODO -- calculate correct amount based on chain decimals
-                    amount: this.tokenAmount
-                });
-            } catch (error) {
-                console.log(error.message);
-            }
+            await this.store.dispatch("SEND_TOKEN", {
+                chain: this.identity.chain?.toLowerCase(),
+                senderAddress: this.selectedAccount,
+                receiverAddress: this.identity.basicInfo.address,
+                //--TODO -- calculate correct amount based on chain decimals
+                amount: this.tokenAmount
+            });
         }
     }
 
@@ -163,7 +185,22 @@ export default class SendTokenModal extends Vue {
         this.tokenAmount = "";
         this.error = "";
         this.$emit("update:open", false);
+        this.store.commit("setTransferTokenSuccessStatus", false);
+        this.store.commit("setTransferTokenError", "");
     }
+
+    get busy() {
+        return this.store.getters.isBusy;
+    }
+
+    get isTransferSuccessful() {
+        return this.store.state.isTransferTokenSuccess;
+    }
+
+    get isTransferFail() {
+        return this.store.state.transferTokenError;
+    }
+
     validate() {
         const positiveFloat = new RegExp(
             "^(?=.+)(?:[1-9]\\d*)?(?:(\\.\\d+)|(0\\.\\d*[1-9]+\\d*))?$"
@@ -224,3 +261,4 @@ export default class SendTokenModal extends Vue {
     }
 }
 </style>
+

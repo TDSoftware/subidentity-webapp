@@ -164,15 +164,16 @@
                 </div>
             </div>
         </div>
-        <!--div class="ms-auto" style="padding-top: 24px">
+        <!-- <div class="ms-auto" style="padding-top: 24px">
             <button
                 class="btn btn-primary fw-bold w-100 text-white"
                 type="submit"
+                :disabled="web3Accounts.length === 0"
                 @click="sendToken"
             >
                 SEND TOKEN
             </button>
-        </div-->
+        </div> -->
     </div>
     <SendTokenModal
         v-model:open="sendTokenModalOpen"

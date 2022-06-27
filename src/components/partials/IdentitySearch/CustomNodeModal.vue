@@ -14,7 +14,12 @@
                         placeholder="e.g.: wss://127.0.0.1:9944"
                         @keypress.enter="saveCustomNode"
                     />
-                    <Alert class="mt-3" v-if="error" :message="error" />
+                    <Alert
+                        class="mt-3"
+                        v-if="error"
+                        :message="error"
+                        :isError="true"
+                    />
                 </div>
                 <div
                     class="mb-3 col"
