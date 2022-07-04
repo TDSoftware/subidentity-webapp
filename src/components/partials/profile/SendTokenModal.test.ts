@@ -41,7 +41,7 @@ describe("SendTokenModal.vue", () => {
     describe("when clicking transfer button", () => {
         it("should dispatch SEND_TOKEN action with correct token amount and correct account address", async () => {
             wrapper.vm.selectedAccount = "dsnjsmdsndjiue4j34idnjnjkdnkjdfjk349dnkd";
-            wrapper.vm.tokenAmount = 1;
+            wrapper.vm.tokenAmount = "1";
             wrapper.vm.store.dispatch = jest.fn();
             const sendTokenMock = jest.spyOn(wrapper.vm, "sendToken");
 
@@ -59,14 +59,14 @@ describe("SendTokenModal.vue", () => {
                     chain: "chain",
                     senderAddress: "dsnjsmdsndjiue4j34idnjnjkdnkjdfjk349dnkd",
                     receiverAddress: "jeeijriejjksnd8439sdjnsnksnjfkndkfj",
-                    amount: 1
+                    amount: "1"
                 }
             );
         });
 
         it("should not dispatch SEND_TOKEN action when amount is not positive float and account address is empty", async () => {
             wrapper.vm.selectedAccount = "";
-            wrapper.vm.tokenAmount = -1;
+            wrapper.vm.tokenAmount = "-1";
             wrapper.vm.store.dispatch = jest.fn();
             const sendTokenMock = jest.spyOn(wrapper.vm, "sendToken");
 
@@ -84,7 +84,7 @@ describe("SendTokenModal.vue", () => {
                     chain: "chain",
                     senderAddress: "",
                     receiverAddress: "jeeijriejjksnd8439sdjnsnksnjfkndkfj",
-                    amount: -1
+                    amount: "-1"
                 }
             );
         });
@@ -96,7 +96,7 @@ describe("SendTokenModal.vue", () => {
 
         it("should set tokenAmount and error variables values to empty ", async () => {
             wrapper.vm.selectedAccount = "dsnjsmdsndjiue4j34idnjnjkdnkjdfjk349dnkd";
-            wrapper.vm.tokenAmount = 1;
+            wrapper.vm.tokenAmount = "1";
             const closeSendTokenMock = jest.spyOn(wrapper.vm, "closeSendToken");
 
             await wrapper.vm.$nextTick();
