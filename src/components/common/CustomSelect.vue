@@ -1,14 +1,32 @@
 <template>
-    <div :tabindex="tabindex" class="custom-select" @blur="open = false">
-        <span class="icon fw-light text-muted">
-            <img src="../../assets/icons/git-network-outline-muted.svg" class="fw-light text-muted" style="width: 16px">
+    <div
+        :tabindex="tabindex"
+        class="custom-select"
+        :style="
+            hasBorder
+                ? { border: 'solid 1px #dee2e6', borderRadius: '0.25rem' }
+                : ''
+        "
+        @blur="open = false"
+    >
+        <span v-if="icon" class="icon fw-light text-muted">
+            <img
+                :src="require(`@/assets/icons/${icon}`)"
+                class="fw-light text-muted"
+                style="width: 16px"
+            />
         </span>
         <div
             :class="{ open: open }"
             class="selected fw-light text-muted"
+            :style="!icon ? { paddingLeft: '12px' } : ''"
             @click="onSelectClick"
         >
-            In {{ selected?.displayValue }}
+            {{
+                hasInPrefix
+                    ? `In ${selected?.displayValue}`
+                    : selected?.displayValue
+            }}
         </div>
         <div :class="{ selectHide: !open }" class="items">
             <div
@@ -49,6 +67,18 @@ import { UISelectOption } from "@/interfaces/UISelectOption";
         selectedKey: {
             type: String,
             required: true
+        },
+        hasBorder: {
+            type: Boolean,
+            default: false
+        },
+        hasInPrefix: {
+            type: Boolean,
+            default: false
+        },
+        icon: {
+            type: String,
+            default: ""
         }
     },
     watch: {
@@ -100,10 +130,10 @@ export default class CustomSelect extends Vue {
 
 <style lang="scss" scoped>
 @import "../../styles/variables.scss";
-img{
-  margin-top: -4px;
-  height: 16px;
-  width: auto !important;
+img {
+    margin-top: -9px;
+    height: 16px;
+    width: auto !important;
 }
 
 .custom-select {
@@ -111,7 +141,7 @@ img{
     width: 100%;
     text-align: left;
     outline: none;
-    height: 47px;
+    height: 50px;
     line-height: 47px;
 
     .selected {
@@ -172,6 +202,7 @@ img{
         right: 0;
         top: 48px;
         z-index: 1;
+        box-shadow: 14px 14px 20px 2px rgba(0, 0, 0, 0.1);
 
         div {
             color: #000;
