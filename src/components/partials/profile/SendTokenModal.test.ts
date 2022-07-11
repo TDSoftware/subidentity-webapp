@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
 import SendTokenModal from "@/components/partials/profile/SendTokenModal.vue";
-
+import CustomSelect from "@/components/common/CustomSelect.vue";
 import { key, store } from "@/store";
 
 describe("SendTokenModal.vue", () => {
@@ -22,20 +22,19 @@ describe("SendTokenModal.vue", () => {
         attachTo: document.body
     });
     describe("when number of accounts are geater than 1", () => {
-        const accountsInput = wrapper.find(".form-check-input");
-        it("should show radio buttons for account selection", async () => {
-            expect(accountsInput.exists()).toBeTruthy();
+        const customSelect = wrapper.findComponent(CustomSelect);
+
+        it("should show select box for account selection", async () => {
+            expect(customSelect.exists()).toBe(true);
         });
 
-        it("should trigger change event on account selection and set selected account with the selected account's address", async () => {
-            const onSelectAccountMock = jest.spyOn(wrapper.vm, "onSelectAccount");
 
-            await accountsInput.setValue("dsnjsmdsndjiue4j34idnjnjkdnkjdfjk349dnkd");
+        it("should emit update:selectedKey event on account selection and set selected account value", async () => {
+
             await wrapper.vm.$nextTick();
-            await accountsInput.trigger("change");
+            await customSelect.vm.$emit("update:selectedKey");
 
-            expect(onSelectAccountMock).toBeCalled();
-            expect(wrapper.vm.selectedAccount).toBe("dsnjsmdsndjiue4j34idnjnjkdnkjdfjk349dnkd");
+            expect(wrapper.vm.selectedAccount).not.toBe("");
         });
     });
     describe("when clicking transfer button", () => {
