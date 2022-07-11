@@ -29,6 +29,8 @@
                         :options="chainOptions"
                         class="select"
                         v-model:selected-key="selectedChainKey"
+                        prefix="In"
+                        icon="git-network-outline-muted.svg"
                     />
                 </div>
                 <div
