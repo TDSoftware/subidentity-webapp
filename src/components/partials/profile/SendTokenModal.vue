@@ -27,25 +27,14 @@
                 <div class="mb-3 col">
                     <span v-if="web3Accounts.length > 1">
                         <label class="form-label fw-bold"
-                            >Choose your account</label
+                            >Please choose your account</label
                         >
-                        <div
-                            v-for="(account, i) of web3Accounts"
-                            :key="i"
-                            class="form-check"
-                        >
-                            <input
-                                class="form-check-input"
-                                type="radio"
-                                name="flexRadio"
-                                :id="account.address"
-                                :value="account.address"
-                                @change="onSelectAccount"
-                            />
-                            <label class="form-check-label">
-                                {{ account.meta.name }}
-                            </label>
-                        </div>
+                        <CustomSelect
+                            :options="accountOptions"
+                            class="select"
+                            v-model:selected-key="selectedAccount"
+                            :hasBorder="true"
+                        />
                     </span>
 
                     <div class="mb-3 col" v-else>
@@ -55,8 +44,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row inputs">
                 <div class="mb-3 col">
                     <label class="form-label fw-bold"
                         >Amount in {{ identity.balance.symbol }}</label
@@ -69,11 +56,15 @@
                         @keypress.enter="sendToken"
                     />
                 </div>
+            </div>
+            <div class="row inputs">
                 <div class="mb-3 col">
                     <label class="form-label fw-bold">Receiver</label>
-                    <div>{{ identity.basicInfo.display }}</div>
-                    <div class="text-muted" style="overflow-wrap: anywhere">
-                        {{ identity.basicInfo.address }}
+                    <div>
+                        {{ identity.basicInfo.display }}
+                        <span class="text-muted mx-3">
+                            {{ identity.basicInfo.address }}</span
+                        >
                     </div>
                 </div>
             </div>
@@ -119,12 +110,15 @@ import Alert from "@/components/common/Alert.vue";
 import { Identity } from "@npmjs_tdsoftware/subidentity";
 import type { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import { useStore } from "../../../store";
+import CustomSelect from "@/components/common/CustomSelect.vue";
+import { UISelectOption } from "@/interfaces/UISelectOption";
 
 @Options({
     components: {
         Modal,
         Spinner,
-        Alert
+        Alert,
+        CustomSelect
     },
     props: {
         open: {
@@ -143,6 +137,7 @@ import { useStore } from "../../../store";
     watch: {
         web3Accounts() {
             this.setWeb3Account();
+            this.setAccountOptions();
         }
     }
 })
@@ -154,9 +149,23 @@ export default class SendTokenModal extends Vue {
     selectedAccount = "";
     web3Accounts!: InjectedAccountWithMeta[];
     store = useStore();
+    accountOptions: UISelectOption[] = [];
 
     created() {
         this.setWeb3Account();
+        this.setAccountOptions();
+    }
+
+    setAccountOptions() {
+        this.accountOptions = this.web3Accounts.map(
+            (account: InjectedAccountWithMeta) => {
+                return {
+                    key: account.address,
+                    displayValue: account.meta.name,
+                    subText: ""
+                };
+            }
+        );
     }
 
     setWeb3Account() {
@@ -186,6 +195,7 @@ export default class SendTokenModal extends Vue {
     closeSendToken() {
         this.tokenAmount = "";
         this.error = "";
+        this.selectedAccount = "";
         this.$emit("update:open", false);
         this.store.commit("setTransferTokenSuccessStatus", false);
         this.store.commit("setTransferTokenError", "");
@@ -223,6 +233,7 @@ export default class SendTokenModal extends Vue {
 @import "../../../styles/variables";
 .input-address {
     border: solid 1px #dee2e6 !important;
+    height: 50px;
 }
 
 .input-name {
