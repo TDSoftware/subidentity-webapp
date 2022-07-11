@@ -62,8 +62,8 @@
                     <label class="form-label fw-bold">Receiver</label>
                     <div>
                         {{ identity.basicInfo.display }}
-                        <span class="text-muted">
-                            &nbsp; &nbsp;{{ identity.basicInfo.address }}</span
+                        <span class="text-muted mx-3">
+                            {{ identity.basicInfo.address }}</span
                         >
                     </div>
                 </div>
@@ -155,7 +155,7 @@ export default class SendTokenModal extends Vue {
     }
 
     setAccountOptions() {
-        const options = this.web3Accounts.map(
+        this.accountOptions = this.web3Accounts.map(
             (account: InjectedAccountWithMeta) => {
                 return {
                     key: account.address,
@@ -164,7 +164,6 @@ export default class SendTokenModal extends Vue {
                 };
             }
         );
-        this.accountOptions = options;
     }
 
     setWeb3Account() {

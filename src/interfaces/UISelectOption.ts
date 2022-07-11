@@ -1,5 +1,5 @@
 export interface UISelectOption {
     key: string;
-    displayValue: string | undefined;
+    displayValue?: string;
     subText: string
 }

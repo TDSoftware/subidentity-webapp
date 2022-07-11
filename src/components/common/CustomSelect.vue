@@ -23,8 +23,8 @@
             @click="onSelectClick"
         >
             {{
-                hasInPrefix
-                    ? `In ${selected?.displayValue}`
+                prefix
+                    ? `${prefix} ${selected?.displayValue}`
                     : selected?.displayValue
             }}
         </div>
@@ -72,9 +72,9 @@ import { UISelectOption } from "@/interfaces/UISelectOption";
             type: Boolean,
             default: false
         },
-        hasInPrefix: {
-            type: Boolean,
-            default: false
+        prefix: {
+            type: String,
+            default: ""
         },
         icon: {
             type: String,
