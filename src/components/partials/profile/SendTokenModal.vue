@@ -81,6 +81,7 @@
                         class="btn btn-primary text-white d-block"
                         :disabled="busy"
                         @click="sendToken"
+                        ref="sendTokenButton"
                     >
                         <Spinner v-if="busy" />
                         TRANSFER
@@ -91,6 +92,7 @@
                         class="btn btn-dark d-block"
                         :disabled="busy"
                         @click="closeSendToken"
+                        ref="cancelButton"
                     >
                         CANCEL
                     </button>
