@@ -2,7 +2,7 @@ import { SearchData } from "@/interfaces/SearchData";
 import { get, push, set, StoreKey } from "@/util/storage";
 import { InjectionKey } from "vue";
 import { createStore, useStore as baseUseStore, Store, ActionContext } from "vuex";
-import { getIdentity, Identity, implementsIdentityPallet, Page, searchIdentities } from "@npmjs_tdsoftware/subidentity";
+import { getIdentity, Identity, implementsIdentityPallet, Page, searchIdentities, connectToWsProvider } from "@npmjs_tdsoftware/subidentity";
 import { getChainAddress } from "@/util/chains";
 import { LoadIdentityRequest } from "@/interfaces/LoadIdentityRequest";
 import { Pagination } from "@/interfaces/Pagination";
@@ -12,16 +12,24 @@ import { apiAvailable, getRequest } from "@/util/http";
 import { GetIdentitiesResponse } from "@/interfaces/http/GetIdentitiesResponse";
 import { GetChainStatusResponse } from "@/interfaces/http/GetChainStatusResponse";
 import { GetVersionResponse } from "@/interfaces/http/GetVersionResponse";
+import { ApiPromise } from "@polkadot/api";
+import {
+    web3Accounts,
+    web3Enable,
+    web3FromAddress
+} from "@polkadot/extension-dapp";
+import type { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import { LoadSendTokenRequest } from "@/interfaces/LoadSendTokenRequest";
 
 
 export interface StoreI {
-    isAuthenticated: boolean;
     busyCounter: 0;
     recentSearches: SearchData<Identity>[];
     currentSearch?: SearchData<Identity>;
     identitySearchPagination: Pagination;
-    apiVersion: string
-
+    apiVersion: string,
+    isTransferTokenSuccess: boolean,
+    transferTokenError: string
 }
 
 export const key: InjectionKey<Store<StoreI>> = Symbol();
@@ -33,7 +41,6 @@ export const useStore = () => {
 export const store = createStore({
     state: {
         busyCounter: 0,
-        isAuthenticated: false,
         recentSearches: get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [],
         identitySearchPagination: {
             totalPageCount: 0,
@@ -42,7 +49,9 @@ export const store = createStore({
             currentPage: 1,
             limit: 5
         },
-        apiVersion: ""
+        apiVersion: "",
+        isTransferTokenSuccess: false,
+        transferTokenError: ""
 
     },
     getters: {
@@ -85,14 +94,6 @@ export const store = createStore({
             state.busyCounter--;
         },
 
-        login(state: StoreI) {
-            state.isAuthenticated = true;
-        },
-
-        logout(state: StoreI) {
-            state.isAuthenticated = false;
-        },
-
         storeAsRecentSearch(state: StoreI, searchData: SearchData<Identity>) {
             const maxItemsInStorage = 12;
             const recentSearches = get<Array<SearchData<Identity>>>(StoreKey.RecentSearches) ?? [];
@@ -121,8 +122,14 @@ export const store = createStore({
         },
         setApiVersion(state: StoreI, versionData) {
             state.apiVersion = `${versionData.version} (${versionData.commitHash})`;
-        }
+        },
 
+        setTransferTokenSuccessStatus(state: StoreI, status) {
+            state.isTransferTokenSuccess = status;
+        },
+        setTransferTokenError(state: StoreI, error) {
+            state.transferTokenError = error;
+        }
     },
     actions: {
 
@@ -236,6 +243,103 @@ export const store = createStore({
             });
             context.commit("decrementBusyCounter");
             return implementsPallet;
+        },
+
+        async LOAD_WEB3_ACCOUNTS(context: ActionContext<StoreI, StoreI>, chainKey: string): Promise<InjectedAccountWithMeta[]> {
+            const wsAddress = getChainAddress(chainKey);
+            if (!wsAddress) {
+                throw new Error("No address given for chain: " + chainKey);
+            }
+
+            const apiPromise: ApiPromise = await connectToWsProvider(wsAddress);
+            const chainGenesisHash = apiPromise.genesisHash.toHuman();
+
+            await web3Enable("SubIdentity");
+
+            const accounts: Array<InjectedAccountWithMeta> = [];
+
+            // returns an array of { address, meta: { name, source } }
+            // meta.source contains the name of the extension that provides this account
+            const allWeb3Accounts = await web3Accounts();
+
+            allWeb3Accounts.forEach((account: InjectedAccountWithMeta) => {
+                if (!account.meta.genesisHash || account.meta.genesisHash === chainGenesisHash) {
+                    accounts.push(account);
+                }
+            });
+
+            return accounts;
+        },
+        async SEND_TOKEN(context: ActionContext<StoreI, StoreI>, request: LoadSendTokenRequest): Promise<void> {
+            context.commit("incrementBusyCounter");
+            context.commit("setTransferTokenSuccessStatus", false);
+            context.commit("setTransferTokenError", "");
+
+            let wsAddress;
+            let apiPromise: ApiPromise;
+            let injector;
+
+            try {
+                wsAddress = getChainAddress(request.chain);
+                if (!wsAddress) {
+                    throw new Error("No address given for chain: " + request.chain);
+                }
+                apiPromise = await connectToWsProvider(wsAddress);
+
+                // (this needs to be called first, before other requests)
+                await web3Enable("SubIdentity");
+
+                // finds an injector for an address
+                injector = await web3FromAddress(request.senderAddress);
+
+                apiPromise
+                    .tx
+                    .balances
+                    .transfer(request.receiverAddress, request.amount)
+                    .signAndSend(request.senderAddress, { signer: injector?.signer }, ({ dispatchError, isFinalized }) => {
+                        if (dispatchError) {
+                            if (dispatchError.isModule) {
+                                const decoded = apiPromise.registry.findMetaError(dispatchError.asModule);
+                                const { docs, name, section } = decoded;
+
+                                if (`${section}.${name}: ${docs.join(" ")}` === "balances.InsufficientBalance: Balance too low to send value") {
+                                    context.commit("decrementBusyCounter");
+                                    context.commit("setTransferTokenError", "The transaction was unsuccessful: Inability to pay some fees");
+                                } else {
+                                    context.commit("decrementBusyCounter");
+                                    context.commit("setTransferTokenError", "The transaction was unsuccessful, please try again");
+                                }
+                            }
+                        } else {
+                            if (isFinalized) {
+                                context.commit("decrementBusyCounter");
+                                context.commit("setTransferTokenSuccessStatus", true);
+                            }
+                        }
+                    }).catch((error) => {
+                        context.commit("decrementBusyCounter");
+                        let errorMessage;
+                        if (error.message === "1010: Invalid Transaction: Inability to pay some fees , e.g. account balance too low") {
+                            errorMessage = "The transaction was unsuccessful: Inability to pay some fees";
+                            context.commit("setTransferTokenError", errorMessage);
+                        } else if (
+                            error.message ===
+                            "Cancelled"
+                        ) {
+                            errorMessage =
+                                "The transaction was cancelled";
+                            context.commit("setTransferTokenError", errorMessage);
+                        } else {
+                            errorMessage =
+                                "The transaction was unsuccessful, please try again";
+                            context.commit("setTransferTokenError", errorMessage);
+                        }
+                    });
+
+            } catch (error) {
+                context.commit("decrementBusyCounter");
+                context.commit("setTransferTokenError", "Something went wrong, please try again");
+            }
         }
     },
     modules: {}

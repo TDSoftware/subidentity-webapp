@@ -26,16 +26,17 @@
                     <p class="mx-2">Back to results</p>
                 </div>
                 <span v-if="loaded && error">
-                    <Alert :message="error" />
+                    <Alert :message="error" :isError="true" />
                 </span>
                 <div v-if="!loaded" class="spinner-wrapper">
                     <Spinner color="#D0D0D0" :size="40" :width="3" />
                 </div>
                 <ProfileHeader
                     v-if="loaded && !error"
-                    class="mb-5"
                     :identity="identity"
+                    :web3Accounts="web3Accounts"
                 />
+
                 <div v-if="loaded && !error" class="plugins fade-in">
                     <BasicInfoPlugin :identity="identity" />
                     <!--
@@ -77,8 +78,10 @@ export default class IdentityView extends Vue {
     identity?: Identity;
     error = "";
     backToHome = false;
+    web3Accounts? = [];
 
     created() {
+        this.loadWeb3Accounts();
         this.loadIdentity();
         if (window.history.state.back === "/") {
             this.backToHome = true;
@@ -94,16 +97,29 @@ export default class IdentityView extends Vue {
             this.loaded = true;
         } catch (error) {
             this.loaded = true;
-            if ( error instanceof Error){
-                this.error =
-                    error.message;
-            }
-            else {
+            if (error instanceof Error) {
+                this.error = error.message;
+            } else {
                 this.error = "An unexpected error occurred";
             }
         }
-
     }
+
+    async loadWeb3Accounts() {
+        try {
+            this.web3Accounts = await this.store.dispatch(
+                "LOAD_WEB3_ACCOUNTS",
+                this.chain
+            );
+        } catch (error) {
+            if (error instanceof Error) {
+                this.error = error.message;
+            } else {
+                this.error = "An unexpected error occurred";
+            }
+        }
+    }
+
     handleError(message: string) {
         this.error = message;
     }

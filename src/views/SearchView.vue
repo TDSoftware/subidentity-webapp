@@ -10,6 +10,7 @@
             v-if="error"
             class="p-0 container-medium fade-in mt-4"
             :message="error"
+            :isError="true"
         ></Alert>
     </div>
     <div

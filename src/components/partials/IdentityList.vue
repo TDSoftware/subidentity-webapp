@@ -35,16 +35,23 @@
             for "{{ lastSearchTerm }}" in "{{ chainName }}"
         </p>
     </div>
-    <Alert v-if="error" class="list-alert" :message="error"></Alert>
+    <Alert
+        v-if="error"
+        class="list-alert"
+        :message="error"
+        :isError="true"
+    ></Alert>
     <Alert
         v-else-if="pageError"
         class="list-alert"
         :message="pageError"
+        :isError="true"
     ></Alert>
     <Alert
         v-else-if="!busy && lastTotalItemCount === 0"
         class="list-alert"
         message="Sorry, there are no results for your search term - Please try again"
+        :isError="true"
     />
 
     <div
