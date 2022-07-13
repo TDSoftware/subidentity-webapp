@@ -39,6 +39,7 @@
 
                 <div v-if="loaded && !error" class="plugins fade-in">
                     <BasicInfoPlugin :identity="identity" />
+                    <TreasuryPlugin />
                     <!--
 
                         ADD MORE PLUGINS HERE 
@@ -59,13 +60,15 @@ import { useStore } from "@/store";
 import { Identity } from "@npmjs_tdsoftware/subidentity";
 import Spinner from "@/components/common/Spinner.vue";
 import Alert from "@/components/common/Alert.vue";
+import TreasuryPlugin from "@/components/partials/profile/plugins/TreasuryPlugin.vue";
 
 @Options({
     components: {
         Spinner,
         ProfileHeader,
         BasicInfoPlugin,
-        Alert
+        Alert,
+        TreasuryPlugin
     }
 })
 export default class IdentityView extends Vue {
