@@ -174,6 +174,13 @@ export default class IdentityView extends Vue {
             margin-right: 0;
         }
     }
+
+    @include media-breakpoint-down(lg) {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
 }
 .spinner-wrapper {
     width: 100%;
