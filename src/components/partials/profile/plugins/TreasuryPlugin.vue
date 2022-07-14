@@ -1,5 +1,5 @@
 <template>
-    <Accordion icon="file-tray-full-outline.svg">
+    <Accordion icon="wallet-outline.svg">
         <template #title>TREASURY</template>
         <template #body>
             <div class="mb-3">
