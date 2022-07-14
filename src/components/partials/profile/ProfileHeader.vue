@@ -79,7 +79,6 @@
                 <button
                     class="btn btn-primary fw-bold w-100 text-white"
                     type="submit"
-                    :disabled="web3Accounts.length === 0"
                     @click="sendToken"
                 >
                     SEND TOKEN
@@ -168,7 +167,6 @@
             <button
                 class="btn btn-primary fw-bold w-100 text-white"
                 type="submit"
-                :disabled="web3Accounts.length === 0"
                 @click="sendToken"
             >
                 SEND TOKEN
@@ -186,6 +184,7 @@
 import { Identity } from "@npmjs_tdsoftware/subidentity";
 import { Options, Vue } from "vue-class-component";
 import SendTokenModal from "./SendTokenModal.vue";
+import { useToast } from "vue-toastification";
 
 @Options({
     components: {
@@ -206,6 +205,7 @@ export default class ProfileHeader extends Vue {
     identity!: Identity;
     sendTokenModalOpen = false;
     web3Accounts!: [];
+    toast = useToast();
 
     checkJudgements() {
         if (this.identity) {
@@ -234,7 +234,13 @@ export default class ProfileHeader extends Vue {
     }
 
     sendToken() {
-        this.sendTokenModalOpen = true;
+        if (this.web3Accounts.length === 0) {
+            this.toast.error(
+                "Add wallet connection with Polkadot.js extension to use this feature"
+            );
+        } else {
+            this.sendTokenModalOpen = true;
+        }
     }
     async copy(s: string, id: string) {
         if (!s) return;
