@@ -7,7 +7,7 @@ import { getChainAddress } from "@/util/chains";
 import { LoadIdentityRequest } from "@/interfaces/LoadIdentityRequest";
 import { Pagination } from "@/interfaces/Pagination";
 import { ImplementsPalletStoreItem } from "@/interfaces/ImplementsPalletStoreItem";
-import config from "@/config";
+import constants from "@/constants";
 import { apiAvailable, getRequest } from "@/util/http";
 import { GetIdentitiesResponse } from "@/interfaces/http/GetIdentitiesResponse";
 import { GetChainStatusResponse } from "@/interfaces/http/GetChainStatusResponse";
@@ -152,11 +152,11 @@ export const store = createStore({
                     const response = await getRequest<GetIdentitiesResponse>(`/identities/search?wsProvider=${encodeURIComponent(wsAddress)}&page=${currentPage}&limit=${this.state.identitySearchPagination.limit}&searchKey=${encodeURIComponent(searchData.searchTerm)}`);
                     page = response.identities;
                 } catch (error) {
-                    if (["Provided node is not an archive node.", "Chain is not indexed yet.", "Could not connect to endpoint."].includes(error.message)) {
+                    if ([constants.ERROR_MESSAGE_IS_ARCHIVED_NODE, constants.ERROR_MESSAGE_IS_CHAIN_INDEXED, constants.ERROR_MESSAGE_ENDPOINT_CONNECT].includes(error.message)) {
                         page = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
                     }
                     else {
-                        throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
+                        throw new Error("Something went wrong while trying to fetch this information");
                     }
 
                 }
@@ -185,11 +185,11 @@ export const store = createStore({
                 try {
                     identity = await getRequest<Identity>(`/identities/${request.address}?wsProvider=${encodeURIComponent(wsAddress)}`);
                 } catch (error) {
-                    if (["Provided node is not an archive node.", "Chain is not indexed yet.", "Unable to find an identity with the provided address.", "Could not connect to endpoint."].includes(error.message)) {
+                    if ([constants.ERROR_MESSAGE_IS_ARCHIVED_NODE, constants.ERROR_MESSAGE_IS_CHAIN_INDEXED, constants.ERROR_MESSAGE_ENDPOINT_CONNECT, constants.ERROR_MESSAGE_CANNOT_FIND_IDENTITY].includes(error.message)) {
                         identity = await getIdentity(wsAddress, request.address);
                     }
                     else {
-                        throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
+                        throw new Error("Something went wrong while trying to fetch this information");
                     }
                 }
             } else {
@@ -206,7 +206,7 @@ export const store = createStore({
                     const response = await getRequest<GetVersionResponse>("/version");
                     context.commit("setApiVersion", response);
                 } catch (error) {
-                    throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
+                    throw new Error("Something went wrong while trying to fetch this information");
                 }
 
             }
@@ -220,7 +220,7 @@ export const store = createStore({
             }
             const localStorageKey = "chain-" + wsAddress + "-implements-pallet";
             const implementsPalletStoreItem = get<ImplementsPalletStoreItem>(localStorageKey);
-            if (implementsPalletStoreItem && implementsPalletStoreItem.timestamp > Date.now() - config.CACHE_DURATION_IMPLEMENTS_PALLET) {
+            if (implementsPalletStoreItem && implementsPalletStoreItem.timestamp > Date.now() - constants.CACHE_DURATION_IMPLEMENTS_PALLET) {
                 return implementsPalletStoreItem.implementsPallet;
             }
             context.commit("incrementBusyCounter");
