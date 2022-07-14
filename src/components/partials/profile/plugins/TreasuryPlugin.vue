@@ -99,8 +99,33 @@
                 <div class="d-flex flex-row avatar">
                     <div class="img-wrapper">
                         <img
-                            src="../../../../assets/icons/warning-outline.svg"
+                            src="../../../../assets/icons/wallet.svg"
                             class="icon border rounded-circle p-1"
+                        />
+                    </div>
+                    <p class="mb-0 fw-bold w-100 pt-2">
+                        tipped on treasury tip with reason "Treasury tip reason"
+                    </p>
+                </div>
+            </div>
+            <div class="mb-3">
+                <p
+                    class="
+                        fw-light
+                        text-muted
+                        border border-1
+                        rounded-2
+                        p-2
+                        w-50
+                    "
+                >
+                    Block #84094033
+                </p>
+                <div class="d-flex flex-row avatar">
+                    <div class="img-wrapper">
+                        <img
+                            src="../../../../assets/icons/warning-outline.svg"
+                            class="icon border rounded-circle p-2 bg-light"
                         />
                     </div>
                     <p class="mb-0 fw-bold w-100">
@@ -146,7 +171,7 @@ export default class TreasuryPlugin extends Vue {}
         flex-direction: column;
         justify-content: center;
         img {
-            object-fit: cover;
+            object-fit: scale-down;
             margin-right: 10px;
             height: 45px;
             width: 45px;
