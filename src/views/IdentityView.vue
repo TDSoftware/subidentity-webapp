@@ -39,7 +39,7 @@
 
                 <div v-if="loaded && !error" class="plugins fade-in">
                     <BasicInfoPlugin :identity="identity" />
-                    <TreasuryPlugin />
+                    <TreasuryPlugin :identity="identity" />
                     <!--
 
                         ADD MORE PLUGINS HERE 

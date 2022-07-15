@@ -19,7 +19,7 @@ export enum ActivityObject {
 //Interaction a user can have with an ActivityObject
 export enum Activity {
     Proposed = "proposed",
-    VotedAye = "voted aye",
+    VotedAye = "voted yay",
     VotedNay = "voted nay",
     MissedVote = "did not vote",
     Tipped = "tipped"

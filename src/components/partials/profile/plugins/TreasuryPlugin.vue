@@ -2,7 +2,7 @@
     <Accordion icon="wallet-outline.svg">
         <template #title>TREASURY</template>
         <template #body>
-            <div class="mb-3">
+            <div class="mb-3" v-for="(treasury, i) in treasury" :key="i">
                 <p
                     class="
                         fw-light
@@ -13,9 +13,12 @@
                         w-50
                     "
                 >
-                    Block #84094033
+                    Block #{{ treasury.block }}
                 </p>
-                <div class="d-flex flex-row avatar">
+                <div
+                    v-if="treasury.type === 'PRO_VOTE'"
+                    class="d-flex flex-row avatar"
+                >
                     <div class="img-wrapper">
                         <img
                             src="../../../../assets/icons/happy-outline.svg"
@@ -23,52 +26,39 @@
                         />
                     </div>
                     <p class="mb-0 fw-bold w-100 pt-2">
-                        voted yay on Referenda
+                        {{ treasury.activity }} on {{ treasury.primaryObject }}
                         <span class="text-decoration-none link-primary">
-                            #24
+                            #{{ treasury.primaryObjectNumber }}
+                        </span>
+                        for {{ treasury.secondaryObject }}
+                        <span class="text-decoration-none link-primary">
+                            #{{ treasury.secondaryObjectNumber }}
                         </span>
                     </p>
                 </div>
-            </div>
-            <div class="mb-3">
-                <p
-                    class="
-                        fw-light
-                        text-muted
-                        border border-1
-                        rounded-2
-                        p-2
-                        w-50
-                    "
+
+                <div
+                    v-if="treasury.type === 'TREASURY'"
+                    class="d-flex flex-row avatar"
                 >
-                    Block #84094033
-                </p>
-                <div class="d-flex flex-row avatar">
                     <div class="img-wrapper">
                         <img
-                            src="../../../../assets/icons/information-circle-outline.svg"
+                            src="../../../../assets/icons/wallet.svg"
                             class="icon border rounded-circle p-1"
                         />
                     </div>
                     <p class="mb-0 fw-bold">
-                        tipped on treasury tip with reason "Treasury tip reason"
+                        {{ treasury.activity }} on
+                        {{ treasury.primaryObject }} with reason "{{
+                            treasury.additionalInfoType
+                        }}"
                     </p>
                 </div>
-            </div>
-            <div class="mb-3">
-                <p
-                    class="
-                        fw-light
-                        text-muted
-                        border border-1
-                        rounded-2
-                        p-2
-                        w-50
-                    "
+
+                <div
+                    v-if="treasury.type === 'CON_VOTE'"
+                    class="d-flex flex-row avatar"
                 >
-                    Block #84094033
-                </p>
-                <div class="d-flex flex-row avatar">
                     <div class="img-wrapper">
                         <img
                             src="../../../../assets/icons/sad-outline.svg"
@@ -76,52 +66,21 @@
                         />
                     </div>
                     <p class="mb-0 fw-bold w-100 pt-2">
-                        voted nay on Referenda
+                        {{ treasury.activity }} on {{ treasury.primaryObject }}
                         <span class="text-decoration-none link-primary">
-                            #20
+                            #{{ treasury.primaryObjectNumber }}
+                        </span>
+                        for {{ treasury.secondaryObject }}
+                        <span class="text-decoration-none link-primary">
+                            #{{ treasury.secondaryObjectNumber }}
                         </span>
                     </p>
                 </div>
-            </div>
-            <div class="mb-3">
-                <p
-                    class="
-                        fw-light
-                        text-muted
-                        border border-1
-                        rounded-2
-                        p-2
-                        w-50
-                    "
+
+                <div
+                    v-if="treasury.type === 'COUNCILOR_MISSED'"
+                    class="d-flex flex-row avatar"
                 >
-                    Block #84094033
-                </p>
-                <div class="d-flex flex-row avatar">
-                    <div class="img-wrapper">
-                        <img
-                            src="../../../../assets/icons/wallet.svg"
-                            class="icon border rounded-circle p-1"
-                        />
-                    </div>
-                    <p class="mb-0 fw-bold w-100 pt-2">
-                        tipped on treasury tip with reason "Treasury tip reason"
-                    </p>
-                </div>
-            </div>
-            <div class="mb-3">
-                <p
-                    class="
-                        fw-light
-                        text-muted
-                        border border-1
-                        rounded-2
-                        p-2
-                        w-50
-                    "
-                >
-                    Block #84094033
-                </p>
-                <div class="d-flex flex-row avatar">
                     <div class="img-wrapper">
                         <img
                             src="../../../../assets/icons/warning-outline.svg"
@@ -129,21 +88,27 @@
                         />
                     </div>
                     <p class="mb-0 fw-bold w-100">
-                        did not vote on council motion
+                        {{ treasury.activity }} on {{ treasury.primaryObject }}
                         <span class="text-decoration-none link-primary">
-                            #20
+                            #{{ treasury.primaryObjectNumber }}
                         </span>
-                        despite being a councilor
+                        for {{ treasury.secondaryObject }}
+                        <span class="text-decoration-none link-primary">
+                            #{{ treasury.secondaryObjectNumber }}
+                        </span>
                     </p>
                 </div>
+            </div>
 
-                <div class="d-flex flex-row pt-4 link-primary">
-                    <p class="mx-2">Show More</p>
-                    <img
-                        src="../../../../assets/icons/arrow-forward-outline-primary.svg"
-                        class="arrow"
-                    />
-                </div>
+            <div
+                @click="$router.push('/')"
+                class="d-flex flex-row pt-4 link-primary"
+            >
+                <p class="mx-2">Show More</p>
+                <img
+                    src="../../../../assets/icons/arrow-forward-outline-primary.svg"
+                    class="arrow"
+                />
             </div>
         </template>
     </Accordion>
@@ -152,13 +117,29 @@
 <script lang="ts">
 import Accordion from "@/components/common/Accordion.vue";
 import { Options, Vue } from "vue-class-component";
+import { DetailedIdentity } from "@/interfaces/DetailedIdentity";
 
 @Options({
     components: {
         Accordion
+    },
+    props: {
+        identity: {
+            type: Object,
+            required: true
+        }
     }
 })
-export default class TreasuryPlugin extends Vue {}
+export default class TreasuryPlugin extends Vue {
+    identity!: DetailedIdentity;
+
+    get treasury() {
+        return this.identity.treasury;
+    }
+    created() {
+        console.log(this.treasury);
+    }
+}
 </script>
 
 <style lang="scss" scoped>
