@@ -261,6 +261,65 @@ export const store = createStore({
                     type: AccountActivityTypeEnum.CouncilorMissed
                 }
             ];
+
+            identity.governance = [
+                {
+                    primaryObject: ActivityObject.TreasuryTip,
+                    primaryObjectNumber: 0,
+                    secondaryObject: null,
+                    secondaryObjectNumber: 0,
+                    additionalInfoType: InfoType.Reason,
+                    additionalInfoValue: "This was great",
+                    activity: Activity.Tipped,
+                    block: 10007882,
+                    type: AccountActivityTypeEnum.Treasury
+                },
+                {
+                    primaryObject: ActivityObject.TreasurySpend,
+                    primaryObjectNumber: 120,
+                    secondaryObject: null,
+                    secondaryObjectNumber: 0,
+                    additionalInfoType: null,
+                    additionalInfoValue: null,
+                    activity: Activity.Proposed,
+                    block: 10006282,
+                    type: AccountActivityTypeEnum.Treasury
+                },
+                {
+                    primaryObject: ActivityObject.CouncilMotion,
+                    primaryObjectNumber: 100,
+                    secondaryObject: ActivityObject.TreasurySpend,
+                    secondaryObjectNumber: 90,
+                    additionalInfoType: null,
+                    additionalInfoValue: null,
+                    activity: Activity.VotedAye,
+                    block: 10006282,
+                    type: AccountActivityTypeEnum.ProVote
+                },
+                {
+                    primaryObject: ActivityObject.CouncilMotion,
+                    primaryObjectNumber: 99,
+                    secondaryObject: ActivityObject.TreasurySpend,
+                    secondaryObjectNumber: 89,
+                    additionalInfoType: null,
+                    additionalInfoValue: null,
+                    activity: Activity.VotedNay,
+                    block: 10006082,
+                    type: AccountActivityTypeEnum.ConVote
+                },
+                {
+                    primaryObject: ActivityObject.CouncilMotion,
+                    primaryObjectNumber: 96,
+                    secondaryObject: ActivityObject.TreasurySpend,
+                    secondaryObjectNumber: 84,
+                    additionalInfoType: null,
+                    additionalInfoValue: null,
+                    activity: Activity.MissedVote,
+                    block: 10000082,
+                    type: AccountActivityTypeEnum.CouncilorMissed
+                }
+            ];
+
             console.log("[store/index] Got identity by address: ", identity);
             return identity;
         },
