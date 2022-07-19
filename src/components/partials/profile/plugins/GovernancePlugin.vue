@@ -16,92 +16,27 @@
                     >
                         Block #{{ governance.block }}
                     </p>
-                    <div
+                    <ProfileActivity
                         v-if="governance.type === 'PRO_VOTE'"
-                        class="d-flex flex-row avatar"
-                    >
-                        <div class="img-wrapper">
-                            <img
-                                src="../../../../assets/icons/happy-outline.svg"
-                                class="icon border rounded-circle p-1"
-                            />
-                        </div>
-                        <p class="mb-0 fw-bold w-100">
-                            {{ governance.activity }} on
-                            {{ governance.primaryObject }}
-                            <span class="text-decoration-none link-primary">
-                                #{{ governance.primaryObjectNumber }}
-                            </span>
-                            for {{ governance.secondaryObject }}
-                            <span class="text-decoration-none link-primary">
-                                #{{ governance.secondaryObjectNumber }}
-                            </span>
-                        </p>
-                    </div>
+                        icon="happy-outline.svg"
+                        message="voted yay on council motion #100 for treasury spend #90"
+                    />
 
-                    <div
+                    <ProfileActivity
                         v-if="governance.type === 'TREASURY'"
-                        class="d-flex flex-row avatar"
-                    >
-                        <div class="img-wrapper">
-                            <img
-                                src="../../../../assets/icons/wallet.svg"
-                                class="icon border rounded-circle p-1"
-                            />
-                        </div>
-                        <p class="mb-0 fw-bold">
-                            {{ governance.activity }} on
-                            {{ governance.primaryObject }} with reason "{{
-                                governance.additionalInfoType
-                            }}"
-                        </p>
-                    </div>
-
-                    <div
+                        icon="wallet.svg"
+                        message="tipped on treasury tip with reason 'reason'"
+                    />
+                    <ProfileActivity
                         v-if="governance.type === 'CON_VOTE'"
-                        class="d-flex flex-row avatar"
-                    >
-                        <div class="img-wrapper">
-                            <img
-                                src="../../../../assets/icons/sad-outline.svg"
-                                class="icon border rounded-circle p-1"
-                            />
-                        </div>
-                        <p class="mb-0 fw-bold w-100">
-                            {{ governance.activity }} on
-                            {{ governance.primaryObject }}
-                            <span class="text-decoration-none link-primary">
-                                #{{ governance.primaryObjectNumber }}
-                            </span>
-                            for {{ governance.secondaryObject }}
-                            <span class="text-decoration-none link-primary">
-                                #{{ governance.secondaryObjectNumber }}
-                            </span>
-                        </p>
-                    </div>
-
-                    <div
+                        icon="sad-outline.svg"
+                        message="voted nay on council motion #99 for treasury spend #89"
+                    />
+                    <ProfileActivity
                         v-if="governance.type === 'COUNCILOR_MISSED'"
-                        class="d-flex flex-row avatar"
-                    >
-                        <div class="img-wrapper">
-                            <img
-                                src="../../../../assets/icons/warning-outline.svg"
-                                class="icon border rounded-circle p-2 bg-light"
-                            />
-                        </div>
-                        <p class="mb-0 fw-bold w-100">
-                            {{ governance.activity }} on
-                            {{ governance.primaryObject }}
-                            <span class="text-decoration-none link-primary">
-                                #{{ governance.primaryObjectNumber }}
-                            </span>
-                            for {{ governance.secondaryObject }}
-                            <span class="text-decoration-none link-primary">
-                                #{{ governance.secondaryObjectNumber }}
-                            </span>
-                        </p>
-                    </div>
+                        icon="warning-outline.svg"
+                        message="did not vote on council motion #96 for treasury spend #84"
+                    />
                 </div>
             </div>
 
@@ -128,10 +63,12 @@
 import Accordion from "@/components/common/Accordion.vue";
 import { Options, Vue } from "vue-class-component";
 import { DetailedIdentity } from "@/interfaces/DetailedIdentity";
+import ProfileActivity from "../ProfileActivity.vue";
 
 @Options({
     components: {
-        Accordion
+        Accordion,
+        ProfileActivity
     },
     props: {
         identity: {
@@ -158,27 +95,6 @@ export default class GovernancePlugin extends Vue {
 
 <style lang="scss" scoped>
 @import "../../../../styles/variables";
-
-.avatar {
-    height: 100%;
-    .img-wrapper {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        img {
-            object-fit: scale-down;
-            margin-right: 10px;
-            height: 45px;
-            width: 45px;
-        }
-    }
-    p {
-        margin: 0;
-        justify-content: center;
-        overflow-wrap: anywhere;
-    }
-}
-
 .arrow {
     width: 16px;
     height: 16px;
