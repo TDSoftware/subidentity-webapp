@@ -182,6 +182,7 @@
 
 <script lang="ts">
 import { Identity } from "@npmjs_tdsoftware/subidentity";
+import { h } from "vue";
 import { Options, Vue } from "vue-class-component";
 import SendTokenModal from "./SendTokenModal.vue";
 import { useToast } from "vue-toastification";
@@ -207,15 +208,28 @@ export default class ProfileHeader extends Vue {
     web3Accounts!: [];
     toast = useToast();
 
+    toastMessage = h("div", {}, [
+        h(
+            "p",
+            { class: "d-inline" },
+            "To use this feature, please attach a wallet connection with polkadot{.js} extension."
+        ),
+        h("a", {
+            href: "https://parallelfi.gitbook.io/parallel-finance/polkadot-network/parallel-product-guides/a-guide-to-testnet/polkadot-.js-connect-wallet",
+            innerHTML: " Click here for more help.",
+            class: "d-inline, text-white"
+        })
+    ]);
+
     checkJudgements() {
         if (this.identity) {
             if (this.identity.judgements) {
                 const keys = this.identity.judgements?.keys();
                 let count = 0;
                 let pending = 0;
-                for (let x of keys!) {
-                    if (this.identity.judgements![x] !== undefined) {
-                        if (this.identity.judgements![x] !== "FeePaid") {
+                for (let x of keys) {
+                    if (this.identity.judgements[x] !== undefined) {
+                        if (this.identity.judgements[x] !== "FeePaid") {
                             count++;
                         } else {
                             pending++;
@@ -235,9 +249,7 @@ export default class ProfileHeader extends Vue {
 
     sendToken() {
         if (this.web3Accounts.length === 0) {
-            this.toast.error(
-                "Add wallet connection with Polkadot.js extension to use this feature"
-            );
+            this.toast.error(this.toastMessage);
         } else {
             this.sendTokenModalOpen = true;
         }
