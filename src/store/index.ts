@@ -152,7 +152,7 @@ export const store = createStore({
                     const response = await getRequest<GetIdentitiesResponse>(`/identities/search?wsProvider=${encodeURIComponent(wsAddress)}&page=${currentPage}&limit=${this.state.identitySearchPagination.limit}&searchKey=${encodeURIComponent(searchData.searchTerm)}`);
                     page = response.identities;
                 } catch (error) {
-                    if ([constants.ERROR_MESSAGE_IS_ARCHIVED_NODE, constants.ERROR_MESSAGE_IS_CHAIN_INDEXED, constants.ERROR_MESSAGE_ENDPOINT_CONNECT].includes(error.message)) {
+                    if ([constants.SERVER_ERROR_IS_NOT_ARCHIVED_NODE, constants.SERVER_ERROR_IS_NOT_CHAIN_INDEXED, constants.SERVER_ERROR_COULD_NOT_CONNECT_ENDPOINT].includes(error.message)) {
                         page = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
                     }
                     else {
@@ -185,7 +185,7 @@ export const store = createStore({
                 try {
                     identity = await getRequest<Identity>(`/identities/${request.address}?wsProvider=${encodeURIComponent(wsAddress)}`);
                 } catch (error) {
-                    if ([constants.ERROR_MESSAGE_IS_ARCHIVED_NODE, constants.ERROR_MESSAGE_IS_CHAIN_INDEXED, constants.ERROR_MESSAGE_ENDPOINT_CONNECT, constants.ERROR_MESSAGE_CANNOT_FIND_IDENTITY].includes(error.message)) {
+                    if ([constants.SERVER_ERROR_IS_NOT_ARCHIVED_NODE, constants.SERVER_ERROR_IS_NOT_CHAIN_INDEXED, constants.SERVER_ERROR_COULD_NOT_CONNECT_ENDPOINT, constants.SERVER_ERROR_CANNOT_FIND_IDENTITY].includes(error.message)) {
                         identity = await getIdentity(wsAddress, request.address);
                     }
                     else {
