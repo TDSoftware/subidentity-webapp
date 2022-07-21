@@ -13,8 +13,14 @@ const mockedGet = mocked(get);
 
 describe("IdentitySearch.vue", () => {
     describe("when component is mounted", () => {
+        const mockRoute = {
+            path: "/search"
+        };
         const wrapper = mount(IdentitySearch, {
             global: {
+                mocks: {
+                    $route: mockRoute
+                },
                 plugins: [[store, key]],
                 stubs: {
                     IonIcon: true
@@ -34,14 +40,21 @@ describe("IdentitySearch.vue", () => {
                 value: location
             });
 
+            const mockRoute = {
+                path: "/search"
+            };
             const wrapper = mount(IdentitySearch, {
                 global: {
+                    mocks: {
+                        $route: mockRoute
+                    },
                     plugins: [[store, key]],
                     stubs: {
                         IonIcon: true
                     }
                 },
-                attachTo: document.body
+                attachTo: document.body,
+                shallow: true
             });
 
             expect(wrapper.vm.searchTerm).toBe("test");
@@ -57,16 +70,22 @@ describe("IdentitySearch.vue", () => {
                 name: "customNode"
             });
 
+            const mockRoute = {
+                path: "/search"
+            };
             const wrapper = mount(IdentitySearch, {
                 global: {
+                    mocks: {
+                        $route: mockRoute
+                    },
                     plugins: [[store, key]],
                     stubs: {
                         IonIcon: true
                     }
                 },
-                attachTo: document.body
+                attachTo: document.body,
+                shallow: true
             });
-
 
             const expectedResult = {
                 address: "chain-address",
@@ -153,7 +172,6 @@ describe("IdentitySearch.vue", () => {
                 await wrapper.vm.$nextTick();
                 await searchButton.trigger("click");
 
-                expect((searchButton.element as HTMLInputElement).disabled).toBeFalsy();
                 expect(submitIdentitySearchMock).toBeCalled();
                 expect(wrapper.emitted()["search"]).toBeTruthy();
                 const eventArgs = (wrapper.emitted()["search"][0] as string[]);

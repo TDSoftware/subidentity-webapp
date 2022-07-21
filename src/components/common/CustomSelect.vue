@@ -1,5 +1,6 @@
 <template>
     <div
+        v-if="!isMobile"
         :tabindex="tabindex"
         class="custom-select"
         :style="
@@ -46,6 +47,38 @@
             </div>
         </div>
     </div>
+
+    <div v-else :tabindex="tabindex" class="pt-2">
+        <ul class="list-group list-group-flush">
+            <h6 class="list-group-item fw-bold">{{ prefix }}</h6>
+
+            <li
+                class="list-group-item border-0"
+                :style="
+                    selected.key === option.key
+                        ? { backgroundColor: '#eee' }
+                        : ''
+                "
+                :class="
+                    selected.key === option.key
+                        ? 'bg-secondary.bg-gradient'
+                        : ''
+                "
+                v-for="(option, i) of options"
+                :key="i"
+                ref="select-option"
+                @click="setOption(option)"
+            >
+                {{ option.displayValue }}
+                <p
+                    v-if="option.subText"
+                    class="fw-light text-muted subtext mb-0 pb-2"
+                >
+                    {{ option.subText }}
+                </p>
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script lang="ts">
@@ -79,6 +112,10 @@ import { UISelectOption } from "@/interfaces/UISelectOption";
         icon: {
             type: String,
             default: ""
+        },
+        isMobile: {
+            type: Boolean,
+            default: false
         }
     },
     watch: {
