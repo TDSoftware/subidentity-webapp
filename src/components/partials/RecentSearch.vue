@@ -13,7 +13,10 @@
                     <div class="card-body">
                         <div class="d-flex mb-3">
                             <span class="fw-light text-muted pt-1">
-                                <img src="../../assets/icons/search-outline-muted.svg" style="width: 19px">
+                                <img
+                                    src="../../assets/icons/search-outline-muted.svg"
+                                    style="width: 19px"
+                                />
                             </span>
                             <div
                                 class="
@@ -27,9 +30,15 @@
                                 "
                             >
                                 <div class="fw-light text-muted">
-                                    <img src="../../assets/icons/git-network-outline-muted.svg" style="width: 16px; margin-top: -4px">
+                                    <img
+                                        src="../../assets/icons/git-network-outline-muted.svg"
+                                        style="width: 16px; margin-top: -4px"
+                                    />
                                 </div>
-                                <div class="mx-2">
+                                <div
+                                    class="text-nowrap text-truncate mx-2"
+                                    style="max-width: 179px"
+                                >
                                     {{ recentSearch.selectedChainKey }}
                                 </div>
                             </div>
@@ -66,7 +75,10 @@
                 class="btn btn-light"
                 @click="clearRecentSearches"
             >
-                <img src="../../assets/icons/trash.svg" style="width: 18px; margin-top: -5px">
+                <img
+                    src="../../assets/icons/trash.svg"
+                    style="width: 18px; margin-top: -5px"
+                />
                 Clear Recent Searches
             </button>
         </div>
