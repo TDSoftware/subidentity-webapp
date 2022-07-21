@@ -264,18 +264,18 @@ export const store = createStore({
 
             identity.governance = [
                 {
-                    primaryObject: ActivityObject.TreasuryTip,
-                    primaryObjectNumber: 0,
+                    primaryObject: ActivityObject.Referenda,
+                    primaryObjectNumber: 24,
                     secondaryObject: null,
                     secondaryObjectNumber: 0,
                     additionalInfoType: InfoType.Reason,
                     additionalInfoValue: "This was great",
-                    activity: Activity.Tipped,
+                    activity: Activity.VotedAye,
                     block: 10007882,
-                    type: AccountActivityTypeEnum.Treasury
+                    type: AccountActivityTypeEnum.ProVote
                 },
                 {
-                    primaryObject: ActivityObject.TreasurySpend,
+                    primaryObject: ActivityObject.DemocracyProposal,
                     primaryObjectNumber: 120,
                     secondaryObject: null,
                     secondaryObjectNumber: 0,
@@ -283,24 +283,24 @@ export const store = createStore({
                     additionalInfoValue: null,
                     activity: Activity.Proposed,
                     block: 10006282,
-                    type: AccountActivityTypeEnum.Treasury
+                    type: AccountActivityTypeEnum.Info
                 },
                 {
-                    primaryObject: ActivityObject.CouncilMotion,
-                    primaryObjectNumber: 100,
-                    secondaryObject: ActivityObject.TreasurySpend,
-                    secondaryObjectNumber: 90,
-                    additionalInfoType: null,
-                    additionalInfoValue: null,
+                    primaryObject: ActivityObject.Referenda,
+                    primaryObjectNumber: 0,
+                    secondaryObject: null,
+                    secondaryObjectNumber: 0,
+                    additionalInfoType: InfoType.Reason,
+                    additionalInfoValue: "This was great",
                     activity: Activity.VotedAye,
-                    block: 10006282,
+                    block: 10007882,
                     type: AccountActivityTypeEnum.ProVote
                 },
                 {
-                    primaryObject: ActivityObject.CouncilMotion,
+                    primaryObject: ActivityObject.Referenda,
                     primaryObjectNumber: 99,
                     secondaryObject: ActivityObject.TreasurySpend,
-                    secondaryObjectNumber: 89,
+                    secondaryObjectNumber: 0,
                     additionalInfoType: null,
                     additionalInfoValue: null,
                     activity: Activity.VotedNay,

@@ -46,6 +46,8 @@ export default class ProfileActivity extends Vue {}
     }
     p {
         margin: 0;
+        display: flex;
+        flex-direction: column;
         justify-content: center;
         overflow-wrap: anywhere;
     }

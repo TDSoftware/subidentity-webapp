@@ -19,7 +19,7 @@
                     <ProfileActivity
                         v-if="governance.type === 'PRO_VOTE'"
                         icon="happy-outline.svg"
-                        message="voted yay on council motion #100 for treasury spend #90"
+                        message="voted yay on Referenda #24"
                     />
 
                     <ProfileActivity
@@ -30,12 +30,17 @@
                     <ProfileActivity
                         v-if="governance.type === 'CON_VOTE'"
                         icon="sad-outline.svg"
-                        message="voted nay on council motion #99 for treasury spend #89"
+                        message="voted nay on Referenda #20"
                     />
                     <ProfileActivity
                         v-if="governance.type === 'COUNCILOR_MISSED'"
                         icon="warning-outline.svg"
                         message="did not vote on council motion #96 for treasury spend #84"
+                    />
+                    <ProfileActivity
+                        v-if="governance.type === 'INFO'"
+                        icon="information-circle-outline.svg"
+                        message="proposed democracy proposal #17"
                     />
                 </div>
             </div>
