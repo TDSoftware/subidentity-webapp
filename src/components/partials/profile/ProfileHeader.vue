@@ -79,7 +79,6 @@
                 <button
                     class="btn btn-primary fw-bold w-100 text-white"
                     type="submit"
-                    :disabled="web3Accounts.length === 0"
                     @click="sendToken"
                 >
                     SEND TOKEN
@@ -168,7 +167,6 @@
             <button
                 class="btn btn-primary fw-bold w-100 text-white"
                 type="submit"
-                :disabled="web3Accounts.length === 0"
                 @click="sendToken"
             >
                 SEND TOKEN
@@ -184,8 +182,10 @@
 
 <script lang="ts">
 import { Identity } from "@npmjs_tdsoftware/subidentity";
+import { h } from "vue";
 import { Options, Vue } from "vue-class-component";
 import SendTokenModal from "./SendTokenModal.vue";
+import { useToast } from "vue-toastification";
 
 @Options({
     components: {
@@ -206,6 +206,21 @@ export default class ProfileHeader extends Vue {
     identity!: Identity;
     sendTokenModalOpen = false;
     web3Accounts!: [];
+    toast = useToast();
+
+    toastMessage = h("div", {}, [
+        h(
+            "p",
+            { class: "d-inline" },
+            "To use this feature, please attach a wallet connection with polkadot{.js} extension."
+        ),
+        h("a", {
+            href: "https://parallelfi.gitbook.io/parallel-finance/polkadot-network/parallel-product-guides/a-guide-to-testnet/polkadot-.js-connect-wallet",
+            target: "_blank",
+            innerHTML: " Click here for more help.",
+            class: "d-inline, text-white"
+        })
+    ]);
 
     checkJudgements() {
         if (this.identity) {
@@ -213,9 +228,9 @@ export default class ProfileHeader extends Vue {
                 const keys = this.identity.judgements?.keys();
                 let count = 0;
                 let pending = 0;
-                for (let x of keys!) {
-                    if (this.identity.judgements![x] !== undefined) {
-                        if (this.identity.judgements![x] !== "FeePaid") {
+                for (let x of keys) {
+                    if (this.identity.judgements[x] !== undefined) {
+                        if (this.identity.judgements[x] !== "FeePaid") {
                             count++;
                         } else {
                             pending++;
@@ -234,7 +249,11 @@ export default class ProfileHeader extends Vue {
     }
 
     sendToken() {
-        this.sendTokenModalOpen = true;
+        if (this.web3Accounts.length === 0) {
+            this.toast.error(this.toastMessage);
+        } else {
+            this.sendTokenModalOpen = true;
+        }
     }
     async copy(s: string, id: string) {
         if (!s) return;
