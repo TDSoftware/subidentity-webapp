@@ -216,6 +216,7 @@ export default class ProfileHeader extends Vue {
         ),
         h("a", {
             href: "https://parallelfi.gitbook.io/parallel-finance/polkadot-network/parallel-product-guides/a-guide-to-testnet/polkadot-.js-connect-wallet",
+            target: "_blank",
             innerHTML: " Click here for more help.",
             class: "d-inline, text-white"
         })
