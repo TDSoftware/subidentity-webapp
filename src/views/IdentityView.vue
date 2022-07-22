@@ -39,11 +39,8 @@
 
                 <div v-if="loaded && !error" class="plugins fade-in">
                     <BasicInfoPlugin :identity="identity" />
-                    <!--
-
-                        ADD MORE PLUGINS HERE 
-
-                    -->
+                    <GovernancePlugin :identity="identity" />
+                    <TreasuryPlugin :identity="identity" />
                 </div>
             </div>
         </div>
@@ -59,13 +56,17 @@ import { useStore } from "@/store";
 import { Identity } from "@npmjs_tdsoftware/subidentity";
 import Spinner from "@/components/common/Spinner.vue";
 import Alert from "@/components/common/Alert.vue";
+import TreasuryPlugin from "@/components/partials/profile/plugins/TreasuryPlugin.vue";
+import GovernancePlugin from "@/components/partials/profile/plugins/GovernancePlugin.vue";
 
 @Options({
     components: {
         Spinner,
         ProfileHeader,
         BasicInfoPlugin,
-        Alert
+        Alert,
+        TreasuryPlugin,
+        GovernancePlugin
     }
 })
 export default class IdentityView extends Vue {
@@ -170,6 +171,13 @@ export default class IdentityView extends Vue {
         &:last-child {
             margin-right: 0;
         }
+    }
+
+    @include media-breakpoint-down(lg) {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        gap: 30px;
     }
 }
 .spinner-wrapper {

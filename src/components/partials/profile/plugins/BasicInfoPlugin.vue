@@ -1,11 +1,10 @@
 <template>
-    <Accordion>
+    <Accordion icon="information-circle-outline.svg">
         <template #title>BASIC INFO</template>
         <template #body>
             <div
                 v-if="identity.basicInfo.address"
                 @click="copy(identity.basicInfo.address)"
-
             >
                 <p class="mb-0 fw-bold">Address</p>
                 <div class="d-flex flex-row">
@@ -17,7 +16,10 @@
                         {{ identity.basicInfo.address }}
                     </p>
                     <span class="text-decoration-none link-primary mx-2">
-                        <img src="../../../../assets/icons/copy-outline-primary.svg" style="width: 18px">
+                        <img
+                            src="../../../../assets/icons/copy-outline-primary.svg"
+                            style="width: 18px"
+                        />
                     </span>
                 </div>
             </div>
@@ -52,7 +54,10 @@
                             'https://twitter.com/' + identity.basicInfo.twitter
                         "
                     >
-                        <img src="../../../../assets/icons/link-outline-primary.svg" style="width: 16px">
+                        <img
+                            src="../../../../assets/icons/link-outline-primary.svg"
+                            style="width: 16px"
+                        />
                     </a>
                 </div>
             </div>
@@ -67,7 +72,10 @@
                         :href="identity.basicInfo.web"
                         target="_blank"
                     >
-                        <img src="../../../../assets/icons/link-outline-primary.svg" style="width: 16px">
+                        <img
+                            src="../../../../assets/icons/link-outline-primary.svg"
+                            style="width: 16px"
+                        />
                     </a>
                 </div>
             </div>
@@ -75,17 +83,19 @@
             <div v-if="judgements[0]">
                 <p class="mb-0 fw-bold">Judgements</p>
                 <div v-for="(judgement, index) in judgements" :key="index">
-                    <p v-if="judgement ==='feepaid'" class="fw-light text-muted" >
-                      Account requested judgement
+                    <p
+                        v-if="judgement === 'feepaid'"
+                        class="fw-light text-muted"
+                    >
+                        Account requested judgement
                     </p>
                     <p v-else class="fw-light text-muted">
                         A Registrar determined this identity as
                         <span class="text-success">
-                                  {{ judgement }}
-                              </span>
+                            {{ judgement }}
+                        </span>
                     </p>
                 </div>
-
             </div>
         </template>
     </Accordion>
@@ -109,9 +119,11 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class BasicInfoPlugin extends Vue {
     identity!: Identity;
-  
+
     get judgements() {
-        return this.identity.judgements?.map((judgement: string) => judgement.toLowerCase());
+        return this.identity.judgements?.map((judgement: string) =>
+            judgement.toLowerCase()
+        );
     }
 
     get balance() {
@@ -123,10 +135,10 @@ export default class BasicInfoPlugin extends Vue {
     async copy(s: string) {
         if (!s) return;
         await navigator.clipboard.writeText(s);
-        let element  = document.getElementById("id") as HTMLDivElement;
+        let element = document.getElementById("id") as HTMLDivElement;
         if (element.classList.contains("flash")) return;
         element.className += " flash";
-        setTimeout(function() {
+        setTimeout(function () {
             element.classList.remove("flash");
         }, 500);
     }
@@ -147,7 +159,6 @@ export default class BasicInfoPlugin extends Vue {
 <style lang="scss" scoped>
 @import "../../../../styles/variables";
 .flash {
-color: $primary !important;
+    color: $primary !important;
 }
-
 </style>
