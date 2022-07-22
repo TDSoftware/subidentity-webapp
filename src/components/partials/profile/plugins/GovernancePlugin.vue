@@ -16,31 +16,9 @@
                     >
                         Block #{{ governance.block }}
                     </p>
-                    <ProfileActivity
-                        v-if="governance.type === 'PRO_VOTE'"
-                        icon="happy-outline.svg"
-                        message="voted yay on Referenda #24"
-                    />
 
                     <ProfileActivity
-                        v-if="governance.type === 'TREASURY'"
-                        icon="wallet.svg"
-                        message="tipped on treasury tip with reason 'reason'"
-                    />
-                    <ProfileActivity
-                        v-if="governance.type === 'CON_VOTE'"
-                        icon="sad-outline.svg"
-                        message="voted nay on Referenda #20"
-                    />
-                    <ProfileActivity
-                        v-if="governance.type === 'COUNCILOR_MISSED'"
-                        icon="warning-outline.svg"
-                        message="did not vote on council motion #96 for treasury spend #84"
-                    />
-                    <ProfileActivity
-                        v-if="governance.type === 'INFO'"
-                        icon="information-circle-outline.svg"
-                        message="proposed democracy proposal #17"
+                        :activity="renderProfileActivity(governance)"
                     />
                 </div>
             </div>
@@ -69,6 +47,8 @@ import Accordion from "@/components/common/Accordion.vue";
 import { Options, Vue } from "vue-class-component";
 import { DetailedIdentity } from "@/interfaces/DetailedIdentity";
 import ProfileActivity from "../ProfileActivity.vue";
+import { formatProfileActivity } from "@/util/formatProfileActivity";
+import { AccountActivity } from "@/interfaces/AccountActivity";
 
 @Options({
     components: {
@@ -94,6 +74,10 @@ export default class GovernancePlugin extends Vue {
     toggleData(defaultLimit: number, dataLength: number) {
         this.limitBy =
             this.limitBy === defaultLimit ? dataLength : defaultLimit;
+    }
+
+    renderProfileActivity(governance: AccountActivity) {
+        return formatProfileActivity(governance);
     }
 }
 </script>

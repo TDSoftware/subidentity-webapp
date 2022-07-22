@@ -2,13 +2,11 @@
     <div class="d-flex flex-row avatar">
         <div class="img-wrapper">
             <img
-                :src="require(`@/assets/icons/${icon}`)"
+                :src="require(`@/assets/icons/${activity.iconName}`)"
                 class="icon border rounded-circle p-2"
             />
         </div>
-        <p class="mb-0 fw-bold w-100">
-            {{ message }}
-        </p>
+        <p class="mb-0 fw-bold w-100">{{ activity.text }}</p>
     </div>
 </template>
 
@@ -17,12 +15,8 @@ import { Options, Vue } from "vue-class-component";
 
 @Options({
     props: {
-        icon: {
-            type: String,
-            required: true
-        },
-        message: {
-            type: String,
+        activity: {
+            type: Object,
             required: true
         }
     }

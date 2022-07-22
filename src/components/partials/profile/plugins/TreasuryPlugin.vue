@@ -18,25 +18,7 @@
                     </p>
 
                     <ProfileActivity
-                        v-if="treasury.type === 'PRO_VOTE'"
-                        icon="happy-outline.svg"
-                        message="voted yay on council motion #100 for treasury spend #90"
-                    />
-
-                    <ProfileActivity
-                        v-if="treasury.type === 'TREASURY'"
-                        icon="wallet.svg"
-                        message="tipped on treasury tip with reason 'reason'"
-                    />
-                    <ProfileActivity
-                        v-if="treasury.type === 'CON_VOTE'"
-                        icon="sad-outline.svg"
-                        message="voted nay on council motion #99 for treasury spend #89"
-                    />
-                    <ProfileActivity
-                        v-if="treasury.type === 'COUNCILOR_MISSED'"
-                        icon="warning-outline.svg"
-                        message="did not vote on council motion #96 for treasury spend #84"
+                        :activity="renderProfileActivity(treasury)"
                     />
                 </div>
             </div>
@@ -65,6 +47,8 @@ import Accordion from "@/components/common/Accordion.vue";
 import { Options, Vue } from "vue-class-component";
 import { DetailedIdentity } from "@/interfaces/DetailedIdentity";
 import ProfileActivity from "../ProfileActivity.vue";
+import { formatProfileActivity } from "@/util/formatProfileActivity";
+import { AccountActivity } from "@/interfaces/AccountActivity";
 
 @Options({
     components: {
@@ -90,6 +74,10 @@ export default class TreasuryPlugin extends Vue {
     toggleData(defaultLimit: number, dataLength: number) {
         this.limitBy =
             this.limitBy === defaultLimit ? dataLength : defaultLimit;
+    }
+
+    renderProfileActivity(treasury: AccountActivity) {
+        return formatProfileActivity(treasury);
     }
 }
 </script>
