@@ -122,7 +122,7 @@ export default class ListView extends Vue {
 <style lang="scss" scoped>
 @import "../styles/variables";
 .sid-wrapper {
-    padding-top: 230px;
+    padding-top: 150px;
 
     @include media-breakpoint-up(lg) {
         padding-top: $headerHeight;

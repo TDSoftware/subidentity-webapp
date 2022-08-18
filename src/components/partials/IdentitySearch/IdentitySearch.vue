@@ -1,9 +1,12 @@
 <template>
-    <form @submit.prevent="submitIdentitySearch">
+    <form
+        v-if="$route.path === '/' || !isMobile"
+        @submit.prevent="submitIdentitySearch"
+    >
         <div class="bg-white shadow text-dark p-0 rounded search-container">
             <div class="row align-items-center">
                 <div class="col-lg col-12">
-                    <div class="input-group">
+                    <div class="input-group search">
                         <span class="input-group-text fw-light text-muted">
                             <img
                                 src="../../../assets/icons/search-outline-muted.svg"
@@ -65,6 +68,80 @@
             </div>
         </div>
     </form>
+
+    <form
+        v-if="$route.path === '/search' && isMobile"
+        @submit.prevent="submitIdentitySearch"
+    >
+        <nav
+            class="
+                navbar navbar-expand-lg navbar-light
+                bg-white
+                rounded-2
+                shadow
+            "
+        >
+            <div class="container-fluid">
+                <div class="col-lg col-10">
+                    <div class="input-group">
+                        <span class="input-group-text fw-light text-muted">
+                            <img
+                                src="../../../assets/icons/search-outline-muted.svg"
+                                class="fw-light text-muted"
+                            />
+                        </span>
+                        <input
+                            :disabled="busy"
+                            autofocus
+                            class="form-control text-muted search-input"
+                            placeholder="Search for a Name, E-Mail, Address"
+                            type="text"
+                            :value="searchTerm"
+                            @keyup="onInputKeyUp"
+                        />
+                    </div>
+                </div>
+                <button
+                    class="btn"
+                    :class="collapsed ? 'btn-secondary' : 'btn-primary'"
+                    type="button"
+                    @click="onCollapseClick"
+                >
+                    <img src="../../../assets/icons/setting-lines.svg" />
+                </button>
+                <div class="collapse navbar-collapse p-0" v-if="collapsed">
+                    <CustomSelect
+                        :options="chainOptions"
+                        class="select"
+                        v-model:selected-key="selectedChainKey"
+                        prefix="Search In"
+                        icon="git-network-outline-muted.svg"
+                        :isMobile="true"
+                    />
+                    <div
+                        class="col-lg col-12 edit-node-button-col"
+                        @click="onEditCustomNodeClick"
+                        :class="{ disabled: busy }"
+                        ref="customNode"
+                    >
+                        <img
+                            v-if="customNode"
+                            src="../../../assets/icons/create-outline-primary.svg"
+                            class="custom-icon"
+                        />
+                        <img
+                            v-else
+                            src="../../../assets/icons/add-circle-outline-sub.svg"
+                            class="custom-icon"
+                        />
+                        <span>
+                            {{ customNode ? "Edit" : "" }} Custom Node
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </form>
     <CustomNodeModal
         v-model:open="editCustomNodeModalOpen"
         :custom-node="customNode"
@@ -94,6 +171,13 @@ import CustomNodeModal from "./CustomNodeModal.vue";
         selectedChainKey() {
             this.checkIdentityPalletExists();
             this.$emit("error", "");
+        },
+        windowWidth() {
+            if (this.windowWidth <= 992) {
+                this.isMobile = true;
+            } else {
+                this.isMobile = false;
+            }
         }
     },
     emits: ["search", "error"]
@@ -107,12 +191,30 @@ export default class IdentitySearch extends Vue {
     customNode?: ChainInfo;
     chainOptions: UISelectOption[] = [];
 
+    collapsed = false;
+    isMobile = false;
+    windowWidth = window.innerWidth;
+
+    onCollapseClick() {
+        this.collapsed = !this.collapsed;
+    }
+
+    onResizeWindow() {
+        this.windowWidth = window.innerWidth;
+    }
+
     created() {
         const searchParams = new URLSearchParams(window.location.search);
         this.searchTerm = searchParams.get("query") ?? "";
         this.selectedChainKey = searchParams.get("chain") ?? "";
         this.loadCustomNodeFromStorage();
         this.setChainOptions();
+        window.addEventListener("resize", this.onResizeWindow);
+        if (this.windowWidth <= 992) {
+            this.isMobile = true;
+        } else {
+            this.isMobile = false;
+        }
     }
 
     onInputKeyUp(event: Event) {
@@ -204,6 +306,10 @@ export default class IdentitySearch extends Vue {
         this.setChainOptions();
         this.editCustomNodeModalOpen = false;
     }
+
+    destroyed() {
+        window.removeEventListener("resize", this.onResizeWindow);
+    }
 }
 </script>
 
@@ -215,7 +321,6 @@ export default class IdentitySearch extends Vue {
 }
 
 img {
-    //font-size: 20px;
     width: 22px;
 }
 
@@ -245,7 +350,7 @@ input:disabled.search-input.form-control {
     }
 }
 
-.input-group {
+.search {
     @include media-breakpoint-down(lg) {
         border-bottom: 1px solid #dee2e6;
     }
