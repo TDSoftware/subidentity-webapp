@@ -8,7 +8,12 @@
                     type="button"
                     @click="onCollapseClick"
                 >
-                    <img src="../../assets/icons/information-circle-outline.svg" class="icon">
+                    <img
+                        v-if="icon"
+                        :src="require(`@/assets/icons/${icon}`)"
+                        class="icon"
+                    />
+
                     <span class="fw-bold mx-2">
                         <slot name="title" />
                     </span>
@@ -26,7 +31,14 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 
-@Options({})
+@Options({
+    props: {
+        icon: {
+            type: String,
+            required: true
+        }
+    }
+})
 export default class Accordion extends Vue {
     collapsed = false;
 

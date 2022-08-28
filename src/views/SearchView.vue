@@ -71,6 +71,8 @@ export default class SearchView extends Vue {
             if (e instanceof Error) {
                 this.error = this.error + e.message;
             }
+        } finally {
+            this.store.commit("decrementBusyCounter");
         }
 
         if (this.searchResults.length === 1) {

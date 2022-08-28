@@ -1,6 +1,6 @@
 {
   "name": "subidentity-webapp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -9,7 +9,7 @@
     "test": "jest --verbose"
   },
   "dependencies": {
-    "@npmjs_tdsoftware/subidentity": "^0.0.10",
+    "@npmjs_tdsoftware/subidentity": "^0.3.1",
     "@polkadot/api": "^8.9.1",
     "@polkadot/extension-dapp": "^0.44.1",
     "async": "^2.6.4",
@@ -19,6 +19,7 @@
     "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.3",
+    "vue-toastification": "^2.0.0-rc.5",
     "vuex": "^4.0.0"
   },
   "devDependencies": {

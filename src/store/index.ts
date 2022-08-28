@@ -7,9 +7,8 @@ import { getChainAddress } from "@/util/chains";
 import { LoadIdentityRequest } from "@/interfaces/LoadIdentityRequest";
 import { Pagination } from "@/interfaces/Pagination";
 import { ImplementsPalletStoreItem } from "@/interfaces/ImplementsPalletStoreItem";
-import config from "@/config";
+import constants from "@/constants";
 import { apiAvailable, getRequest } from "@/util/http";
-import { GetIdentitiesResponse } from "@/interfaces/http/GetIdentitiesResponse";
 import { GetChainStatusResponse } from "@/interfaces/http/GetChainStatusResponse";
 import { GetVersionResponse } from "@/interfaces/http/GetVersionResponse";
 import { ApiPromise } from "@polkadot/api";
@@ -20,6 +19,7 @@ import {
 } from "@polkadot/extension-dapp";
 import type { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import { LoadSendTokenRequest } from "@/interfaces/LoadSendTokenRequest";
+import { DetailedIdentity, AccountActivityTypeEnum } from "@npmjs_tdsoftware/subidentity";
 
 
 export interface StoreI {
@@ -98,9 +98,8 @@ export const store = createStore({
             const maxItemsInStorage = 12;
             const recentSearches = get<Array<SearchData<Identity>>>(StoreKey.RecentSearches) ?? [];
             const foundSeachTermIndex = recentSearches.findIndex((element) => element.searchTerm === searchData.searchTerm && element.selectedChainKey === searchData.selectedChainKey);
-
-            // if search term found
-            if (foundSeachTermIndex !== -1) {
+            const searchTermFund = foundSeachTermIndex !== -1;
+            if (searchTermFund) {
                 recentSearches.splice(foundSeachTermIndex, 1);
                 recentSearches.push(searchData);
                 set(StoreKey.RecentSearches, recentSearches);
@@ -109,7 +108,6 @@ export const store = createStore({
                 push(StoreKey.RecentSearches, searchData, maxItemsInStorage);
                 state.recentSearches = get<SearchData<Identity>[]>(StoreKey.RecentSearches) ?? [];
             }
-
         },
 
         clearRecentSearches(state: StoreI) {
@@ -145,24 +143,7 @@ export const store = createStore({
             if (!wsAddress) {
                 throw new Error("No address given for chain: " + searchData.selectedChainKey);
             }
-
-            let page: Page<Identity>;
-            if (await apiAvailable()) {
-                try {
-                    const response = await getRequest<GetIdentitiesResponse>(`/identities/search?wsProvider=${encodeURIComponent(wsAddress)}&page=${currentPage}&limit=${this.state.identitySearchPagination.limit}&searchKey=${encodeURIComponent(searchData.searchTerm)}`);
-                    page = response.identities;
-                } catch (error) {
-                    if (["Provided node is not an archive node.", "Chain is not indexed yet.", "Could not connect to endpoint."].includes(error.message)) {
-                        page = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
-                    }
-                    else {
-                        throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
-                    }
-
-                }
-            } else {
-                page = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
-            }
+            const page: Page<Identity> = await searchIdentities(wsAddress, searchData.searchTerm, currentPage, this.state.identitySearchPagination.limit);
             console.log("[store/index] Got identities: ", page);
             context.commit("paginateSearchResult", page);
             searchData.results = page.items;
@@ -180,21 +161,138 @@ export const store = createStore({
             if (!wsAddress) {
                 throw new Error("No address given for chain: " + request.chain);
             }
-            let identity;
+            let identity: DetailedIdentity;
             if (await apiAvailable()) {
                 try {
                     identity = await getRequest<Identity>(`/identities/${request.address}?wsProvider=${encodeURIComponent(wsAddress)}`);
                 } catch (error) {
-                    if (["Provided node is not an archive node.", "Chain is not indexed yet.", "Unable to find an identity with the provided address.", "Could not connect to endpoint."].includes(error.message)) {
+                    if ([constants.SERVER_ERROR_IS_NOT_ARCHIVE_NODE, constants.SERVER_ERROR_IS_NOT_CHAIN_INDEXED, constants.SERVER_ERROR_COULD_NOT_CONNECT_ENDPOINT, constants.SERVER_ERROR_CANNOT_FIND_IDENTITY].includes(error.message)) {
                         identity = await getIdentity(wsAddress, request.address);
                     }
                     else {
-                        throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
+                        throw new Error("Something went wrong while trying to fetch this information");
                     }
                 }
             } else {
                 identity = await getIdentity(wsAddress, request.address);
             }
+
+            // //TODO-- get governance and treasury data from npm package
+            // identity.treasury = [
+            //     {
+            //         primaryObject: ActivityObject.TreasuryTip,
+            //         primaryObjectValue: 0,
+            //         secondaryObject: null,
+            //         secondaryObjectValue: 0,
+            //         additionalInfoType: InfoType.Reason,
+            //         additionalInfoValue: "This was great",
+            //         activity: Activity.Tipped,
+            //         block: 10007882,
+            //         type: AccountActivityTypeEnum.Treasury
+            //     },
+            //     {
+            //         primaryObject: ActivityObject.TreasurySpend,
+            //         primaryObjectValue: 120,
+            //         secondaryObject: null,
+            //         secondaryObjectValue: 0,
+            //         additionalInfoType: null,
+            //         additionalInfoValue: null,
+            //         activity: Activity.Proposed,
+            //         block: 10006282,
+            //         type: AccountActivityTypeEnum.Treasury
+            //     },
+            //     {
+            //         primaryObject: ActivityObject.CouncilMotion,
+            //         primaryObjectValue: 100,
+            //         secondaryObject: ActivityObject.TreasurySpend,
+            //         secondaryObjectValue: 90,
+            //         additionalInfoType: null,
+            //         additionalInfoValue: null,
+            //         activity: Activity.VotedAye,
+            //         block: 10006282,
+            //         type: AccountActivityTypeEnum.ProVote
+            //     },
+            //     {
+            //         primaryObject: ActivityObject.CouncilMotion,
+            //         primaryObjectValue: 99,
+            //         secondaryObject: ActivityObject.TreasurySpend,
+            //         secondaryObjectValue: 89,
+            //         additionalInfoType: null,
+            //         additionalInfoValue: null,
+            //         activity: Activity.VotedNay,
+            //         block: 10006082,
+            //         type: AccountActivityTypeEnum.ConVote
+            //     },
+            //     {
+            //         primaryObject: ActivityObject.CouncilMotion,
+            //         primaryObjectValue: 96,
+            //         secondaryObject: ActivityObject.TreasurySpend,
+            //         secondaryObjectValue: 84,
+            //         additionalInfoType: null,
+            //         additionalInfoValue: null,
+            //         activity: Activity.MissedVote,
+            //         block: 10000082,
+            //         type: AccountActivityTypeEnum.CouncilorMissed
+            //     }
+            // ];
+
+            // identity.governance = [
+            //     {
+            //         primaryObject: ActivityObject.Referenda,
+            //         primaryObjectValue: 24,
+            //         secondaryObject: null,
+            //         secondaryObjectValue: 0,
+            //         additionalInfoType: InfoType.Reason,
+            //         additionalInfoValue: "This was great",
+            //         activity: Activity.VotedAye,
+            //         block: 10007882,
+            //         type: AccountActivityTypeEnum.ProVote
+            //     },
+            //     {
+            //         primaryObject: ActivityObject.DemocracyProposal,
+            //         primaryObjectValue: 120,
+            //         secondaryObject: null,
+            //         secondaryObjectValue: 0,
+            //         additionalInfoType: null,
+            //         additionalInfoValue: null,
+            //         activity: Activity.Proposed,
+            //         block: 10006282,
+            //         type: AccountActivityTypeEnum.Info
+            //     },
+            //     {
+            //         primaryObject: ActivityObject.Referenda,
+            //         primaryObjectValue: 0,
+            //         secondaryObject: null,
+            //         secondaryObjectValue: 0,
+            //         additionalInfoType: InfoType.Reason,
+            //         additionalInfoValue: "This was great",
+            //         activity: Activity.VotedAye,
+            //         block: 10007882,
+            //         type: AccountActivityTypeEnum.ProVote
+            //     },
+            //     {
+            //         primaryObject: ActivityObject.Referenda,
+            //         primaryObjectValue: 99,
+            //         secondaryObject: ActivityObject.TreasurySpend,
+            //         secondaryObjectValue: 0,
+            //         additionalInfoType: null,
+            //         additionalInfoValue: null,
+            //         activity: Activity.VotedNay,
+            //         block: 10006082,
+            //         type: AccountActivityTypeEnum.ConVote
+            //     },
+            //     {
+            //         primaryObject: ActivityObject.CouncilMotion,
+            //         primaryObjectValue: 96,
+            //         secondaryObject: ActivityObject.TreasurySpend,
+            //         secondaryObjectValue: 84,
+            //         additionalInfoType: null,
+            //         additionalInfoValue: null,
+            //         activity: Activity.MissedVote,
+            //         block: 10000082,
+            //         type: AccountActivityTypeEnum.CouncilorMissed
+            //     }
+            // ];
 
             console.log("[store/index] Got identity by address: ", identity);
             return identity;
@@ -206,7 +304,7 @@ export const store = createStore({
                     const response = await getRequest<GetVersionResponse>("/version");
                     context.commit("setApiVersion", response);
                 } catch (error) {
-                    throw new Error(`Something went wrong while trying to fetch this information: ${error.message}`);
+                    throw new Error("Something went wrong while trying to fetch this information");
                 }
 
             }
@@ -220,7 +318,7 @@ export const store = createStore({
             }
             const localStorageKey = "chain-" + wsAddress + "-implements-pallet";
             const implementsPalletStoreItem = get<ImplementsPalletStoreItem>(localStorageKey);
-            if (implementsPalletStoreItem && implementsPalletStoreItem.timestamp > Date.now() - config.CACHE_DURATION_IMPLEMENTS_PALLET) {
+            if (implementsPalletStoreItem && implementsPalletStoreItem.timestamp > Date.now() - constants.CACHE_DURATION_IMPLEMENTS_PALLET) {
                 return implementsPalletStoreItem.implementsPallet;
             }
             context.commit("incrementBusyCounter");
@@ -270,6 +368,7 @@ export const store = createStore({
 
             return accounts;
         },
+
         async SEND_TOKEN(context: ActionContext<StoreI, StoreI>, request: LoadSendTokenRequest): Promise<void> {
             context.commit("incrementBusyCounter");
             context.commit("setTransferTokenSuccessStatus", false);

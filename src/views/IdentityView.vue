@@ -2,26 +2,12 @@
     <div class="sid-wrapper">
         <div class="subidentity-container pb-5">
             <div class="container-medium">
-                <div
-                    v-if="error || backToHome"
-                    class="d-flex flex-row pt-4 link-primary"
-                    @click="$router.push('/')"
-                >
-                    <img
-                        src="../assets/icons/arrow-back-outline-primary.svg"
-                        class="back-arrow"
-                    />
+                <div v-if="error || backToHome" class="d-flex flex-row pt-4 link-primary" @click="$router.push('/')">
+                    <img src="../assets/icons/arrow-back-outline-primary.svg" class="back-arrow" />
                     <p class="mx-2">Back to home</p>
                 </div>
-                <div
-                    v-else
-                    class="d-flex flex-row pt-4 link-primary"
-                    @click="$router.go(-1)"
-                >
-                    <img
-                        src="../assets/icons/arrow-back-outline-primary.svg"
-                        class="back-arrow"
-                    />
+                <div v-else class="d-flex flex-row pt-4 link-primary" @click="$router.go(-1)">
+                    <img src="../assets/icons/arrow-back-outline-primary.svg" class="back-arrow" />
 
                     <p class="mx-2">Back to results</p>
                 </div>
@@ -31,19 +17,12 @@
                 <div v-if="!loaded" class="spinner-wrapper">
                     <Spinner color="#D0D0D0" :size="40" :width="3" />
                 </div>
-                <ProfileHeader
-                    v-if="loaded && !error"
-                    :identity="identity"
-                    :web3Accounts="web3Accounts"
-                />
+                <ProfileHeader v-if="loaded && !error" :identity="identity" :web3Accounts="web3Accounts" />
 
                 <div v-if="loaded && !error" class="plugins fade-in">
                     <BasicInfoPlugin :identity="identity" />
-                    <!--
-
-                        ADD MORE PLUGINS HERE 
-
-                    -->
+                    <GovernancePlugin v-if="identity?.governance" :identity="identity" />
+                    <TreasuryPlugin v-if="identity?.treasury" :identity="identity" />
                 </div>
             </div>
         </div>
@@ -59,13 +38,17 @@ import { useStore } from "@/store";
 import { Identity } from "@npmjs_tdsoftware/subidentity";
 import Spinner from "@/components/common/Spinner.vue";
 import Alert from "@/components/common/Alert.vue";
+import TreasuryPlugin from "@/components/partials/profile/plugins/TreasuryPlugin.vue";
+import GovernancePlugin from "@/components/partials/profile/plugins/GovernancePlugin.vue";
 
 @Options({
     components: {
         Spinner,
         ProfileHeader,
         BasicInfoPlugin,
-        Alert
+        Alert,
+        TreasuryPlugin,
+        GovernancePlugin
     }
 })
 export default class IdentityView extends Vue {
@@ -78,7 +61,7 @@ export default class IdentityView extends Vue {
     identity?: Identity;
     error = "";
     backToHome = false;
-    web3Accounts? = [];
+    web3Accounts?= [];
 
     created() {
         this.loadWeb3Accounts();
@@ -128,33 +111,38 @@ export default class IdentityView extends Vue {
 
 <style lang="scss" scoped>
 @import "../styles/variables";
+
 .logo {
     cursor: pointer;
 }
+
 .back-arrow {
     width: 16px;
     height: 16px;
     margin-top: 5px;
 }
+
 .sid-wrapper {
     padding-top: $headerHeightMobile;
 
-    & > * {
+    &>* {
         min-height: calc(100vh - $footerHeight - $headerHeightMobile);
     }
 
     @include media-breakpoint-up(lg) {
         padding-top: $headerHeight;
 
-        & > * {
+        &>* {
             min-height: calc(100vh - $footerHeight - $headerHeight);
         }
     }
 }
+
 .plugins {
     display: flex;
     flex-direction: row;
-    & > * {
+
+    &>* {
         width: 100%;
 
         @include media-breakpoint-up(sm) {
@@ -171,7 +159,15 @@ export default class IdentityView extends Vue {
             margin-right: 0;
         }
     }
+
+    @include media-breakpoint-down(lg) {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
 }
+
 .spinner-wrapper {
     width: 100%;
     text-align: center;
