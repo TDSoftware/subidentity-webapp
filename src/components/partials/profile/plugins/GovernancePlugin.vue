@@ -4,39 +4,27 @@
         <template #body>
             <div class="mb-3" v-for="(governance, i) in governance" :key="i">
                 <div v-if="i < limitBy">
-                    <p
-                        class="
-                            fw-light
+                    <p class="
+                            fw-normal
                             text-muted
                             border border-1
                             rounded-2
-                            p-2
-                            w-50
-                        "
-                    >
+                            py-1 px-2
+                            text-nowrap
+                            d-inline-block
+                        " style="font-size: 12px;">
                         Block #{{ governance.block }}
                     </p>
 
-                    <ProfileActivity
-                        :activity="renderProfileActivity(governance)"
-                    />
+                    <ProfileActivity :activity="renderProfileActivity(governance)" />
                 </div>
             </div>
 
-            <div
-                v-if="governance.length > 10"
-                class="d-flex flex-row pt-4 link-primary"
-            >
-                <p
-                    class="mx-2"
-                    @click="toggleData(defaultLimit, governance.length)"
-                >
-                    {{ limitBy === 10 ? "Show more" : "  Show less" }}
+            <div v-if="governance.length > 10" class="d-flex flex-row pt-4 link-primary">
+                <p class="mx-2" @click="toggleData(defaultLimit, governance.length)">
+                    {{ limitBy === 10 ? "Show more" : " Show less" }}
                 </p>
-                <img
-                    src="../../../../assets/icons/arrow-forward-outline-primary.svg"
-                    class="arrow"
-                />
+                <img src="../../../../assets/icons/arrow-forward-outline-primary.svg" class="arrow" />
             </div>
         </template>
     </Accordion>
@@ -45,10 +33,11 @@
 <script lang="ts">
 import Accordion from "@/components/common/Accordion.vue";
 import { Options, Vue } from "vue-class-component";
-import { DetailedIdentity } from "@/interfaces/DetailedIdentity";
+import { DetailedIdentity } from "@npmjs_tdsoftware/subidentity";
 import ProfileActivity from "../ProfileActivity.vue";
 import { formatProfileActivity } from "@/util/formatProfileActivity";
-import { AccountActivity } from "@/interfaces/AccountActivity";
+import { AccountActivity } from "@npmjs_tdsoftware/subidentity";
+import { useRoute } from "vue-router";
 
 @Options({
     components: {
@@ -63,6 +52,7 @@ import { AccountActivity } from "@/interfaces/AccountActivity";
     }
 })
 export default class GovernancePlugin extends Vue {
+    route = useRoute();
     identity!: DetailedIdentity;
     defaultLimit = 10;
     limitBy = 10;
@@ -71,19 +61,24 @@ export default class GovernancePlugin extends Vue {
         return this.identity.governance;
     }
 
+    get currentChainName() {
+        return this.route.params.chain as string;
+    }
+
     toggleData(defaultLimit: number, dataLength: number) {
         this.limitBy =
             this.limitBy === defaultLimit ? dataLength : defaultLimit;
     }
 
     renderProfileActivity(governance: AccountActivity) {
-        return formatProfileActivity(governance);
+        return formatProfileActivity(governance, this.currentChainName);
     }
 }
 </script>
 
 <style lang="scss" scoped>
 @import "../../../../styles/variables";
+
 .arrow {
     width: 16px;
     height: 16px;
