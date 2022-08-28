@@ -42,7 +42,7 @@ SubIdentity Webapp by default uses the [SubIdentity npm package](https://www.npm
 But if you want to extend the functionality you can download [the package source code](https://github.com/TDSoftware/subidentity-package), adjust it to your needs and use it with `npm link` locally.
 
 ### Backend
-In order to improve the performance of the web application, it can be connected to the [SubIdentity backend](https://github.com/TDSoftware/subidentity-backend). For more information on how to run the backend, or it's features, read the [project's readme](https://github.com/TDSoftware/subidentity-backend/blob/main/readme.md) as only the connection to the web application is explained here.
+In order to get more detailed information about identities of a Substrate based chain, the webapp can be connected to the [SubIdentity backend](https://github.com/TDSoftware/subidentity-backend). For more information on how to run the backend, or it's features, read the [project's readme](https://github.com/TDSoftware/subidentity-backend/blob/main/readme.md) as only the connection to the web application is explained here.
 If the backend is running, and you want to use the backend to fetch identities, follow these steps before running or building the web application:
     1. Duplicate the [.env.template](./.env.template) file and name it `.env`.
     2. Edit the value for `VUE_APP_API_URL` to match your backend URL. If you are running the backend locally, it might look like this: `VUE_APP_API_URL=http://localhost:5001`
