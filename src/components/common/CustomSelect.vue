@@ -1,57 +1,28 @@
 <template>
-    <div
-        v-if="!isMobile"
-        :tabindex="tabindex"
-        class="custom-select"
-        :style="
-            hasBorder
-                ? { border: 'solid 1px #dee2e6', borderRadius: '0.25rem' }
-                : ''
-        "
-        @blur="open = false"
-    >
+    <div v-if="!isMobile" :tabindex="tabindex" class="custom-select" :style="
+        hasBorder
+            ? { border: 'solid 1px #dee2e6', borderRadius: '0.25rem' }
+            : ''
+    " @blur="open = false">
         <span v-if="icon" class="icon fw-light text-muted">
-            <img
-                :src="require(`@/assets/icons/${icon}`)"
-                class="fw-light text-muted"
-                style="width: 16px"
-            />
+            <img :src="require(`@/assets/icons/${icon}`)" class="fw-light text-muted" style="width: 16px" />
         </span>
-        <div
-            :class="{ open: open }"
-            class="selected fw-light text-muted"
-            :style="!icon ? { paddingLeft: '12px' } : ''"
-            @click="onSelectClick"
-        >
+        <div :class="{ open: open }" class="selected fw-light text-muted" :style="!icon ? { paddingLeft: '12px' } : ''"
+            @click="onSelectClick">
             {{
-                prefix
-                    ? `${prefix} ${selected?.displayValue}`
-                    : selected?.displayValue
+            prefix
+            ? `${prefix} ${selected?.displayValue}`
+            : selected?.displayValue
             }}
         </div>
         <div :class="{ selectHide: !open }" class="items">
-            <div
-                v-for="(option, i) of options"
-                :key="i"
-                ref="select-option"
-                class="select-option fw-light text-body"
-                @click="setOption(option)"
-            >
+            <div v-for="(option, i) of options" :key="i" ref="select-option" class="select-option fw-light text-body"
+                @click="setOption(option)">
                 {{ option.displayValue }}
-                <p
-                    v-if="option.subText"
-                    class="fw-light text-muted subtext mb-0 pb-2"
-                >
+                <p v-if="option.subText" class="fw-light text-muted subtext mb-0 pb-2">
                     {{ option.subText }}
-                    <span
-                        class="tooltip"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top"
-                        :title="msg"
-                    >
-                        <img
-                            src="@/assets/icons/information-circle-outline.svg"
-                        />  
+                    <span class="tooltip" data-bs-toggle="tooltip" data-bs-placement="top" :title="msg">
+                        <img src="@/assets/icons/information-circle-outline.svg" />
                     </span>
                 </p>
             </div>
@@ -62,28 +33,17 @@
         <ul class="list-group list-group-flush">
             <h6 class="list-group-item fw-bold">{{ prefix }}</h6>
 
-            <li
-                class="list-group-item border-0"
-                :style="
-                    selected.key === option.key
-                        ? { backgroundColor: '#eee' }
-                        : ''
-                "
-                :class="
+            <li class="list-group-item border-0" :style="
+                selected.key === option.key
+                    ? { backgroundColor: '#eee' }
+                    : ''
+            " :class="
                     selected.key === option.key
                         ? 'bg-secondary.bg-gradient'
                         : ''
-                "
-                v-for="(option, i) of options"
-                :key="i"
-                ref="select-option"
-                @click="setOption(option)"
-            >
+                " v-for="(option, i) of options" :key="i" ref="select-option" @click="setOption(option)">
                 {{ option.displayValue }}
-                <p
-                    v-if="option.subText"
-                    class="fw-light text-muted subtext mb-0 pb-2"
-                >
+                <p v-if="option.subText" class="fw-light text-muted subtext mb-0 pb-2">
                     {{ option.subText }}
                 </p>
             </li>
@@ -161,7 +121,7 @@ export default class CustomSelect extends Vue {
         this.selected =
             this.options.find(({ key }) => key === this.selectedKey) ??
             this.options[0];
-        this.$emit("update:selectedKey", this.selected?.key);
+        this.$emit("update:selectedKey", this.selected?.key ?? "");
     }
 
     onSelectClick() {
@@ -171,13 +131,14 @@ export default class CustomSelect extends Vue {
     setOption(option: UISelectOption) {
         this.selected = option;
         this.open = false;
-        this.$emit("update:selectedKey", this.selected?.key);
+        this.$emit("update:selectedKey", this.selected?.key ?? "");
     }
 }
 </script>
 
 <style lang="scss" scoped>
 @import "../../styles/variables.scss";
+
 img {
     margin-top: -9px;
     height: 16px;
@@ -229,6 +190,7 @@ img {
             transform-origin: right;
         }
     }
+
     .tooltip {
         display: inline-block;
         position: relative;
