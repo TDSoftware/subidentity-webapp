@@ -160,6 +160,8 @@ import { ChainInfo, chains } from "../../../util/chains";
 import { UISelectOption } from "@/interfaces/UISelectOption";
 import { get, StoreKey } from "@/util/storage";
 import CustomNodeModal from "./CustomNodeModal.vue";
+import { GetChainStatusResponse } from "@/interfaces/http/GetChainStatusResponse";
+import { getRequest } from "@/util/http";
 
 @Options({
     components: {
@@ -234,22 +236,24 @@ export default class IdentitySearch extends Vue {
         return !this.searchTerm || this.busy || !this.implementsPallet;
     }
 
-    setChainOptions() {
-        const options = chains.map((chainInfo: ChainInfo) => {
-            return {
+    async setChainOptions() {
+        const chainOptions: UISelectOption[] = [];
+        for (const chainInfo of chains) {
+            chainOptions.push({
                 key: chainInfo.key,
                 displayValue: chainInfo.name,
-                subText: ""
-            };
-        });
+                subText: (await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(chainInfo.address)}`)).chainStatus.isIndexed ? "Indexed" : "Not Indexed"
+            });
+        }
+
         if (this.customNode) {
-            options.push({
+            chainOptions.push({
                 key: this.customNode.key,
                 displayValue: this.customNode.name,
                 subText: this.customNode.address
             });
         }
-        this.chainOptions = options;
+        this.chainOptions = chainOptions;
     }
 
     /**

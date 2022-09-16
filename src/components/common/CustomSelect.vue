@@ -43,6 +43,16 @@
                     class="fw-light text-muted subtext mb-0 pb-2"
                 >
                     {{ option.subText }}
+                    <span
+                        class="tooltip"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        :title="msg"
+                    >
+                        <img
+                            src="@/assets/icons/information-circle-outline.svg"
+                        />  
+                    </span>
                 </p>
             </div>
         </div>
@@ -145,6 +155,7 @@ export default class CustomSelect extends Vue {
         subText: ""
     };
     open = false;
+    msg = "Governance and treasury data will only be displayed if the chain has been indexed.";
 
     created() {
         this.selected =
@@ -218,6 +229,12 @@ img {
             transform-origin: right;
         }
     }
+    .tooltip {
+        display: inline-block;
+        position: relative;
+        top: 3px;
+    }
+
 
     .icon {
         position: absolute;
