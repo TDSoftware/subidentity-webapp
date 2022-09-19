@@ -157,11 +157,12 @@ import { useStore } from "../../../store";
 import Spinner from "../../common/Spinner.vue";
 import { SearchData } from "../../../interfaces/SearchData";
 import { ChainInfo, chains } from "../../../util/chains";
+import { LogRequest } from "../../../interfaces/LogRequest";
 import { UISelectOption } from "@/interfaces/UISelectOption";
 import { get, StoreKey } from "@/util/storage";
 import CustomNodeModal from "./CustomNodeModal.vue";
 import { GetChainStatusResponse } from "@/interfaces/http/GetChainStatusResponse";
-import { getRequest } from "@/util/http";
+import { getRequest, postRequest } from "@/util/http";
 
 @Options({
     components: {
@@ -291,6 +292,7 @@ export default class IdentitySearch extends Vue {
         };
         try {
             this.$emit("search", searchData);
+            this.logSearch();
         } catch (e) {
             this.$emit(
                 "error",
@@ -299,6 +301,14 @@ export default class IdentitySearch extends Vue {
             this.store.dispatch("DECREMENT_BUSY");
         }
         (this.$refs.searchButton as HTMLButtonElement).blur();
+    }
+
+    async logSearch() {
+        const data: LogRequest = {
+            info: this.searchTerm,
+            event: "SEARCH"
+        };
+        await postRequest("/log", data);
     }
 
     onEditCustomNodeClick() {
