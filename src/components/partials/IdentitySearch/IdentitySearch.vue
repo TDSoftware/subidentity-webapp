@@ -163,6 +163,7 @@ import { get, StoreKey } from "@/util/storage";
 import CustomNodeModal from "./CustomNodeModal.vue";
 import { GetChainStatusResponse } from "@/interfaces/http/GetChainStatusResponse";
 import { getRequest, postRequest } from "@/util/http";
+import { logEvent } from "@/util/eventLogger";
 
 @Options({
     components: {
@@ -292,7 +293,8 @@ export default class IdentitySearch extends Vue {
         };
         try {
             this.$emit("search", searchData);
-            this.logSearch();
+            const logInfo = `[${searchData.selectedChainKey}]: ${searchData.searchTerm}`;
+            logEvent(logInfo, "SEARCH");
         } catch (e) {
             this.$emit(
                 "error",
@@ -301,14 +303,6 @@ export default class IdentitySearch extends Vue {
             this.store.dispatch("DECREMENT_BUSY");
         }
         (this.$refs.searchButton as HTMLButtonElement).blur();
-    }
-
-    async logSearch() {
-        const data: LogRequest = {
-            info: this.searchTerm,
-            event: "SEARCH"
-        };
-        await postRequest("/log", data);
     }
 
     onEditCustomNodeClick() {
