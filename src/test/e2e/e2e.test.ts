@@ -17,6 +17,7 @@ describe('Basic Search Scenario', function () {
   beforeAll(async function () {
     driver = await new Builder().forBrowser(browser).build();
     driver.manage().window().maximize();
+    await driver.manage().setTimeouts( { implicit: 10000 } );
     await driver.get(frontendUrl);
   });
 
@@ -46,13 +47,13 @@ describe('Basic Search Scenario', function () {
     await fadeinChildren[0].click();
   });
 
-  it('Check that Basic Info Accordion exists', async function () {
+  it('Check that basic info box exists', async function () {
     await driver.wait(until.elementLocated(By.css('[data-v-0255e7ed]')), 10000);
     assert(await driver.findElement(By.css('[data-v-0255e7ed]')).isDisplayed());
     await driver.sleep(2000);
   });
 
-  it('Check that address in the body info is correct in fw-light text-muted', async function () {
+  it('Check that address in the body info is correct in basic info box', async function () {
     const address = await driver.findElement(By.css('[class="fw-light text-muted"]')).getText();
     const testAddress = '1hCMdtRsaRA4ZTEKpPKPvEjK9rZpGhyFnRHSDhqFMCEayRL'
     assert(address.includes(testAddress));
@@ -60,6 +61,55 @@ describe('Basic Search Scenario', function () {
 
   afterAll(async function () {
     await driver.sleep(3000);
+    await driver.quit();
+  });
+});
+
+describe('Plugin Scenario', function() {
+  let driver;
+
+  beforeAll(async function () {
+    driver = await new Builder().forBrowser(browser).build();
+    driver.manage().window().maximize();
+    const exampleIdentityAddress = '1hCMdtRsaRA4ZTEKpPKPvEjK9rZpGhyFnRHSDhqFMCEayRL';
+    await driver.get(frontendUrl + "/chain/polkadot/identity/" + exampleIdentityAddress);
+    await driver.sleep(2000);
+  });
+
+  it('Check that governance section exists', async function () {
+    await driver.wait(until.elementLocated(By.css('[data-v-cf40a3b0]')), 10000);
+    assert(await driver.findElement(By.css('[data-v-cf40a3b0]')).isDisplayed());
+  });
+
+  it('Check that treasury section exists', async function () {
+    await driver.wait(until.elementLocated(By.css('[data-v-7466b007]')), 10000);
+    assert(await driver.findElement(By.css('[data-v-7466b007]')).isDisplayed());
+  });
+
+  it('Check that subscan redirect works for governance', async function () {
+    const exampleLink = await driver.findElement(By.xpath('//a[contains(text(),"#163")]'));
+    assert(await exampleLink.isDisplayed());
+    await driver.executeScript("arguments[0].click();", exampleLink);
+    await driver.getAllWindowHandles().then(async function (handles) {
+      let newTabHandle;
+      for (let i = 0; i < handles.length; i++) {
+        await driver.switchTo().window(handles[i]);
+        if (await driver.getTitle() !== 'SubIdentity') {
+          newTabHandle = handles[i];
+        }
+      }
+      await driver.switchTo().window(newTabHandle).then(async function () {
+        await driver.sleep(2000);
+        driver.getCurrentUrl().then(async function (url) {
+          assert.equal(url, 'https://polkadot.subscan.io/council/163');
+          await driver.sleep(3000);
+        });
+      });
+    });
+  });
+
+  afterAll(async function () {
+    await driver.sleep(2000);
     await driver.quit();
   });
 });
