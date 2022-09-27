@@ -1,66 +1,30 @@
 <template>
-    <form
-        v-if="$route.path === '/' || !isMobile"
-        @submit.prevent="submitIdentitySearch"
-    >
+    <form v-if="$route.path === '/' || !isMobile" @submit.prevent="submitIdentitySearch">
         <div class="bg-white shadow text-dark p-0 rounded search-container">
             <div class="row align-items-center">
                 <div class="col-lg col-12">
                     <div class="input-group search">
                         <span class="input-group-text fw-light text-muted">
-                            <img
-                                src="../../../assets/icons/search-outline-muted.svg"
-                                class="fw-light text-muted"
-                            />
+                            <img src="../../../assets/icons/search-outline-muted.svg" class="fw-light text-muted" />
                         </span>
-                        <input
-                            :disabled="busy"
-                            autofocus
-                            class="form-control text-muted search-input"
-                            placeholder="Search for a Name, E-Mail, Address"
-                            type="text"
-                            :value="searchTerm"
-                            @keyup="onInputKeyUp"
-                        />
+                        <input :disabled="busy" autofocus class="form-control text-muted search-input"
+                            placeholder="Search for a Name, E-Mail, Address" type="text" :value="searchTerm"
+                            @keyup="onInputKeyUp" />
                     </div>
                 </div>
-                <div
-                    class="col-lg-3 col-12 custom-select-container"
-                    :class="{ disabled: busy }"
-                >
-                    <CustomSelect
-                        :options="chainOptions"
-                        class="select"
-                        v-model:selected-key="selectedChainKey"
-                        prefix="In"
-                        icon="git-network-outline-muted.svg"
-                    />
+                <div class="col-lg-3 col-12 custom-select-container" :class="{ disabled: busy }">
+                    <CustomSelect :options="chainOptions" class="select" v-model:selected-key="selectedChainKey"
+                        prefix="In" icon="git-network-outline-muted.svg" />
                 </div>
-                <div
-                    class="col-lg col-12 edit-node-button-col"
-                    @click="onEditCustomNodeClick"
-                    :class="{ disabled: busy }"
-                    ref="customNode"
-                >
-                    <img
-                        v-if="customNode"
-                        src="../../../assets/icons/create-outline-primary.svg"
-                        class="custom-icon"
-                    />
-                    <img
-                        v-else
-                        src="../../../assets/icons/add-circle-outline-sub.svg"
-                        class="custom-icon"
-                    />
+                <div class="col-lg col-12 edit-node-button-col" @click="onEditCustomNodeClick"
+                    :class="{ disabled: busy }" ref="customNode">
+                    <img v-if="customNode" src="../../../assets/icons/create-outline-primary.svg" class="custom-icon" />
+                    <img v-else src="../../../assets/icons/add-circle-outline-sub.svg" class="custom-icon" />
                     <span> {{ customNode ? "Edit" : "" }} Custom Node </span>
                 </div>
                 <div class="col d-grid mx-auto search-button-col">
-                    <button
-                        ref="searchButton"
-                        :disabled="submitButtonDisabled"
-                        class="btn btn-primary fw-normal text-white"
-                        type="submit"
-                    >
+                    <button ref="searchButton" :disabled="submitButtonDisabled"
+                        class="btn btn-primary fw-normal text-white" type="submit">
                         <Spinner v-if="busy" />
                         SEARCH
                     </button>
@@ -69,71 +33,36 @@
         </div>
     </form>
 
-    <form
-        v-if="$route.path === '/search' && isMobile"
-        @submit.prevent="submitIdentitySearch"
-    >
-        <nav
-            class="
+    <form v-if="$route.path === '/search' && isMobile" @submit.prevent="submitIdentitySearch">
+        <nav class="
                 navbar navbar-expand-lg navbar-light
                 bg-white
                 rounded-2
                 shadow
-            "
-        >
+            ">
             <div class="container-fluid">
                 <div class="col-lg col-10">
                     <div class="input-group">
                         <span class="input-group-text fw-light text-muted">
-                            <img
-                                src="../../../assets/icons/search-outline-muted.svg"
-                                class="fw-light text-muted"
-                            />
+                            <img src="../../../assets/icons/search-outline-muted.svg" class="fw-light text-muted" />
                         </span>
-                        <input
-                            :disabled="busy"
-                            autofocus
-                            class="form-control text-muted search-input"
-                            placeholder="Search for a Name, E-Mail, Address"
-                            type="text"
-                            :value="searchTerm"
-                            @keyup="onInputKeyUp"
-                        />
+                        <input :disabled="busy" autofocus class="form-control text-muted search-input"
+                            placeholder="Search for a Name, E-Mail, Address" type="text" :value="searchTerm"
+                            @keyup="onInputKeyUp" />
                     </div>
                 </div>
-                <button
-                    class="btn"
-                    :class="collapsed ? 'btn-secondary' : 'btn-primary'"
-                    type="button"
-                    @click="onCollapseClick"
-                >
+                <button class="btn" :class="collapsed ? 'btn-secondary' : 'btn-primary'" type="button"
+                    @click="onCollapseClick">
                     <img src="../../../assets/icons/setting-lines.svg" />
                 </button>
                 <div class="collapse navbar-collapse p-0" v-if="collapsed">
-                    <CustomSelect
-                        :options="chainOptions"
-                        class="select"
-                        v-model:selected-key="selectedChainKey"
-                        prefix="Search In"
-                        icon="git-network-outline-muted.svg"
-                        :isMobile="true"
-                    />
-                    <div
-                        class="col-lg col-12 edit-node-button-col"
-                        @click="onEditCustomNodeClick"
-                        :class="{ disabled: busy }"
-                        ref="customNode"
-                    >
-                        <img
-                            v-if="customNode"
-                            src="../../../assets/icons/create-outline-primary.svg"
-                            class="custom-icon"
-                        />
-                        <img
-                            v-else
-                            src="../../../assets/icons/add-circle-outline-sub.svg"
-                            class="custom-icon"
-                        />
+                    <CustomSelect :options="chainOptions" class="select" v-model:selected-key="selectedChainKey"
+                        prefix="Search In" icon="git-network-outline-muted.svg" :isMobile="true" />
+                    <div class="col-lg col-12 edit-node-button-col" @click="onEditCustomNodeClick"
+                        :class="{ disabled: busy }" ref="customNode">
+                        <img v-if="customNode" src="../../../assets/icons/create-outline-primary.svg"
+                            class="custom-icon" />
+                        <img v-else src="../../../assets/icons/add-circle-outline-sub.svg" class="custom-icon" />
                         <span>
                             {{ customNode ? "Edit" : "" }} Custom Node
                         </span>
@@ -142,12 +71,8 @@
             </div>
         </nav>
     </form>
-    <CustomNodeModal
-        v-model:open="editCustomNodeModalOpen"
-        :custom-node="customNode"
-        @save="onCustomNodeSaved"
-        @delete="onCustomNodeSaved"
-    />
+    <CustomNodeModal v-model:open="editCustomNodeModalOpen" :custom-node="customNode" @save="onCustomNodeSaved"
+        @delete="onCustomNodeSaved" />
 </template>
 
 <script lang="ts">
@@ -211,6 +136,7 @@ export default class IdentitySearch extends Vue {
         const searchParams = new URLSearchParams(window.location.search);
         this.searchTerm = searchParams.get("query") ?? "";
         this.selectedChainKey = searchParams.get("chain") ?? "";
+        debugger;
         this.loadCustomNodeFromStorage();
         this.setChainOptions();
         window.addEventListener("resize", this.onResizeWindow);
@@ -238,13 +164,21 @@ export default class IdentitySearch extends Vue {
         return !this.searchTerm || this.busy || !this.implementsPallet;
     }
 
+    async isChainIndexed(chainInfo: ChainInfo) {
+        try {
+            return (await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(chainInfo.address)}`)).chainStatus.isIndexed;
+        } catch (e) {
+            return false;
+        }
+    }
+
     async setChainOptions() {
         const chainOptions: UISelectOption[] = [];
         for (const chainInfo of chains) {
             chainOptions.push({
                 key: chainInfo.key,
                 displayValue: chainInfo.name,
-                subText: (await getRequest<GetChainStatusResponse>(`/chains/status?wsProvider=${encodeURIComponent(chainInfo.address)}`)).chainStatus.isIndexed ? "Indexed" : "Not Indexed"
+                subText: await this.isChainIndexed(chainInfo) ? "Indexed" : "Not Indexed"
             });
         }
 
