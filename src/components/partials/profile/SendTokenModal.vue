@@ -107,11 +107,12 @@ import { Options, Vue } from "vue-class-component";
 import Modal from "../../common/Modal.vue";
 import Spinner from "@/components/common/Spinner.vue";
 import Alert from "@/components/common/Alert.vue";
-import { Identity } from "@npmjs_tdsoftware/subidentity";
+import { getTokenDetails, Identity } from "@npmjs_tdsoftware/subidentity";
 import type { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import { useStore } from "../../../store";
 import CustomSelect from "@/components/common/CustomSelect.vue";
 import { UISelectOption } from "@/interfaces/UISelectOption";
+import { getChainAddress } from "@/util/chains";
 
 @Options({
     components: {
@@ -186,10 +187,15 @@ export default class SendTokenModal extends Vue {
                 chain: this.identity.chain?.toLowerCase(),
                 senderAddress: this.selectedAccount,
                 receiverAddress: this.identity.basicInfo.address,
-                //--TODO -- calculate correct amount based on chain decimals
-                amount: this.tokenAmount
+                amount: await this.calculateAmountWithDecimals(this.identity.chain!, this.tokenAmount)
             });
         }
+    }
+
+    async calculateAmountWithDecimals(chain: string, amount: string): Promise<number> {
+        const decimals = (await getTokenDetails(getChainAddress(chain.toLowerCase())!)).decimals;
+        const adjustedAmount = Math.pow(10, decimals!) * Number(amount);
+        return adjustedAmount;
     }
 
     closeSendToken() {
