@@ -51,14 +51,14 @@ describe("SendTokenModal.vue", () => {
             await wrapper.vm.$nextTick();
             await sendTokenButton.trigger("click");
 
-            expect(sendTokenMock).toBeCalled();
+            expect(sendTokenMock).toBeCalled();  
             expect(wrapper.vm.store.dispatch).toBeCalledWith(
                 "SEND_TOKEN",
                 {
                     chain: "chain",
                     senderAddress: "dsnjsmdsndjiue4j34idnjnjkdnkjdfjk349dnkd",
                     receiverAddress: "jeeijriejjksnd8439sdjnsnksnjfkndkfj",
-                    amount: "1"
+                    amount: "10000000000"
                 }
             );
         });
