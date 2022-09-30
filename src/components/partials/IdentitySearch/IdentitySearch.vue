@@ -87,8 +87,7 @@ import { UISelectOption } from "@/interfaces/UISelectOption";
 import { get, StoreKey } from "@/util/storage";
 import CustomNodeModal from "./CustomNodeModal.vue";
 import { GetChainStatusResponse } from "@/interfaces/http/GetChainStatusResponse";
-import { getRequest, postRequest } from "@/util/http";
-import { logEvent } from "@/util/eventLogger";
+import { getRequest } from "@/util/http";
 
 @Options({
     components: {
@@ -227,8 +226,6 @@ export default class IdentitySearch extends Vue {
         };
         try {
             this.$emit("search", searchData);
-            const logInfo = `[${searchData.selectedChainKey}]: ${searchData.searchTerm}`;
-            logEvent(logInfo, "SEARCH");
         } catch (e) {
             this.$emit(
                 "error",
