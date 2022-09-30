@@ -82,7 +82,6 @@ import { useStore } from "../../../store";
 import Spinner from "../../common/Spinner.vue";
 import { SearchData } from "../../../interfaces/SearchData";
 import { ChainInfo, chains } from "../../../util/chains";
-import { LogRequest } from "../../../interfaces/LogRequest";
 import { UISelectOption } from "@/interfaces/UISelectOption";
 import { get, StoreKey } from "@/util/storage";
 import CustomNodeModal from "./CustomNodeModal.vue";

@@ -8,7 +8,7 @@ import "../node_modules/polkadot-web-identicon/polyfills.js";
 import "../node_modules/polkadot-web-identicon/runtime.js";
 import { Options, Vue } from "vue-class-component";
 import "./styles/app.scss";
-import { apiAvailable} from "./util/http";
+import { apiAvailable } from "./util/http";
 import { useStore } from "@/store";
 
 @Options({})
