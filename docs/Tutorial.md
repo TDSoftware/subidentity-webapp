@@ -48,3 +48,11 @@ If you click on a table row, you will be redirected to the users [Identity View]
 In the Identity View, as seen in the screenshot above, the available details of a user are displayed. The identicon (round image in the top left of the view) displays an address as a unique icon and could therefore be used to recognize an identity. Information is displayed in separate plugins. Basic Information can be found in the Plugin with title "Basic Info".
 
 ℹ️ If an information of the selected identity is missing, the field for this information will not be shown.
+
+
+## <a id="profilePlugins"></a> Profile Plugins
+![Profile Plugins](./assets/profilePlugin.png)
+
+ℹ️ In the Identity View plugins are shown if the search was made on an indexed blockchain. "Indexed" means that the related governance and treasury data is stored in the given MySQL database of the middleware service. If the data isn't available, the plugins aren't shown. To index a chain, please checkout the SubIdentity backend service. 
+
+For Polkadot the plugins look like in the screenshot. Every entry in the plugins contains a link Subscan.
