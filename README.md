@@ -1,5 +1,7 @@
 # SubIdentity Webapp
 
+[![Tests](https://github.com/TDSoftware/subidentity-webapp/actions/workflows/node.js.yml/badge.svg)](https://github.com/TDSoftware/subidentity-webapp/actions/workflows/node.js.yml)
+
 SubIdentity is a web application that can be used to search for identities on all Substrate based blockchains that implement the identity pallet.
 
 See the [tutorial](./docs/Tutorial.md) for an explanation of how to use the SubIdentity webapp.
