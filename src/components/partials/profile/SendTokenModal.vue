@@ -5,7 +5,7 @@
             <div v-if="isTransferSuccessful" class="mb-4">
                 <Alert
                     :isError="false"
-                    :message="`${identity.balance.symbol} ${tokenAmount} were send
+                    :message="`${tokenAmount} ${identity.balance.symbol}  were sent
                 successfully to ${identity.basicInfo.display}`"
                 />
             </div>
@@ -107,11 +107,12 @@ import { Options, Vue } from "vue-class-component";
 import Modal from "../../common/Modal.vue";
 import Spinner from "@/components/common/Spinner.vue";
 import Alert from "@/components/common/Alert.vue";
-import { Identity } from "@npmjs_tdsoftware/subidentity";
+import { getTokenDetails, Identity } from "@npmjs_tdsoftware/subidentity";
 import type { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
 import { useStore } from "../../../store";
 import CustomSelect from "@/components/common/CustomSelect.vue";
 import { UISelectOption } from "@/interfaces/UISelectOption";
+import { getChainAddress } from "@/util/chains";
 
 @Options({
     components: {
@@ -145,6 +146,7 @@ export default class SendTokenModal extends Vue {
     identity!: Identity;
     open!: boolean;
     tokenAmount = "";
+    decimals = 10;
     error = "";
     selectedAccount = "";
     web3Accounts!: InjectedAccountWithMeta[];
@@ -152,6 +154,7 @@ export default class SendTokenModal extends Vue {
     accountOptions: UISelectOption[] = [];
 
     created() {
+        this.setDecimals();
         this.setWeb3Account();
         this.setAccountOptions();
     }
@@ -174,6 +177,10 @@ export default class SendTokenModal extends Vue {
         } else this.selectedAccount = "";
     }
 
+    async setDecimals() {
+        this.decimals = (await getTokenDetails(getChainAddress(this.identity.chain!.toLowerCase())!)).decimals ?? 10;
+    }
+
     onSelectAccount(event: Event) {
         const target = event.target as HTMLTextAreaElement;
         this.selectedAccount = target.value;
@@ -186,8 +193,7 @@ export default class SendTokenModal extends Vue {
                 chain: this.identity.chain?.toLowerCase(),
                 senderAddress: this.selectedAccount,
                 receiverAddress: this.identity.basicInfo.address,
-                //--TODO -- calculate correct amount based on chain decimals
-                amount: this.tokenAmount
+                amount: (Math.pow(10, this.decimals!) * Number(this.tokenAmount)).toString()
             });
         }
     }
