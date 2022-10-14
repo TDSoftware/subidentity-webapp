@@ -6,7 +6,7 @@
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",
-        "test": "jest --verbose"
+        "test": "jest --verbose --silent"
     },
     "dependencies": {
         "@npmjs_tdsoftware/subidentity": "^0.3.1",
