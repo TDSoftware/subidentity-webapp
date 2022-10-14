@@ -1,29 +1,30 @@
 # SubIdentity Webapp
 
-SubIdentity is a web application that can be used to search for identities on all substrate chains that implement the identity pallet.
+SubIdentity is a web application that can be used to search for identities on all Substrate based blockchains that implement the identity pallet.
+
 See the [tutorial](./docs/Tutorial.md) for an explanation of how to use the SubIdentity webapp.
 
-## Project setup
+## Get Started
 
 ### Installs dependencies
-```
+```bash
 npm install
 ```
 
 ### Compiles and hot-reloads for development
-```
+```bash
 npm run serve
 ```
 
 ### Compiles and minifies for production
-```
+```bash
 npm run build
 ```
 
 ### Runs your unit tests
 Core functions are covered by unit tests to ensure functionality and robustness. To run the unit tests use:
 
-```
+```bash
 npm run test
 ```
 
@@ -31,13 +32,13 @@ npm run test
 
 💡 Hint: Set up your IDE to automatically run that on save. Works in VS Code and IntelliJ.
 
-```
+```bash
 npm run lint
 ```
 
-## Data
+## Data From Substrate Chains
 
-### Npm package
+### NPM package
 SubIdentity Webapp by default uses the [SubIdentity npm package](https://www.npmjs.com/package/@npmjs_tdsoftware/subidentity) to search for identities on a given node. The easiest way is to download that package from npm `@npmjs_tdsoftware/subidentity`.
 But if you want to extend the functionality you can download [the package source code](https://github.com/TDSoftware/subidentity-package), adjust it to your needs and use it with `npm link` locally.
 
