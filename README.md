@@ -28,6 +28,16 @@ Core functions are covered by unit tests to ensure functionality and robustness.
 npm run test
 ```
 
+### Runs your e2e tests
+To run these test you might need to install custom browser drivers for selenium.
+
+Refer to this page: https://www.selenium.dev/documentation/webdriver/getting_started/install_drivers/
+  
+
+```bash
+npm run e2e-test
+```
+
 ### Lints and fixes files
 
 💡 Hint: Set up your IDE to automatically run that on save. Works in VS Code and IntelliJ.
