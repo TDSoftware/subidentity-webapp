@@ -121,7 +121,7 @@ export default class Pagination extends Vue {
     }
 
     get pages() {
-        let range = [];
+        let range: any = [];
 
         for (
             let i = this.startPage;
@@ -136,6 +136,7 @@ export default class Pagination extends Vue {
                 name: i,
                 isDisabled: i === this.currentPage
             });
+            
         }
         return range;
     }
