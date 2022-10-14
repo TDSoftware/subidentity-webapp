@@ -103,7 +103,7 @@ describe("IdentitySearch.vue", () => {
                 return {
                     key: chainInfo.key,
                     displayValue: chainInfo.name,
-                    subText: ""
+                    subText: "Not Indexed"
                 };
             }));
 

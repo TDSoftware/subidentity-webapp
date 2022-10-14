@@ -134,7 +134,6 @@ export default class IdentitySearch extends Vue {
         const searchParams = new URLSearchParams(window.location.search);
         this.searchTerm = searchParams.get("query") ?? "";
         this.selectedChainKey = searchParams.get("chain") ?? "";
-        debugger;
         this.loadCustomNodeFromStorage();
         this.setChainOptions();
         window.addEventListener("resize", this.onResizeWindow);
