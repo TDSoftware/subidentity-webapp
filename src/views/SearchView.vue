@@ -26,6 +26,22 @@
             @item-clicked="recallSearch"
         />
     </div>
+    <div v-else class="contact">
+        <div class="contact-col">
+            <button
+                        class="btn btn-primary fw-normal text-white" type="submit" onclick="location.href='mailto:subidentity@tdsoftware.de?subject=Get Listed'">
+                        Get Listed
+            </button>
+            <div class = "contactText"> We add your chain to subidentity.io </div>
+        </div>
+        <div class="contact-col">
+            <button
+                        class="btn btn-primary fw-normal text-white" type="submit" onclick="location.href='mailto:subidentity@tdsoftware.de?subject=Custom Development'">
+                        Custom Development
+            </button>    
+            <div class = "contactText"> Need help? We support you with custom blockchain development. </div>        
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -128,4 +144,32 @@ export default class SearchView extends Vue {
         margin-bottom: 100px;
     }
 }
+.contact {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    .contact-col {
+        margin: 25px;
+        height: 80px;
+        justify-content: center;
+        align-items: center;
+        .btn {
+            width: 250px;
+            height: 35px;
+            font-size: 14px;
+            position: relative;
+        }
+        .contactText {
+            width: 250px;
+            height: 35px;
+            font-size: 13px;
+            margin-top: 8px;
+            text-align: center;
+            color: #6c757d;
+        }
+    }
+}
+
 </style>
