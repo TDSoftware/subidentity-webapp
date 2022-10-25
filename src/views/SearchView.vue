@@ -6,40 +6,28 @@
         <div class="pt-5 p-0 container-medium fade-in">
             <IdentitySearch @search="onSearch" @error="handleError" />
         </div>
-        <Alert
-            v-if="error"
-            class="p-0 container-medium fade-in mt-4"
-            :message="error"
-            :isError="true"
-        ></Alert>
+        <Alert v-if="error" class="p-0 container-medium fade-in mt-4" :message="error" :isError="true"></Alert>
     </div>
-    <div
-        v-if="showRecentSearch"
-        ref="recentSearch"
-        class="subidentity-container pb-5 bg-white recent-search-container"
-    >
+    <div v-if="showRecentSearch" ref="recentSearch" class="subidentity-container pb-5 bg-white recent-search-container">
         <div class="container-medium pt-5 p-0">
             <p class="h4">Recent Searches</p>
         </div>
-        <RecentSearch
-            class="mb-5 pb-2 p-0 fade-in"
-            @item-clicked="recallSearch"
-        />
+        <RecentSearch class="mb-5 pb-2 p-0 fade-in" @item-clicked="recallSearch" />
     </div>
     <div v-else class="contact">
         <div class="contact-col">
-            <button
-                        class="btn btn-primary fw-normal text-white" type="submit" onclick="location.href='mailto:subidentity@tdsoftware.de?subject=Get Listed'">
-                        Get Listed
+            <button class="btn btn-primary fw-normal text-white" type="submit"
+                onclick="location.href='mailto:subidentity@tdsoftware.de?subject=Get Listed'">
+                Get Listed
             </button>
-            <div class = "contactText"> We add your chain to subidentity.io </div>
+            <div class="contactText"> We add your chain to subidentity.io </div>
         </div>
         <div class="contact-col">
-            <button
-                        class="btn btn-primary fw-normal text-white" type="submit" onclick="location.href='mailto:subidentity@tdsoftware.de?subject=Custom Development'">
-                        Custom Development
-            </button>    
-            <div class = "contactText"> Need help? We support you with custom blockchain development. </div>        
+            <button class="btn btn-primary fw-normal text-white" type="submit"
+                onclick="location.href='mailto:subidentity@tdsoftware.de?subject=Custom Development'">
+                Custom Development
+            </button>
+            <div class="contactText"> Need help? We support you with custom blockchain development. </div>
         </div>
     </div>
 </template>
@@ -132,9 +120,11 @@ export default class SearchView extends Vue {
 
 <style lang="scss" scoped>
 @import "../styles/variables";
+
 .logo-container {
     padding-top: 8%;
 }
+
 .recent-search-container {
     min-height: calc(100vh - $headerHeight - 29.5rem);
 }
@@ -144,23 +134,28 @@ export default class SearchView extends Vue {
         margin-bottom: 100px;
     }
 }
+
 .contact {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     margin-top: 10px;
+    flex-wrap: wrap;
+
     .contact-col {
         margin: 25px;
         height: 80px;
         justify-content: center;
         align-items: center;
+
         .btn {
             width: 250px;
             height: 35px;
             font-size: 14px;
             position: relative;
         }
+
         .contactText {
             width: 250px;
             height: 35px;
@@ -171,5 +166,4 @@ export default class SearchView extends Vue {
         }
     }
 }
-
 </style>

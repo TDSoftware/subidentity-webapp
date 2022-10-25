@@ -82,12 +82,11 @@ import { useStore } from "../../../store";
 import Spinner from "../../common/Spinner.vue";
 import { SearchData } from "../../../interfaces/SearchData";
 import { ChainInfo, chains } from "../../../util/chains";
-import { LogRequest } from "../../../interfaces/LogRequest";
 import { UISelectOption } from "@/interfaces/UISelectOption";
 import { get, StoreKey } from "@/util/storage";
 import CustomNodeModal from "./CustomNodeModal.vue";
 import { GetChainStatusResponse } from "@/interfaces/http/GetChainStatusResponse";
-import { getRequest, postRequest } from "@/util/http";
+import { getRequest } from "@/util/http";
 import { logEvent } from "@/util/eventLogger";
 
 @Options({
@@ -136,7 +135,6 @@ export default class IdentitySearch extends Vue {
         const searchParams = new URLSearchParams(window.location.search);
         this.searchTerm = searchParams.get("query") ?? "";
         this.selectedChainKey = searchParams.get("chain") ?? "";
-        debugger;
         this.loadCustomNodeFromStorage();
         this.setChainOptions();
         window.addEventListener("resize", this.onResizeWindow);
